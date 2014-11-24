@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd  
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd ">
+	<!-- <tx:annotation-driven/> -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:props/db.properties</value>
+				<!-- <value>classpath*:props/mq.properties</value> -->
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ds" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl">
+			<value>${DB_URL}</value>
+		</property>
+		<property name="user" value="${DB_USER}"></property>
+		<property name="password" value="${DB_PASSWORD}"></property>
+		<property name="initialPoolSize" value="5" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="50" />
+		<property name="acquireRetryAttempts" value="31"></property>
+		<property name="acquireRetryDelay" value="2000"></property>
+		<property name="maxIdleTime" value="1800"></property>
+		<property name="idleConnectionTestPeriod" value="300"></property>
+		<property name="testConnectionOnCheckin" value="true"></property>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.sargeraswang.webmanager.dao.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+	
+	<!-- aop式事务实现，可以支持多库 -->
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+	  <tx:attributes>
+	    <tx:method name="*" rollback-for="Throwable"/>
+	  </tx:attributes>
+	</tx:advice>
+	<aop:config>
+	    <aop:pointcut id="defaultServiceOperation"
+	          expression="execution(* com.sargeraswang.webmanager.service.*.*(..))"/>
+	    <aop:advisor pointcut-ref="defaultServiceOperation" advice-ref="txAdvice"/>           
+  	</aop:config>
+  	<!-- aop式事务实现，可以支持多库 -->
+  	
+  	<!-- 返回JSON模版 -->   
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >    
+	    <property name="messageConverters">    
+	    <list>  
+	         <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />  
+	    </list>   
+	    </property>    
+	</bean>    
+</beans>
