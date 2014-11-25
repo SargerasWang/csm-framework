@@ -29,10 +29,6 @@ public class Constants {
 	public static final int PAGE_SIZE = 10;
 	
     /**
-     * Session存验证码
-     */
-    public static final String SESSION_KEY_RANDOM="SESSION_RANDOM";
-    /**
      * Session存userid
      */
     public static final String SESSION_KEY_UID="SESSION_KEY_UID";
@@ -41,19 +37,25 @@ public class Constants {
      */
     public static final String SESSION_KEY_UINFO="SESSION_KEY_UINFO";
     /**
-     * 是否登陆
-     */
-    public static final String SESSION_KEY_ISLOGIN="SESSION_KEY_ISLOGIN";
-    /**
      * 菜单权限
      */
     public static final String SESSION_KEY_MENULIST="SESSION_KEY_MENULIST";
+
+
     /**
-     * 默认审核通过文字
+     * 是否为BaseParamater的标示
      */
-    public static final String AUDIT_PASS_DEFAULT_TEXT="默认审核通过";
+    public static final String BASEPARAMATER_JUDGE="BASEPARAMATER_JUDGE";
     /**
-     * 审核备注前缀
+     * BaseParamater的index
      */
-    public static final String AUDIT_PREV_TEXT="[wap端]";
+    public static final String BASEPARAMATER_INDEX="index";
+    /**
+     * BaseParamater的iDisplayLength
+     */
+    public static final String BASEPARAMATER_LENGTH="iDisplayLength";
+    /**
+     * BaseParamater的iDisplayStart
+     */
+    public static final String BASEPARAMATER_START="iDisplayStart";
 }

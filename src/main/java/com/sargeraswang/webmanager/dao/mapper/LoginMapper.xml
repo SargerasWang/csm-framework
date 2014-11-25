@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sargeraswang.webmanager.dao.mapper.LoginMapper" >
   <select id="selectUserByLogin" resultType="java.util.HashMap" parameterType="java.util.HashMap">
-    SELECT * FROM user_account where loginname=#{loginname} and password=MD5(#{password})
+    SELECT id,loginname,storage_id,status,rid,name,gid,did FROM user_account where loginname=#{loginname} and password=MD5(#{password})
   </select>
 
 </mapper>

@@ -28,7 +28,7 @@ public class LoginController {
 	@Resource
 	UserService loginService;
 	
-	private static final transient Logger LOG = LoggerFactory.getLogger(UserService.class);
+	private static final transient Logger LOG = LoggerFactory.getLogger(LoginController.class);
 	
 	@ResponseBody
 	@RequestMapping(value="/login")
@@ -37,11 +37,13 @@ public class LoginController {
 	    String loginname = allRequestParams.get("loginname");
 	    String password = allRequestParams.get("password");
 		List<Map<String, Object>> list = loginService.selectUserByLogin(loginname, password);
+
+		String ip = request.getRemoteAddr();
 		if (CollectionUtils.isEmpty(list)){
-	        LOG.info(MessageFormat.format("用户登入失败，loginname={0},password={1}", loginname, password));
+	        LOG.info(MessageFormat.format("用户登入失败，loginname={0},password={1},ip={2}", loginname, password,ip));
 			return "2";
 		}else{
-	        LOG.warn("用户登陆成功，user="+list.get(0));
+	        LOG.warn("用户登陆成功，user="+list.get(0)+",ip="+ip);
 			request.getSession().setAttribute(Constants.SESSION_KEY_UID, list.get(0).get("id"));
 			request.getSession().setAttribute(Constants.SESSION_KEY_UINFO,list.get(0));
 			return "1";

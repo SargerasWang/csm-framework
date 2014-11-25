@@ -61,13 +61,4 @@
 	    <aop:advisor pointcut-ref="defaultServiceOperation" advice-ref="txAdvice"/>           
   	</aop:config>
   	<!-- aop式事务实现，可以支持多库 -->
-  	
-  	<!-- 返回JSON模版 -->   
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >    
-	    <property name="messageConverters">    
-	    <list>  
-	         <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />  
-	    </list>   
-	    </property>    
-	</bean>    
 </beans>

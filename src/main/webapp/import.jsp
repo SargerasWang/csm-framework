@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="网站描述.">
 <meta name="author" content="SargerasWang">
@@ -21,10 +22,10 @@
 <link href="<c:url value='/css/jquery.iphone.toggle.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/uploadify.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/animate.min.css'/>" rel='stylesheet'>
+<link href="<c:url value='/css/dataTables.bootstrap.css'/>" rel='stylesheet'>
 
 <!-- jQuery -->
 <script src="<c:url value='/bower_components/jquery/jquery.js'/>"></script>
-<script src="<c:url value='/js/jquery.form.js'/>"></script>
 
 <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>

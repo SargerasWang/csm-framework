@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
     <title>自由的 HTML5 Bootstrap 后台模板</title>
     <jsp:include page="import.jsp" flush="true"/>
 </head>
@@ -114,7 +113,7 @@
                         <li><a class="ajax-link" href="gallery.html"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
                         </li>
                         <li class="nav-header hidden-md">Sample Section</li>
-                        <li><a class="ajax-link" href="table.html"><i
+                        <li><a class="ajax-link" href="/table.jsp"><i
                                 class="glyphicon glyphicon-align-justify"></i><span> 表格</span></a></li>
                         <li class="accordion">
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 手风琴菜单</span></a>

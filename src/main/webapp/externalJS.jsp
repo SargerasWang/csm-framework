@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!-- external javascript -->
+<script src="<c:url value='/js/jquery.form.js'/>"></script>
 
 <script src="<c:url value='/bower_components/bootstrap/dist/js/bootstrap.min.js'/>"></script>
 
@@ -11,6 +12,7 @@
 <script src="<c:url value='/bower_components/fullcalendar/dist/fullcalendar.min.js'/>"></script>
 <!-- data table plugin -->
 <script src="<c:url value='/js/jquery.dataTables.min.js'/>"></script>
+<script src="<c:url value='/js/dataTables.bootstrap.js'/>"></script>
 
 <!-- select or dropdown enhancer -->
 <script src="<c:url value='/bower_components/chosen/chosen.jquery.min.js'/>"></script>
@@ -34,4 +36,6 @@
 <script src="<c:url value='/js/jquery.history.js'/>"></script>
 <!-- application script for Charisma demo -->
 <script src="<c:url value='/js/charisma.js'/>"></script>
+<!-- base.js -->
+<script src="<c:url value='/js/base.js'/>"></script>
 
