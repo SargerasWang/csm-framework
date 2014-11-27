@@ -10,13 +10,49 @@ $(document).ready(function() {
 
     $('#example').baseTable({
         "index": "selectAll",
-        "col": [
-            { "mData": "id","mRender":function(data,type,row){
+        "columns": [
+            { "mData": "id",title:"编号",width:"100px","mRender":function(data,type,row){
 
-                return data+"|"+type+"|"+row;
+                return data;
             } },
-            { "mData": "text" },
-            { "mData": "ctime" }
+            { "mData": "text","title":"文本" },
+            { "mData": "ctime",title:"创建时间" },
+            { mData:"status",title:"状态",render:function (data) {
+                var s;
+                var c;
+                switch (data){
+                    case 0:
+                        s="初始状态"
+                        c="";
+                        break;
+                    case 1:
+                        s="进行中"
+                        c="label-warning";
+                        break;
+                    case 2:
+                        s="已完成"
+                        c="label-success";
+                        break;
+                    case 3:
+                        s="已删除";
+                        c="label-danger"
+                        break;
+                    default :
+                }
+                return '<span class="'+c+' label label-default">'+s+'</span>';
+            }}
+        ],
+        "search":[
+            {"column":"id"},
+            {"column":"text"},
+            {"column":"ctime","date":true,"placeholder":"创建时间起讫"},
+            {column:"status",select:true,"placeholder":"全部状态",
+                data:[
+                {value:0,text:"初始状态"},
+                {value:1,text:"进行中"},
+                {value:2,text:"已完成"},
+                {value:3,text:"已删除"}
+            ]}
         ]
     } );
 
@@ -188,19 +224,10 @@ $(document).ready(function() {
         </div>
     </div>
     <div class="box-content">
+    <%-- begin --%>
+    <table id="example"></table>
+    <%-- end --%>
     <div class="alert alert-info">For help with such table please check <a href="http://datatables.net/" target="_blank">http://datatables.net/</a></div>
-        <%-- begin --%>
-        <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Text</th>
-                <th>Ctime</th>
-            </tr>
-            </thead>
-
-        </table>
-        <%-- end --%>
     <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
     <thead>
     <tr>

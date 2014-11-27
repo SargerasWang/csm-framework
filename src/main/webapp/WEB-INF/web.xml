@@ -38,10 +38,11 @@
     <filter-name>loginFilter</filter-name>
     <url-pattern>*.html</url-pattern>
   </filter-mapping>
-<!--  <error-page>
+  <error-page>
     <error-code>401</error-code>
-    <location>/error.jsp</location>
+    <location>/login.jsp</location>
   </error-page>
+  <!--
   <error-page>
     <error-code>404</error-code>
     <location>/error.jsp</location>
@@ -53,5 +54,6 @@
   <error-page>
     <exception-type>java.lang.NullPointerException</exception-type>
     <location>/error.jsp</location>
-  </error-page>-->
+  </error-page>
+  -->
 </web-app>

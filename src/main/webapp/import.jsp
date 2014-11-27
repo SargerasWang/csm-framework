@@ -8,6 +8,8 @@
 <!-- The styles -->
 <link id="bs-css" href="<c:url value='/css/bootstrap-cerulean.min.css'/>" rel="stylesheet">
 
+<link href="<c:url value='/css/base.css'/>" rel="stylesheet">
+<link href="<c:url value='/css/bootstrap.min.css'/>" rel="stylesheet">
 <link href="<c:url value='/css/charisma-app.css'/>" rel="stylesheet">
 <link href="<c:url value='/bower_components/fullcalendar/dist/fullcalendar.css'/>" rel='stylesheet'>
 <link href="<c:url value='/bower_components/fullcalendar/dist/fullcalendar.print.css'/>" rel='stylesheet' media='print'>
@@ -23,6 +25,8 @@
 <link href="<c:url value='/css/uploadify.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/animate.min.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/dataTables.bootstrap.css'/>" rel='stylesheet'>
+<link href="<c:url value='/css/datepicker3.css'/>" rel='stylesheet'>
+<link href="<c:url value='/css/prism.css'/>" rel='stylesheet'>
 
 <!-- jQuery -->
 <script src="<c:url value='/bower_components/jquery/jquery.js'/>"></script>

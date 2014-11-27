@@ -41,15 +41,17 @@ public class LoginFilter extends OncePerRequestFilter {
         if(doFilter){
             Object uid = request.getSession().getAttribute(Constants.SESSION_KEY_UID);
             if(uid == null ){
-                PrintWriter out = response.getWriter();  
-                String loginPage = request.getContextPath() + "/login.jsp";  
-                StringBuilder builder = new StringBuilder();  
-                builder.append("<script type=\"text/javascript\">");  
-                builder.append("window.top.location.href='");  
-                builder.append(loginPage);  
-                builder.append("';");  
-                builder.append("</script>");  
-                out.print(builder.toString()); 
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.sendRedirect("/login.jsp");
+//                PrintWriter out = response.getWriter();
+//                String loginPage = request.getContextPath() + "/login.jsp";
+//                StringBuilder builder = new StringBuilder();
+//                builder.append("<script type=\"text/javascript\">");
+//                builder.append("window.top.location.href='");
+//                builder.append(loginPage);
+//                builder.append("';");
+//                builder.append("</script>");
+//                out.print(builder.toString());
             }else{
                 filterChain.doFilter(request, response);
             }
