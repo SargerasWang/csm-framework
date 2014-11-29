@@ -97,10 +97,10 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">主菜单</li>
-                        <li><a class="ajax-link" href="#" url="/dashboard.jsp" onclick="$(this).openTab()"><i
+                        <li><a class="ajax-link" href="#" url="/dashboard.jsp"><i
                                 class="glyphicon glyphicon-home"></i><span> 仪表盘</span></a>
                         </li>
-                        <li><a class="ajax-link" href="ui.html"><i
+                        <li><a class="ajax-link" href="#" url="/ui.jsp"><i
                                 class="glyphicon glyphicon-eye-open"></i><span> UI 特性</span></a>
                         </li>
                         <li><a class="ajax-link" href="form.html"><i
@@ -113,7 +113,7 @@
                         <li><a class="ajax-link" href="gallery.html"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
                         </li>
                         <li class="nav-header hidden-md">Sample Section</li>
-                        <li><a class="ajax-link" href="#" url="/table.jsp" onclick="$(this).openTab()"><i
+                        <li><a class="ajax-link" href="#" url="/table.jsp"><i
                                 class="glyphicon glyphicon-align-justify"></i><span> 表格</span></a></li>
                         <li class="accordion">
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 手风琴菜单</span></a>
@@ -210,32 +210,41 @@
     var _tab_index=0;
     //tab 右键菜单
     var $contextMenu = $("#contextMenu");
-    $contextMenu.on("click", "a", function(source) {
-        var tabId = $(source.target).parents("div").attr("target");
-        var i = $(source.target).attr("tabindex");
-        var ul = $(".nav-tabs",".tabbable");
-        var div_p = $(".tab-content",".tabbable");
-        switch (i){
-            case "1":
+
+    $(document).ready(function() {
+        $contextMenu.on("click", "a", function (source) {
+            var tabId = $(source.target).parents("div").attr("target");
+            var i = $(source.target).attr("tabindex");
+            var ul = $(".nav-tabs", ".tabbable");
+            var div_p = $(".tab-content", ".tabbable");
+            switch (i) {
+                case "1":
                     closeTab(tabId);
-                break;
-            case "2":
+                    break;
+                case "2":
                     $(ul).empty();
                     $(div_p).empty();
                     $(".tabbable").hide();
-                break;
-            case "3":
-                    $(div_p).children().each(function(){
-                       if(this.id != tabId){
-                           closeTab(this.id);
-                       }
+                    break;
+                case "3":
+                    $(div_p).children().each(function () {
+                        if (this.id != tabId) {
+                            closeTab(this.id);
+                        }
                     });
-                break;
-        }
-        $contextMenu.hide();
-    });
-    $("body").bind("click",function(){
-        $contextMenu.hide();
+                    break;
+            }
+            $contextMenu.hide();
+        });
+        $("body").bind("click", function () {
+            $contextMenu.hide();
+        });
+        //绑定menu事件
+        $("a","ul.nav-pills li").bind("click",function(){
+            if($(this).parent().children("ul").length == 0 ){
+                $(this).openTab();
+            }
+        });
     });
     //改变iframe高度
     function resetIframeHeight(iframe){
@@ -263,7 +272,7 @@
         var id= "tab_"+index;
         var li = $.parseHTML('<li><a id="a_'+id+'" href="#'+id+'" data-toggle="tab">'+text+'</a><span class="tab-close">X</span></li>');
         var div = $.parseHTML('<div class="tab-pane" id="'+id+'">'
-            +'<iframe src="'+url+'" class="mainFrame" onload="resetIframeHeight(this)"></iframe>'
+            +'<iframe scrolling="no" src="'+url+'" class="mainFrame" onload="resetIframeHeight(this)"></iframe>'
             +'</div>');
         //绑定右键事件
         $(li).children("a").first().bind("contextmenu",function(e){
