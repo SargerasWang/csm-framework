@@ -6,6 +6,9 @@
     <title>登入</title>
     <jsp:include page="import.jsp" flush="true"/>
     <script>
+        if(top != self){
+            top.location.href = location.href;
+        }
         $(function () {
             $("#loginname").focus();
 
