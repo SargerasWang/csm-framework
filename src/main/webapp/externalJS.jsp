@@ -36,11 +36,14 @@
 <script src="<c:url value='/js/jquery.history.js'/>"></script>
 <!-- application script for Charisma demo -->
 <script src="<c:url value='/js/charisma.js'/>"></script>
-<!-- base.js -->
-<script src="<c:url value='/js/base.js'/>"></script>
 <!-- datetimepicker -->
 <script src="<c:url value='/js/bootstrap-datepicker.js'/>"></script>
 <script src="<c:url value='/js/bootstrap-datepicker.zh-CN.js'/>"></script>
 <script src="<c:url value='/js/prism.js'/>"></script>
+<!-- bootbox -->
+<script src="<c:url value='/js/bootbox.js'/>"></script>
+<!-- base.js -->
+<script src="<c:url value='/js/base.js'/>"></script>
+
 
 

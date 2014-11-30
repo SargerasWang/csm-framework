@@ -103,14 +103,14 @@
                         <li><a class="ajax-link" href="#" url="/ui.jsp"><i
                                 class="glyphicon glyphicon-eye-open"></i><span> UI 特性</span></a>
                         </li>
-                        <li><a class="ajax-link" href="form.html"><i
+                        <li><a class="ajax-link" href="#" url="/form.jsp"><i
                                 class="glyphicon glyphicon-edit"></i><span> Forms</span></a></li>
-                        <li><a class="ajax-link" href="chart.html"><i
+                        <li><a class="ajax-link" href="#" url="/chart.jsp"><i
                                 class="glyphicon glyphicon-list-alt"></i><span> 图表</span></a>
                         </li>
-                        <li><a class="ajax-link" href="typography.html"><i class="glyphicon glyphicon-font"></i><span> 排版</span></a>
+                        <li><a class="ajax-link" href="#" url="/typography.jsp"><i class="glyphicon glyphicon-font"></i><span> 排版</span></a>
                         </li>
-                        <li><a class="ajax-link" href="gallery.html"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
+                        <li><a class="ajax-link" href="#" url="/gallery.jsp"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
                         </li>
                         <li class="nav-header hidden-md">Sample Section</li>
                         <li><a class="ajax-link" href="#" url="/table.jsp"><i
@@ -122,16 +122,16 @@
                                 <li><a href="#">子菜单2</a></li>
                             </ul>
                         </li>
-                        <li><a class="ajax-link" href="calendar.html"><i class="glyphicon glyphicon-calendar"></i><span> 日历</span></a>
+                        <li><a class="ajax-link" href="#" url="/calendar.jsp"><i class="glyphicon glyphicon-calendar"></i><span> 日历</span></a>
                         </li>
-                        <li><a class="ajax-link" href="grid.html"><i
+                        <li><a class="ajax-link" href="#" url="/grid.jsp"><i
                                 class="glyphicon glyphicon-th"></i><span> 网格</span></a></li>
-                        <li><a href="tour.html"><i class="glyphicon glyphicon-globe"></i><span> 指引</span></a></li>
-                        <li><a class="ajax-link" href="icon.html"><i
+                        <li><a href="#" url="/tour.jsp"><i class="glyphicon glyphicon-globe"></i><span> 指引</span></a></li>
+                        <li><a class="ajax-link" href="#" url="/icon.jsp"><i
                                 class="glyphicon glyphicon-star"></i><span> Icons</span></a></li>
-                        <li><a href="error.jsp"><i class="glyphicon glyphicon-ban-circle"></i><span> 错误页面</span></a>
+                        <li><a href="#" url="error.jsp"><i class="glyphicon glyphicon-ban-circle"></i><span> 错误页面</span></a>
                         </li>
-                        <li><a href="login.jsp"><i class="glyphicon glyphicon-lock"></i><span> 登陆页面</span></a>
+                        <li><a href="#" url="login.jsp"><i class="glyphicon glyphicon-lock"></i><span> 登陆页面</span></a>
                         </li>
                     </ul>
                     <label id="for-is-ajax" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax 菜单</label>

@@ -143,13 +143,13 @@
                         </li>
                         <li><a class="ajax-link" href="ui.jsp"><i class="glyphicon glyphicon-eye-open"></i><span> UI Features</span></a>
                         </li>
-                        <li><a class="ajax-link" href="form.html"><i
+                        <li><a class="ajax-link" href="form.jsp"><i
                                     class="glyphicon glyphicon-edit"></i><span> Forms</span></a></li>
-                        <li><a class="ajax-link" href="chart.html"><i class="glyphicon glyphicon-list-alt"></i><span> Charts</span></a>
+                        <li><a class="ajax-link" href="chart.jsp"><i class="glyphicon glyphicon-list-alt"></i><span> Charts</span></a>
                         </li>
-                        <li><a class="ajax-link" href="typography.html"><i class="glyphicon glyphicon-font"></i><span> Typography</span></a>
+                        <li><a class="ajax-link" href="typography.jsp"><i class="glyphicon glyphicon-font"></i><span> Typography</span></a>
                         </li>
-                        <li><a class="ajax-link" href="gallery.html"><i class="glyphicon glyphicon-picture"></i><span> Gallery</span></a>
+                        <li><a class="ajax-link" href="gallery.jsp"><i class="glyphicon glyphicon-picture"></i><span> Gallery</span></a>
                         </li>
                         <li class="nav-header hidden-md">Sample Section</li>
                         <li><a class="ajax-link" href="table.jsp"><i
@@ -161,12 +161,12 @@
                                 <li><a href="#">Child Menu 2</a></li>
                             </ul>
                         </li>
-                        <li><a class="ajax-link" href="calendar.html"><i class="glyphicon glyphicon-calendar"></i><span> Calendar</span></a>
+                        <li><a class="ajax-link" href="calendar.jsp"><i class="glyphicon glyphicon-calendar"></i><span> Calendar</span></a>
                         </li>
-                        <li><a class="ajax-link" href="grid.html"><i
+                        <li><a class="ajax-link" href="grid.jsp"><i
                                     class="glyphicon glyphicon-th"></i><span> Grid</span></a></li>
                         <li><a href="tour.html"><i class="glyphicon glyphicon-globe"></i><span> Tour</span></a></li>
-                        <li><a class="ajax-link" href="icon.html"><i
+                        <li><a class="ajax-link" href="icon.jsp"><i
                                     class="glyphicon glyphicon-star"></i><span> Icons</span></a></li>
                         <li><a href="error.jsp"><i class="glyphicon glyphicon-ban-circle"></i><span> Error Page</span></a>
                         </li>
