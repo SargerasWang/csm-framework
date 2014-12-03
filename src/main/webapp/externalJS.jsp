@@ -42,6 +42,8 @@
 <script src="<c:url value='/js/prism.js'/>"></script>
 <!-- bootbox -->
 <script src="<c:url value='/js/bootbox.js'/>"></script>
+<!--form auto fill -->
+<script src="<c:url value='/js/jquery.formautofill.js'/>"></script>
 <!-- base.js -->
 <script src="<c:url value='/js/base.js'/>"></script>
 

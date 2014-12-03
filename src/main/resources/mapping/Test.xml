@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="test" >
+  <select id="selectAll" resultType="java.util.HashMap" parameterType="java.util.HashMap" useCache="false">
+    SELECT text,id,date_format(ctime,'%Y/%m/%d %H:%i:%s') as ctime ,status FROM test
+    <where>
+      <if test="text != null">
+        and text like "%"#{text}"%"
+      </if>
+      <if test="id != null">
+        and id = #{id}
+      </if>
+      <if test="ctime_0 != null">
+        and ctime &gt;= #{ctime_0}
+      </if>
+      <if test="ctime_1 != null">
+        and ctime &lt;= #{ctime_1}
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+    ORDER BY ${_order_}
+  </select>
+  <insert id="insert" parameterType="java.util.HashMap">
+    insert into test(text,status,ctime) values(#{text},0,NOW())
+  </insert>
+  <update id="update" parameterType="java.util.HashMap">
+    update test set text = #{text} where id=#{id}
+  </update>
+  <update id="updateStatus" parameterType="java.util.HashMap">
+    update test set status = #{status} where id=#{id}
+  </update>
+  <delete id="delete" parameterType="java.util.HashMap">
+    delete from test where id=#{id}
+  </delete>
+
+</mapper>

@@ -49,13 +49,17 @@ public class Constants {
     /**
      * BaseParamater的index
      */
-    public static final String BASEPARAMATER_INDEX="index";
+    public static final String BASEPARAMATER_INDEX="_index_";
+    /**
+     * BaseParamater的order
+     */
+    public static final String BASEPARAMATER_ORDER="_order_";
     /**
      * BaseParamater的iDisplayLength
      */
-    public static final String BASEPARAMATER_LENGTH="iDisplayLength";
+    public static final String BASEPARAMATER_LENGTH="_length_";
     /**
      * BaseParamater的iDisplayStart
      */
-    public static final String BASEPARAMATER_START="iDisplayStart";
+    public static final String BASEPARAMATER_START="_start_";
 }

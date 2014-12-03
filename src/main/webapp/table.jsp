@@ -6,9 +6,25 @@
     <jsp:include page="import.jsp" flush="true"/>
     <script>
         $(document).ready(function () {
-
-            $('#example').baseTable({
-                "index": "selectAll",
+            //初始化form
+            var myForm = $("#myForm").baseForm({
+                title: "测试表单",
+                submit: function (data) {
+                    ajaxUpdate({
+                        index: data.index,
+                        data: data,
+                        success: function (r) {
+                            if (r.status = 1) {
+                                table.reload();
+                            }
+                        }
+                    });
+                }
+            });
+            var table = $('#example').baseTable({
+                "index": "test.selectAll",
+//                "single":true,
+                "order":[[2,"desc"]],
                 "columns": [
                     {"mData": "id", title: "编号", width: "60px"},
                     {"mData": "text", "title": "文本"},
@@ -60,17 +76,17 @@
                             "text": "新增",
                             "css": "btn-success",
                             icon: "plus",
+                            allowNull: true,
                             "method": function () {
-
+                                myForm.open({index: "test.insert"});
                             }
                         },
                         {
                             "text": "修改",
                             "css": "btn-warning",
                             icon: "edit",
-                            allowNull: false,
                             "method": function (datas) {
-                                console.debug(datas[0]);
+                                myForm.open({data:datas[0], index: "test.update"});
                             }
                         },
                         {
@@ -78,7 +94,19 @@
                             "css": "btn-danger",
                             icon: "trash",
                             "method": function (datas) {
-
+                                bootbox.confirm('确认删除数据[' + datas[0].text + ']么?', function (r) {
+                                    if (r) {
+                                        ajaxUpdate({
+                                            index: "test.delete",
+                                            data:{id: datas[0].id},
+                                            success:function(r){
+                                                if(r.status == 1){
+                                                    table.reload();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         }
                     ],
@@ -100,25 +128,16 @@
 </head>
 
 <body>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+<form id="myForm" role="form" class="hide">
+    <input type="hidden" name="index">
+    <input type="hidden" name="id">
 
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3>Settings</h3>
-            </div>
-            <div class="modal-body">
-                <p>Here settings can be configured...</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                <a href="#" class="btn btn-primary" data-dismiss="modal">Save changes</a>
-            </div>
-        </div>
+    <div class="form-group">
+        <label for="text">文本</label>
+        <input type="text" class="form-control" id="text" name="text"
+               placeholder="请输入文本">
     </div>
-</div>
+</form>
 <div class="ch-container-main">
     <div class="row">
         <div id="content" class="col-lg-12">

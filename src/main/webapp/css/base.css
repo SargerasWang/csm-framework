@@ -1,0 +1,53 @@
+.baseSearch {
+    height: 28px;
+    margin-right: 5px;
+}
+
+.row-fluid .input-daterange .input-group-addon {
+    border-width: 1px 0 1px 1px;
+}
+
+.row-fluid .input-group, .input-daterange, .chosen-container {
+    margin-bottom: 5px;
+}
+
+.mainFrame {
+    overflow: hidden;
+    border: none;
+    width:100%;
+}
+
+.ch-container-main {
+    padding: 0px;
+}
+
+.tabbable .tab-close {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    font-size: 12px;
+    color:#ababab;
+}
+.tabbable .tab-close:hover{
+    color:red;
+    cursor:pointer;
+}
+#contextMenu {
+    position: absolute;
+    display:none;
+}
+.tabbable .nav-tabs>li>a{
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+.panel .panel-heading{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.dataTable tbody tr:hover td,
+.dataTable tbody tr.selected td,
+.dataTable tbody tr:nth-child(odd):hover td,
+.dataTable tbody tr:nth-child(odd).selected td
+{
+    background-color: #D1D1D1;
+}
