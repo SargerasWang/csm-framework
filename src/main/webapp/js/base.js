@@ -50,6 +50,31 @@ function ajaxErrorCallback(err) {
         bootbox.alert("服务器发生错误,代码[" + err.status +"]");
     }
 }
+/**
+ * 提示框
+ * @param text 文字内容
+ * @param title 标题,默认"系统提示"
+ * @param type 类型:info,success(默认),warning,danger
+ * @param time 显示多长时间后关闭,默认800ms
+ */
+function tipMsg(text,title,type,time){
+    if(typeof title == "undefined"){
+        title="系统提示";
+    }
+    if(typeof type == "undefined"){
+        type="success";
+    }
+    if(typeof time == "undefined"){
+        time=800;
+    }
+    var _alert= $.parseHTML('<div class="alert alert-'+type+' basealert" style="display:none;">'
+           // +'<a href="#" class="close" data-dismiss="alert">&times;</a>'
+            +'<h4 class="alert-heading">'+title+'</h4>'+text+'</div>');
+    $(document.body).append(_alert);
+    $(_alert).fadeIn('fast').delay(time).fadeOut('fast',function(){
+        this.remove();
+    });
+}
 
 /**
  * Created by SagerasWang on 14/11/25.
@@ -87,8 +112,7 @@ $.fn.baseTable = function (opt) {
             "processing": true,
             "serverSide": true,
             "searching": false,
-            "dom": "<'row-fluid'r>t<'row-fluid'<'span12'l><'span12'i><'span12 center'p>>",
-            //"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+            "dom": "<'row-fluid'r>t<'row'<'col-md-3'l><'col-md-6 center'p><'col-md-3 right'i>>",
             "paginationType": "bootstrap",
             "columns": opt.columns,
             "language": {
@@ -133,18 +157,18 @@ $.fn.baseTable = function (opt) {
                 //加载完数据后,通知外层改变iframe高度
                 resetHeight();
             }
-            //,"fnServerData": function (sSource, aoData, fnCallback) {
-            //console.debug(sSource);
-            //    $.ajax({
-            //        "dataType": 'json',
-            //        //"type": "GET",
-            //        "url": sSource,
-            //        "data": aoData,
-            //        "success": fnCallback,
-            //        "timeout": 15000,   // optional if you want to handle timeouts (which you should)
-            //        "error": ajaxErrorCallback
-            //    });
-            //}
+            /*,"fnServerData": function (sSource, aoData, fnCallback) {
+            console.debug(sSource);
+                $.ajax({
+                    "dataType": 'json',
+                    //"type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback,
+                    "timeout": 15000,   // optional if you want to handle timeouts (which you should)
+                    "error": ajaxErrorCallback
+                });
+            }*/
         },opt)
     );
     $(table).DataTable.ext.errMode = "throw";//出错时不alert
@@ -267,7 +291,7 @@ $.fn.baseTable = function (opt) {
                     //点击按钮,将当前选中数据当做参数传回
                     $(_btn).bind("click", function () {
                         if (!allowNull && table.rows('.selected').data().length == 0) {
-                            bootbox.alert('请先选择数据!');
+                            tipMsg("请先选择数据","提示","warning");
                             return false;
                         }
                         method(table.rows('.selected').data());

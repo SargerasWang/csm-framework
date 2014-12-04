@@ -7,8 +7,7 @@
 </head>
 
 <body>
-<div class="ch-container">
-    <div class="row">
+<div class="row">
     <ul class="breadcrumb">
         <li>
             <a href="#">Home</a>
@@ -85,7 +84,7 @@
                                title="A Title">Click for popover</a>
                         </td>
                         <td><code>&lt;a href="#" class="btn btn-danger" data-toggle="popover" data-content="And here's
-                                some amazing content. It's very engaging. right?" title="A Title"&gt;hover for popover&lt;/a&gt;</code>
+                            some amazing content. It's very engaging. right?" title="A Title"&gt;hover for popover&lt;/a&gt;</code>
                         </td>
                     </tr>
                     <tr>
@@ -102,8 +101,8 @@
                                class="btn btn-warning">Hover for tooltip</a>
                         </td>
                         <td><code>&lt;a href="#" title="Tooltip, you can change the position, for example use
-                                data-placement="left"." data-toggle="tooltip" class="btn btn-warning"&gt;Hover for
-                                tooltip&lt;/a&gt;</code></td>
+                            data-placement="left"." data-toggle="tooltip" class="btn btn-warning"&gt;Hover for
+                            tooltip&lt;/a&gt;</code></td>
                     </tr>
                     </tbody>
                 </table>
@@ -112,7 +111,8 @@
     </div>
     <!--/span-->
 
-</div><!--/row-->
+</div>
+<!--/row-->
 
 <div class="row">
     <div class="box col-md-6">
@@ -245,7 +245,8 @@
     </div>
     <!--/span-->
 
-</div><!--/row-->
+</div>
+<!--/row-->
 <div class="row">
     <div class="box col-md-5">
         <div class="box-inner">
@@ -364,33 +365,33 @@
             </div>
             <div class="box-content">
                 <ul class="ajax-loaders">
-                                            <li><img src="img/ajax-loaders/ajax-loader-1.gif"
-                                 title="img/ajax-loaders/ajax-loader-1.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-2.gif"
-                                 title="img/ajax-loaders/ajax-loader-2.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-3.gif"
-                                 title="img/ajax-loaders/ajax-loader-3.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-4.gif"
-                                 title="img/ajax-loaders/ajax-loader-4.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-5.gif"
-                                 title="img/ajax-loaders/ajax-loader-5.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-6.gif"
-                                 title="img/ajax-loaders/ajax-loader-6.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-7.gif"
-                                 title="img/ajax-loaders/ajax-loader-7.gif"></li>
-                                            <li><img src="img/ajax-loaders/ajax-loader-8.gif"
-                                 title="img/ajax-loaders/ajax-loader-8.gif"></li>
-                                    </ul>
+                    <li><img src="img/ajax-loaders/ajax-loader-1.gif"
+                             title="img/ajax-loaders/ajax-loader-1.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-2.gif"
+                             title="img/ajax-loaders/ajax-loader-2.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-3.gif"
+                             title="img/ajax-loaders/ajax-loader-3.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-4.gif"
+                             title="img/ajax-loaders/ajax-loader-4.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-5.gif"
+                             title="img/ajax-loaders/ajax-loader-5.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-6.gif"
+                             title="img/ajax-loaders/ajax-loader-6.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-7.gif"
+                             title="img/ajax-loaders/ajax-loader-7.gif"></li>
+                    <li><img src="img/ajax-loaders/ajax-loader-8.gif"
+                             title="img/ajax-loaders/ajax-loader-8.gif"></li>
+                </ul>
                 <span class="clearfix">From / More <a href="http://ajaxload.info/"
                                                       target="_blank">http://ajaxload.info/</a></span>
             </div>
         </div>
     </div>
     <!--/span-->
-</div><!--/row-->
+</div>
+<!--/row-->
 
-</div><!--/.fluid-container-->
-<jsp:include page="externalJS.jsp" flush="true" />
+<jsp:include page="externalJS.jsp" flush="true"/>
 </body>
 </html>
 

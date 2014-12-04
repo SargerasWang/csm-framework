@@ -4,6 +4,11 @@
 <html>
 <head>
     <title>自由的 HTML5 Bootstrap 后台模板</title>
+    <script>
+        if(top != self){
+            top.location.href = location.href;
+        }
+    </script>
     <jsp:include page="import.jsp" flush="true"/>
 </head>
 
@@ -104,7 +109,7 @@
                                 class="glyphicon glyphicon-eye-open"></i><span> UI 特性</span></a>
                         </li>
                         <li><a class="ajax-link" href="#" url="/form.jsp"><i
-                                class="glyphicon glyphicon-edit"></i><span> Forms</span></a></li>
+                                class="glyphicon glyphicon-edit"></i><span> 表单</span></a></li>
                         <li><a class="ajax-link" href="#" url="/chart.jsp"><i
                                 class="glyphicon glyphicon-list-alt"></i><span> 图表</span></a>
                         </li>
@@ -244,6 +249,8 @@
             if($(this).parent().children("ul").length == 0 ){
                 $(this).openTab();
             }
+            $("li","ul.nav-pills").removeClass("active");
+            $(this).parent().addClass("active");
         });
     });
     //改变iframe高度

@@ -11,10 +11,19 @@
     margin-bottom: 5px;
 }
 
+/*分页footer信息居右*/
+.dataTables_wrapper > .row > div.center {
+    float:left !important;
+}
+.dataTables_wrapper > .row > div.right > .dataTables_info{
+    text-align: right;
+    line-height: 12px;
+}
+
 .mainFrame {
     overflow: hidden;
     border: none;
-    width:100%;
+    width: 100%;
 }
 
 .ch-container-main {
@@ -26,28 +35,42 @@
     top: 5px;
     right: 7px;
     font-size: 12px;
-    color:#ababab;
+    color: #ababab;
 }
-.tabbable .tab-close:hover{
-    color:red;
-    cursor:pointer;
+
+.tabbable .tab-close:hover {
+    color: red;
+    cursor: pointer;
 }
+
 #contextMenu {
     position: absolute;
-    display:none;
+    display: none;
 }
-.tabbable .nav-tabs>li>a{
+
+.tabbable .nav-tabs > li > a {
     background-color: #f9f9f9;
     border-bottom: 1px solid #ddd;
 }
-.panel .panel-heading{
+
+.panel .panel-heading {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
 .dataTable tbody tr:hover td,
 .dataTable tbody tr.selected td,
 .dataTable tbody tr:nth-child(odd):hover td,
-.dataTable tbody tr:nth-child(odd).selected td
-{
+.dataTable tbody tr:nth-child(odd).selected td {
     background-color: #D1D1D1;
+}
+
+.alert.basealert {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    margin: -200px 0 0 -50px;
+    width: 400px;
+    height: 80px;
+    z-index: 999;
 }
