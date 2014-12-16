@@ -71,6 +71,6 @@
     left: 30%;
     margin: -200px 0 0 -50px;
     width: 400px;
-    height: 80px;
+    /*height: 80px;*/
     z-index: 999;
 }

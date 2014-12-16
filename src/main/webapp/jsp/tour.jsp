@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>指引</title>
-    <jsp:include page="import.jsp" flush="true"/>
+    <jsp:include page="../import.jsp" flush="true"/>
 </head>
 
 <body>
@@ -44,6 +44,6 @@
     <!--/span-->
 </div>
 <!--/row-->
-<jsp:include page="externalJS.jsp" flush="true"/>
+<jsp:include page="../externalJS.jsp" flush="true"/>
 </body>
 </html>

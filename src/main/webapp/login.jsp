@@ -12,9 +12,10 @@
         $(function () {
             $("#loginname").focus();
 
-            //登陆按钮提交
+            //登入按钮提交
             $('#loginForm').submit(function (e) {
                 e.preventDefault();
+                $('#btnSubmit').button('loading');
                 $('#loginForm').serialize();
                 $('#loginForm').ajaxSubmit({
                     type: 'post',
@@ -23,12 +24,14 @@
                         if (data == 2) {
                             $('#divInfo').addClass("alert-danger").text('用户名或密码错误!');
                             $("#loginname").focus();
+                            $('#btnSubmit').button('reset');
                         } else {
                             location.href = "<c:url value='/'/>";
                         }
                     },
                     error: function () {
-                        $('#divInfo').addClass("alert-danger").text('登陆失败!');
+                        $('#divInfo').addClass("alert-danger").text('登入失败!');
+                        $('#btnSubmit').button('reset');
                     }
                 });
             });
@@ -44,7 +47,7 @@
 
         <div class="row">
             <div class="col-md-12 center login-header">
-                <h2>欢迎登陆系统</h2>
+                <h2>欢迎登入系统</h2>
             </div>
             <!--/span-->
         </div>
@@ -77,7 +80,7 @@
                         <div class="clearfix"></div>
 
                         <p class="center col-md-5">
-                            <button type="submit" id="btnSubmit" class="btn btn-primary">登入</button>
+                            <button type="submit" id="btnSubmit" class="btn btn-primary" data-loading-text="登入中...">登入</button>
                         </p>
                     </fieldset>
                 </form>

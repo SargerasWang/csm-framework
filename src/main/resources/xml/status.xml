@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <status id="blog_status">
+        <data key="0">初始状态</data>
+        <data key="1">进行中</data>
+        <data key="2">已完成</data>
+        <data key="3">已删除</data>
+    </status>
+</root>

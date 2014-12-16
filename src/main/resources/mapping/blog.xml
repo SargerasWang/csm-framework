@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="test" >
+<mapper namespace="blog" >
   <select id="selectAll" resultType="java.util.HashMap" parameterType="java.util.HashMap" useCache="false">
-    SELECT text,id,date_format(ctime,'%Y/%m/%d %H:%i:%s') as ctime ,status FROM test
+    SELECT title,id,level,date_format(ctime,'%Y/%m/%d %H:%i:%s') as ctime ,status FROM blog
     <where>
-      <if test="text != null">
-        and text like "%"#{text}"%"
+      <if test="title != null">
+        and title like "%"#{title}"%"
       </if>
       <if test="id != null">
         and id = #{id}
@@ -23,13 +23,13 @@
     ORDER BY ${_order_}
   </select>
   <insert id="insert" parameterType="java.util.HashMap">
-    insert into test(text,status,ctime) values(#{text},0,NOW())
+    insert into blog(title,level,status,ctime) values(#{title},#{level},0,NOW())
   </insert>
   <update id="update" parameterType="java.util.HashMap">
-    update test set text = #{text} where id=#{id}
+    update blog set title = #{title},level=#{level} where id=#{id}
   </update>
   <update id="updateStatus" parameterType="java.util.HashMap">
-    update test set status = #{status} where id=#{id}
+    update blog set status = #{status} where id=#{id}
   </update>
   <delete id="delete" parameterType="java.util.HashMap">
     delete from test where id=#{id}

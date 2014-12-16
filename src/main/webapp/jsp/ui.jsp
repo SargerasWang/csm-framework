@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Free HTML5 Bootstrap Admin Template</title>
-    <jsp:include page="import.jsp" flush="true"/>
+    <jsp:include page="../import.jsp" flush="true"/>
 </head>
 
 <body>
@@ -365,21 +365,21 @@
             </div>
             <div class="box-content">
                 <ul class="ajax-loaders">
-                    <li><img src="img/ajax-loaders/ajax-loader-1.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-1.gif"
                              title="img/ajax-loaders/ajax-loader-1.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-2.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-2.gif"
                              title="img/ajax-loaders/ajax-loader-2.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-3.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-3.gif"
                              title="img/ajax-loaders/ajax-loader-3.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-4.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-4.gif"
                              title="img/ajax-loaders/ajax-loader-4.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-5.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-5.gif"
                              title="img/ajax-loaders/ajax-loader-5.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-6.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-6.gif"
                              title="img/ajax-loaders/ajax-loader-6.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-7.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-7.gif"
                              title="img/ajax-loaders/ajax-loader-7.gif"></li>
-                    <li><img src="img/ajax-loaders/ajax-loader-8.gif"
+                    <li><img src="../img/ajax-loaders/ajax-loader-8.gif"
                              title="img/ajax-loaders/ajax-loader-8.gif"></li>
                 </ul>
                 <span class="clearfix">From / More <a href="http://ajaxload.info/"
@@ -391,7 +391,7 @@
 </div>
 <!--/row-->
 
-<jsp:include page="externalJS.jsp" flush="true"/>
+<jsp:include page="../externalJS.jsp" flush="true"/>
 </body>
 </html>
 

@@ -23,7 +23,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand arial" href="index.jsp"> <img alt="Charisma Logo" src="/img/logo20.png" class="hidden-xs"/>
+        <a class="navbar-brand arial font-hei" href="index.jsp"> <img alt="Charisma Logo" src="/img/logo20.png" class="hidden-xs"/>
             <span>XX后台管理</span></a>
 
         <!-- user dropdown starts -->
@@ -102,24 +102,29 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">主菜单</li>
-                        <li><a class="ajax-link" href="#" url="/dashboard.jsp"><i
+                        <li><a class="ajax-link" href="#" url="/jsp/dashboard.jsp"><i
                                 class="glyphicon glyphicon-home"></i><span> 仪表盘</span></a>
                         </li>
-                        <li><a class="ajax-link" href="#" url="/ui.jsp"><i
+                        <li><a class="ajax-link" href="#" url="/jsp/ui.jsp"><i
                                 class="glyphicon glyphicon-eye-open"></i><span> UI 特性</span></a>
                         </li>
-                        <li><a class="ajax-link" href="#" url="/form.jsp"><i
+                        <li><a class="ajax-link" href="#" url="/jsp/form.jsp"><i
                                 class="glyphicon glyphicon-edit"></i><span> 表单</span></a></li>
-                        <li><a class="ajax-link" href="#" url="/chart.jsp"><i
+                        <li><a class="ajax-link" href="#" url="/jsp/chart.jsp"><i
                                 class="glyphicon glyphicon-list-alt"></i><span> 图表</span></a>
                         </li>
-                        <li><a class="ajax-link" href="#" url="/typography.jsp"><i class="glyphicon glyphicon-font"></i><span> 排版</span></a>
+                        <li><a class="ajax-link" href="#" url="/jsp/typography.jsp"><i class="glyphicon glyphicon-font"></i><span> 排版</span></a>
                         </li>
-                        <li><a class="ajax-link" href="#" url="/gallery.jsp"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
+                        <li><a class="ajax-link" href="#" url="/jsp/gallery.jsp"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
                         </li>
                         <li class="nav-header hidden-md">Sample Section</li>
-                        <li><a class="ajax-link" href="#" url="/table.jsp"><i
-                                class="glyphicon glyphicon-align-justify"></i><span> 表格</span></a></li>
+                        <li class="accordion">
+                            <a href="#"><i class="glyphicon glyphicon-align-justify"></i><span> 表格</span></a>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#" url="/jsp/table.jsp">基本功能</a></li>
+                                <li><a href="#" url="/jsp/table_advance.jsp">进阶功能</a></li>
+                            </ul>
+                        </li>
                         <li class="accordion">
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 手风琴菜单</span></a>
                             <ul class="nav nav-pills nav-stacked">
@@ -127,16 +132,16 @@
                                 <li><a href="#">子菜单2</a></li>
                             </ul>
                         </li>
-                        <li><a class="ajax-link" href="#" url="/calendar.jsp"><i class="glyphicon glyphicon-calendar"></i><span> 日历</span></a>
+                        <li><a class="ajax-link" href="#" url="/jsp/calendar.jsp"><i class="glyphicon glyphicon-calendar"></i><span> 日历</span></a>
                         </li>
-                        <li><a class="ajax-link" href="#" url="/grid.jsp"><i
+                        <li><a class="ajax-link" href="#" url="/jsp/grid.jsp"><i
                                 class="glyphicon glyphicon-th"></i><span> 网格</span></a></li>
-                        <li><a href="#" url="/tour.jsp"><i class="glyphicon glyphicon-globe"></i><span> 指引</span></a></li>
-                        <li><a class="ajax-link" href="#" url="/icon.jsp"><i
+                        <li><a href="#" url="/jsp/tour.jsp"><i class="glyphicon glyphicon-globe"></i><span> 指引</span></a></li>
+                        <li><a class="ajax-link" href="#" url="/jsp/icon.jsp"><i
                                 class="glyphicon glyphicon-star"></i><span> Icons</span></a></li>
-                        <li><a href="#" url="error.jsp"><i class="glyphicon glyphicon-ban-circle"></i><span> 错误页面</span></a>
+                        <li><a href="#" url="/error.jsp"><i class="glyphicon glyphicon-ban-circle"></i><span> 错误页面</span></a>
                         </li>
-                        <li><a href="#" url="login.jsp"><i class="glyphicon glyphicon-lock"></i><span> 登陆页面</span></a>
+                        <li><a href="#" url="/login.jsp"><i class="glyphicon glyphicon-lock"></i><span> 登陆页面</span></a>
                         </li>
                     </ul>
                     <label id="for-is-ajax" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax 菜单</label>
@@ -246,11 +251,11 @@
         });
         //绑定menu事件
         $("a","ul.nav-pills li").bind("click",function(){
-            if($(this).parent().children("ul").length == 0 ){
-                $(this).openTab();
-            }
             $("li","ul.nav-pills").removeClass("active");
             $(this).parent().addClass("active");
+            if($(this).parent().children("ul").length == 0 ){//有子菜单的父菜单无动作
+                $(this).openTab();
+            }
         });
     });
     //改变iframe高度
@@ -303,7 +308,14 @@
     //点击menu
     $.fn.openTab=function(){
         var url = $(this).attr("url");
-        var text = $(this).find("span").text();
+        var text ;
+        if($(this).find("span").length != 0){
+            //一级菜单
+            text = $(this).find("span").text();
+        }else{
+            //二级菜单
+            text = $(this).parent().parent().prev().last().text() + "-" + $(this).text();
+        }
         openTab(url,text);
     };
     //关闭tab标签页

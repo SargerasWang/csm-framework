@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <jsp:include page="import.jsp" flush="true"/>
+    <jsp:include page="../import.jsp" flush="true"/>
 </head>
 
 <body>
@@ -411,6 +411,6 @@
     </div>
     <!--/fluid-row-->
 
-<jsp:include page="externalJS.jsp" flush="true"/>
+<jsp:include page="../externalJS.jsp" flush="true"/>
 </body>
 </html>

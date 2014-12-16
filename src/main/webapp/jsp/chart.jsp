@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>图表</title>
-    <jsp:include page="import.jsp" flush="true"/>
+    <jsp:include page="../import.jsp" flush="true"/>
 </head>
 
 <body>
@@ -156,16 +156,16 @@
 <!--/row-->
 
 <!-- chart libraries start -->
-<script src="bower_components/flot/excanvas.min.js"></script>
-<script src="bower_components/flot/jquery.flot.js"></script>
-<script src="bower_components/flot/jquery.flot.pie.js"></script>
-<script src="bower_components/flot/jquery.flot.stack.js"></script>
-<script src="bower_components/flot/jquery.flot.resize.js"></script>
+<script src="../bower_components/flot/excanvas.min.js"></script>
+<script src="../bower_components/flot/jquery.flot.js"></script>
+<script src="../bower_components/flot/jquery.flot.pie.js"></script>
+<script src="../bower_components/flot/jquery.flot.stack.js"></script>
+<script src="../bower_components/flot/jquery.flot.resize.js"></script>
 <!-- chart libraries end -->
-<script src="js/init-chart.js"></script>
+<script src="../js/init-chart.js"></script>
 
 <!-- content ends -->
-<jsp:include page="externalJS.jsp" flush="true"/>
+<jsp:include page="../externalJS.jsp" flush="true"/>
 
 </body>
 </html>

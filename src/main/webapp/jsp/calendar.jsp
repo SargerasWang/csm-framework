@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>日历</title>
-    <jsp:include page="import.jsp" flush="true"/>
+    <jsp:include page="../import.jsp" flush="true"/>
 </head>
 
 <body>
@@ -35,7 +35,7 @@
 </div>
 <!--/row-->
 
-<jsp:include page="externalJS.jsp" flush="true"/>
+<jsp:include page="../externalJS.jsp" flush="true"/>
 
 </body>
 </html>

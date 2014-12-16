@@ -318,9 +318,7 @@ div.center, p.center, img.center {
 }
 
 .navbar-brand {
-    font-family: 'Shojumaru', cursive, Arial, serif;
     letter-spacing: 2px;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     width: 183px;
     font-size: 17px;
 }
