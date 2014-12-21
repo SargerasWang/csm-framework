@@ -53,14 +53,31 @@
     border-bottom: 1px solid #ddd;
 }
 
+.tabbable .tabFullScreen{
+    position: absolute;
+    top:5px;
+    right:20px;
+    font-size: 28px;
+    height: 28px;
+    width:28px;
+    color: rgba(33, 215, 22,0.5);
+    cursor:pointer;
+}
+.tabbable .tabFullScreen:hover{
+    color: rgba(33, 215, 22,1);
+
+}
+
 .panel .panel-heading {
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
 .dataTable tbody tr:hover td,
+.dataTable tbody tr:nth-child(odd):hover td{
+    background-color: #e5e5e5;
+}
 .dataTable tbody tr.selected td,
-.dataTable tbody tr:nth-child(odd):hover td,
 .dataTable tbody tr:nth-child(odd).selected td {
     background-color: #D1D1D1;
 }

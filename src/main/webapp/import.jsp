@@ -27,6 +27,9 @@
 <link href="<c:url value='/css/dataTables.bootstrap.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/datepicker3.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/prism.css'/>" rel='stylesheet'>
+<!-- richtext editor -->
+<link href="<c:url value='/css/summernote.css'/>" rel='stylesheet'>
+<link href="<c:url value='/css/font-awesome.min.css'/>" rel='stylesheet'>
 
 <!-- jQuery -->
 <script src="<c:url value='/bower_components/jquery/jquery.js'/>"></script>

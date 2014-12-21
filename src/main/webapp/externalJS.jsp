@@ -42,6 +42,9 @@
 <script src="<c:url value='/js/prism.js'/>"></script>
 <!-- bootbox -->
 <script src="<c:url value='/js/bootbox.js'/>"></script>
+<!-- richtext editor -->
+<script src="<c:url value='/js/summernote.js'/>"></script>
+<script src="<c:url value='/js/summernote-zh-CN.js'/>"></script>
 <!--form auto fill -->
 <script src="<c:url value='/js/jquery.formautofill.js'/>"></script>
 <!-- base.js -->

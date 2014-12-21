@@ -38,7 +38,11 @@
 						elt = ( settings.restrict ) ? self.find( selector ) : $( selector );
 						
 						if ( elt.length == 1 ) {
-							elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
+							if(elt.prop("tagName") == "TEXTAREA" && elt.code ){
+								elt.code(v);
+							}else{
+								elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
+							}
 						} else if ( elt.length > 1 ) {
 							// radio
 							elt.val([v]);
@@ -56,7 +60,11 @@
 						elt = ( settings.restrict ) ? self.find( selector ) : $( selector );
 						
 						if ( elt.length == 1 ) {
-							elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
+							if(elt.prop("tagName") == "TEXTAREA" && elt.code ){
+								elt.code(v);
+							}else{
+								elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
+							}
 						} else {
 							var radiofound = false;
 							

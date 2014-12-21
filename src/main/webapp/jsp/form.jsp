@@ -23,6 +23,30 @@
     <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-edit"></i> 富文本编辑器</h2>
+
+                <div class="box-icon">
+                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                            class="glyphicon glyphicon-cog"></i></a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                            class="glyphicon glyphicon-chevron-up"></i></a>
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                            class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <div class="control-group">
+                    <label class="control-label" for="article">文章内容</label>
+                    <button onclick="setText()">赋值</button>
+                    <button onclick="destroy()">销毁</button>
+                    <button onclick="richText()">创建</button>
+                    <textarea id="article" name="ariticle">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+        <div class="box-inner">
+            <div class="box-header well" data-original-title="">
                 <h2><i class="glyphicon glyphicon-edit"></i> Form Elements</h2>
 
                 <div class="box-icon">
@@ -259,6 +283,23 @@
 </div>
 <!--/row-->
 <jsp:include page="../externalJS.jsp" flush="true"/>
+<script>
+    $(document).ready(function () {
+       $("#article").richEditor();
+    });
+    function setText(){
+        var sc = "<script>alert(1);</sc"+"ript>";
+        sc = $("<div/>").text(sc).html();
+        $("#article").code(sc);
+    }
+    function destroy(){
+        $("#article").destroy();
+    }
+    function richText(){
+        $("#article").richEditor();
+    }
+</script>
+
 </body>
 </html>
 

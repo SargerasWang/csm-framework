@@ -5,6 +5,7 @@ import com.sargeraswang.webmanager.bean.BaseExecuteParamater;
 import com.sargeraswang.webmanager.bean.BaseQueryParamater;
 import com.sargeraswang.webmanager.common.util.JsonUtil;
 import com.sargeraswang.webmanager.common.util.StatusUtil;
+import com.sargeraswang.webmanager.common.util.StringUtil;
 import com.sargeraswang.webmanager.dao.BaseDao;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,13 @@ public class BaseService {
         return baseDao.queryCount(paramater);
     }
 
+    /**
+     * 根据数据集和标题行,组成数据数组
+     * @param statusColumn
+     * @param datalist
+     * @param columns
+     * @return
+     */
     public String[][] assembleTableData(String statusColumn, List datalist, String columns){
         //处理需要翻译字段
         List statList = JsonUtil.fromJson(statusColumn, List.class);
@@ -82,7 +90,11 @@ public class BaseService {
             String[] dataRow = dataArray[i + 1];
             for (int j = 0; j < colList.size(); j++) {
                 Object key = ((Map<String, Object>) colList.get(j)).get("data");
-                dataRow[j] = String.valueOf(map.get(key));
+                if(map.get(key) != null) {
+                    dataRow[j] = String.valueOf(map.get(key));
+                }else{
+                    dataRow[j] = StringUtil.EMPTY;
+                }
             }
         }
         return dataArray;

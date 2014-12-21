@@ -54,13 +54,13 @@ public class ExcelUtil {
      * 获取cell类型的文字描述
      *
      * @param cellType <pre>
-     *                 Cell.CELL_TYPE_BLANK
-     *                 Cell.CELL_TYPE_BOOLEAN
-     *                 Cell.CELL_TYPE_ERROR
-     *                 Cell.CELL_TYPE_FORMULA
-     *                 Cell.CELL_TYPE_NUMERIC
-     *                 Cell.CELL_TYPE_STRING
-     *                 </pre>
+     *                                 Cell.CELL_TYPE_BLANK
+     *                                 Cell.CELL_TYPE_BOOLEAN
+     *                                 Cell.CELL_TYPE_ERROR
+     *                                 Cell.CELL_TYPE_FORMULA
+     *                                 Cell.CELL_TYPE_NUMERIC
+     *                                 Cell.CELL_TYPE_STRING
+     *                                 </pre>
      * @return
      */
     private static String getCellTypeByInt(int cellType) {
@@ -114,27 +114,32 @@ public class ExcelUtil {
     }
 
     public static void exportExcel(String[][] datalist, OutputStream out) {
-        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        // 生成一个表格
-        HSSFSheet sheet = workbook.createSheet();
-
-        for (int i = 0; i < datalist.length; i++) {
-            String[] r = datalist[i];
-            HSSFRow row = sheet.createRow(i);
-            for (int j = 0; j < r.length; j++) {
-                HSSFCell cell = row.createCell(j);
-                cell.setCellValue(r[j]);
-            }
-        }
-        //自动列宽
-        if (datalist.length > 0) {
-            int colcount = datalist[0].length;
-            for (int i = 0; i < colcount; i++) {
-                sheet.autoSizeColumn(i);
-            }
-        }
         try {
+            // 声明一个工作薄
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            // 生成一个表格
+            HSSFSheet sheet = workbook.createSheet();
+
+            for (int i = 0; i < datalist.length; i++) {
+                String[] r = datalist[i];
+                HSSFRow row = sheet.createRow(i);
+                for (int j = 0; j < r.length; j++) {
+                    HSSFCell cell = row.createCell(j);
+                    //cell max length 32767
+                    if(r[j].length() > 32767){
+                        r[j] = "--此字段过长(超过32767),已被截断--" + r[j];
+                        r[j] = r[j].substring(0,32766);
+                    }
+                    cell.setCellValue(r[j]);
+                }
+            }
+            //自动列宽
+            if (datalist.length > 0) {
+                int colcount = datalist[0].length;
+                for (int i = 0; i < colcount; i++) {
+                    sheet.autoSizeColumn(i);
+                }
+            }
             workbook.write(out);
         } catch (IOException e) {
             LG.error(e.toString(), e);

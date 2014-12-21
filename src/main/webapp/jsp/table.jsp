@@ -86,14 +86,7 @@
                 {column: "id"},
                 {column: "title"},
                 {column: "ctime", date: true, placeholder: "创建时间起讫"},
-                {column: "status", select: true, placeholder: "全部状态",
-                    data: [
-                        {value: 0, text: "初始状态"},
-                        {value: 1, text: "进行中"},
-                        {value: 2, text: "已完成"},
-                        {value: 3, text: "已删除"}
-                    ]
-                }
+                {column: "status", select: true, placeholder: "全部状态",data:convertObj2Arr(blog_status)}
             ],
             "buttons": [
                 [

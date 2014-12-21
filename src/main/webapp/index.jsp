@@ -14,7 +14,7 @@
 
 <body>
 <!-- topbar starts -->
-<div class="navbar navbar-default" role="navigation">
+<div class="navbar navbar-default topMenu" role="navigation">
 
     <div class="navbar-inner">
         <button type="button" class="navbar-toggle pull-left animated flip">
@@ -94,7 +94,7 @@
     <div class="row">
 
         <!-- left menu starts -->
-        <div class="col-sm-2 col-lg-2">
+        <div class="col-sm-2 col-lg-2 leftMenu">
             <div class="sidebar-nav">
                 <div class="nav-canvas">
                     <div class="nav-sm nav nav-stacked">
@@ -165,6 +165,7 @@
                 <ul class="nav nav-tabs">
 
                 </ul>
+                <div class="tabFullScreen" <%--title="全屏" data-toggle="tooltip" data-placement="bottom"--%>><i class="glyphicon glyphicon-resize-full"></i></div>
                 <div class="tab-content">
 
                 </div>
@@ -221,6 +222,22 @@
     //tab 右键菜单
     var $contextMenu = $("#contextMenu");
 
+    //全屏
+    $("div.tabFullScreen").click(function(){
+        $("i",this).toggleClass("glyphicon-resize-full glyphicon-resize-small")
+        if(!$("body div.topMenu").is(':visible')){
+            $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
+        }
+        var toggleFlag = 0;
+        $("body div.topMenu,.ch-container div.leftMenu").toggle(400,function(){
+            toggleFlag ++;
+            if(toggleFlag == 2 && !$("body div.topMenu").is(':visible')){
+                $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
+            }
+        });
+            //$(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
+    });
+
     $(document).ready(function() {
         $contextMenu.on("click", "a", function (source) {
             var tabId = $(source.target).parents("div").attr("target");
@@ -264,6 +281,9 @@
             var win = iframe.contentWindow || iframe.contentDocument.parentWindow;
             if(win.document.body){
                 iframe.height = win.document.documentElement.scrollHeight || win.document.body.scrollHeight;
+                if($(".ch-container","body").height() > iframe.height){
+                    iframe.height = $(".ch-container","body").height();
+                }
             }
         }
     }

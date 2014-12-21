@@ -2,7 +2,7 @@
  * default
  */
 bootbox.setDefaults({locale: "zh_CN"});
-$(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError){
+$(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
     ajaxErrorCallback(jqXHR);
 });
 /**
@@ -12,7 +12,13 @@ function resetHeight() {
     //index.jsp's function
     parent.resetIframeHeight(window.frameElement);
 }
-
+function convertObj2Arr(obj) {
+    var arr = new Array();
+    $.each(obj, function (key, value) {
+        arr.push({value: key, text: value});
+    });
+    return arr;
+}
 /**
  *ajax查询
  * @param opt
@@ -43,9 +49,9 @@ function ajaxUpdate(opt) {
 function ajaxErrorCallback(err) {
     if (err.status == 200) {
         bootbox.alert("本次会话断开,即将重新登入...");
-        setTimeout(function(){
+        setTimeout(function () {
             location.href = "/login.jsp";
-        },2000)
+        }, 2000)
     } else {
         bootbox.alert("服务器发生错误,代码[" + err.status + "]");
         console.debug(err);
@@ -73,14 +79,14 @@ function ajax_download(url, data) {
     }
 
     iframe_html = "<html><head></head><body><form method='POST' action='" +
-    url +"'>"
+    url + "'>"
 
-    Object.keys(data).forEach(function(key){
-        iframe_html += "<input type='hidden' name='"+key+"' value='"+data[key]+"'>";
+    Object.keys(data).forEach(function (key) {
+        iframe_html += "<input type='hidden' name='" + key + "' value='" + data[key] + "'>";
 
     });
 
-    iframe_html +="</form></body></html>";
+    iframe_html += "</form></body></html>";
 
     iframe_doc.open();
     iframe_doc.write(iframe_html);
@@ -89,7 +95,7 @@ function ajax_download(url, data) {
 /**
  * 导出方法
  */
-function datatableDownload(type,options){
+function datatableDownload(type, options) {
     var index = options.index,
         fileName = options.fileName,
         columns = options.columns,
@@ -97,27 +103,27 @@ function datatableDownload(type,options){
         params = options.queryParams,
         order = options.order
     //order
-    var _order = [columns[order[0][0]].data,order[0][1]];
+    var _order = [columns[order[0][0]].data, order[0][1]];
     //columns
     var cols = new Array();
-    $(columns).each(function(){
-        cols.push({data:this.data,title:this.title});
+    $(columns).each(function () {
+        cols.push({data: this.data, title: this.title});
     });
     //params
     var queryParam = new Object();
-    $(params).each(function(){
+    $(params).each(function () {
         if ($(this).val() != '') {
             queryParam[this.id] = $(this).val();
         }
     });
-    ajax_download("/base/tableDownload.do",{
-        type:type,
-        index:index,
-        fileName:fileName,
+    ajax_download("/base/tableDownload.do", {
+        type: type,
+        index: index,
+        fileName: fileName,
         columns: JSON.stringify(cols),
-        statusColumn:JSON.stringify(statusColumn),
-        params:JSON.stringify(queryParam),
-        order:_order
+        statusColumn: JSON.stringify(statusColumn),
+        params: JSON.stringify(queryParam),
+        order: _order
     });
 }
 /**
@@ -171,6 +177,35 @@ $.fn.dateRangeBox = function (opt) {
 }
 
 /**
+ * richEditor
+ */
+$.fn.richEditor = function (opt){
+    //placeholder
+    var placeholder = false;
+    if($(this).attr("placeholder")){
+        placeholder = $(this).attr("placeholder");
+    }
+    this.summernote($.extend({
+        height: 200,
+        lang: 'zh-CN',
+        disableResizeEditor: false,
+        placeholder:placeholder,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'hr']],
+            ['view', ['fullscreen'/*, 'codeview'*/]]
+            //,['help', ['help']]
+        ]
+    },opt));
+}
+
+/**
  * baseTable
  * @param opt
  */
@@ -178,67 +213,68 @@ $.fn.baseTable = function (opt) {
     var _this = this;
     this.addClass("table table-striped table-bordered");
     var table = this.DataTable(
-            {
-                "processing": true,
-                "serverSide": true,
-                "searching": false,
-                "dom": "<'row-fluid'r>t<'row'<'col-md-3'l><'col-md-6 center'p><'col-md-3 right'i>>",
-                "paginationType": "bootstrap",
-                "columns": opt.columns,
-                "language": {
-                    "sProcessing": "正在加载中......",
-                    "sLengthMenu": "每页显示 _MENU_ 条记录",
-                    "sZeroRecords": "对不起，查询不到相关数据！",
-                    "sEmptyTable": "对不起，查询不到相关数据！",
-                    "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-                    "sInfoEmpty": "当前显示 0 到 0 条，共 0 条记录",
-                    "sInfoFiltered": "数据表中共 _MAX_ 条记录",
-                    "sSearch": "搜索",
-                    "oPaginate": {
-                        "sFirst": "首页",
-                        "sPrevious": "上一页",
-                        "sNext": "下一页",
-                        "sLast": "末页"
-                    }
-                },
-                "ajax": {
-                    "url": "/base/query.do",
-                    "type": "POST",
-                    "data": function (d) {
-                        //index
-                        d.index = opt.index;
-                        //order
-                        var order_index = d.order[0].column;
-                        var column = d.columns[order_index].data;
-                        var dir = d.order[0].dir;
-                        d.order = {"column": column, "dir": dir};
-                        //search
-                        $(".baseSearch", $(_this).parent()).each(function () {
-                            if ($(this).val() != '') {
-                                d[this.id] = $(this).val();
-                            }
-                        });
-                        delete d.search;
-                        delete d.columns;
-                    }
-                },
-                "drawCallback": function () {
-                    //加载完数据后,通知外层改变iframe高度
-                    resetHeight();
+        {
+            "autoWidth":false,
+            "processing": true,
+            "serverSide": true,
+            "searching": false,
+            "dom": "<'row-fluid'r>t<'row'<'col-md-3'l><'col-md-6 center'p><'col-md-3 right'i>>",
+            "paginationType": "bootstrap",
+            "columns": opt.columns,
+            "language": {
+                "sProcessing": "正在加载中......",
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "对不起，查询不到相关数据！",
+                "sEmptyTable": "对不起，查询不到相关数据！",
+                "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                "sInfoEmpty": "当前显示 0 到 0 条，共 0 条记录",
+                "sInfoFiltered": "数据表中共 _MAX_ 条记录",
+                "sSearch": "搜索",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上一页",
+                    "sNext": "下一页",
+                    "sLast": "末页"
                 }
-                /*,"fnServerData": function (sSource, aoData, fnCallback) {
-                 console.debug(sSource);
-                 $.ajax({
-                 "dataType": 'json',
-                 //"type": "GET",
-                 "url": sSource,
-                 "data": aoData,
-                 "success": fnCallback,
-                 "timeout": 15000,   // optional if you want to handle timeouts (which you should)
-                 "error": ajaxErrorCallback
-                 });
-                 }*/
+            },
+            "ajax": {
+                "url": "/base/query.do",
+                "type": "POST",
+                "data": function (d) {
+                    //index
+                    d.index = opt.index;
+                    //order
+                    var order_index = d.order[0].column;
+                    var column = d.columns[order_index].data;
+                    var dir = d.order[0].dir;
+                    d.order = {"column": column, "dir": dir};
+                    //search
+                    $(".baseSearch", $(_this).parent()).each(function () {
+                        if ($(this).val() != '') {
+                            d[this.id] = $(this).val();
+                        }
+                    });
+                    delete d.search;
+                    delete d.columns;
+                }
+            },
+            "drawCallback": function () {
+                //加载完数据后,通知外层改变iframe高度
+                resetHeight();
             }
+            /*,"fnServerData": function (sSource, aoData, fnCallback) {
+             console.debug(sSource);
+             $.ajax({
+             "dataType": 'json',
+             //"type": "GET",
+             "url": sSource,
+             "data": aoData,
+             "success": fnCallback,
+             "timeout": 15000,   // optional if you want to handle timeouts (which you should)
+             "error": ajaxErrorCallback
+             });
+             }*/
+        }
     );
     $(table).DataTable.ext.errMode = "throw";//出错时不alert
     //绑定选中事件
@@ -258,7 +294,7 @@ $.fn.baseTable = function (opt) {
         });
     }
     //按钮集合
-    if (opt.search || opt.download || opt.buttons ) {
+    if (opt.search || opt.download || opt.buttons) {
         var panel = $.parseHTML('<div class="panel panel-default"></div>');
         var panel_heading = $.parseHTML('<div class="panel-heading"></div>');
         var panel_body = $.parseHTML('<div class="panel-body" style="display:none"></div>');
@@ -267,7 +303,7 @@ $.fn.baseTable = function (opt) {
         $(panel).append(panel_heading);
         $(panel_heading).append(btn_toolbar);
 
-        if (opt.search ) {
+        if (opt.search) {
             //搜索按钮添加到toolbar,自己一个group
             var searchBtnGrp = $.parseHTML('<div class="btn-group"></div>');
             var _searchBtn = $.parseHTML('<button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-search"></span>搜索</button>');
@@ -338,30 +374,30 @@ $.fn.baseTable = function (opt) {
             $(panel_body).append(searchBtn);
         }
         //下载按钮
-        if(opt.download){
+        if (opt.download) {
             var option = $.extend({
-                type:"csv",//csv,excel,all
-                statusColumn:[]
-            },opt.download);
+                type: "csv",//csv,excel,all
+                statusColumn: []
+            }, opt.download);
             var _btnGroup = $.parseHTML('<div class="btn-group"></div>');
             var btnStr = '<button type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-download-alt"></i></button>';
-            var downloadOpts={
-                fileName:option.fileName,
-                index:opt.index,
-                columns:opt.columns,
-                statusColumn:option.statusColumn,
-                queryParams:$(".baseSearch", $(_this).parent()),
-                order:table.order()
+            var downloadOpts = {
+                fileName: option.fileName,
+                index: opt.index,
+                columns: opt.columns,
+                statusColumn: option.statusColumn,
+                queryParams: $(".baseSearch", $(_this).parent()),
+                order: table.order()
             };
-            if(option.type == "all" || option.type=="csv"){
-                var btnCsv = $($.parseHTML(btnStr)).append(" CSV").on("click",function(){
-                    datatableDownload("CSV",downloadOpts);
+            if (option.type == "all" || option.type == "csv") {
+                var btnCsv = $($.parseHTML(btnStr)).append(" CSV").on("click", function () {
+                    datatableDownload("CSV", downloadOpts);
                 });
                 $(_btnGroup).append(btnCsv);
             }
-            if(option.type == "all" || option.type=="excel"){
-                var btnExcel = $($.parseHTML(btnStr)).append(" EXCEL").on("click",function(){
-                    datatableDownload("EXCEL",downloadOpts)
+            if (option.type == "all" || option.type == "excel") {
+                var btnExcel = $($.parseHTML(btnStr)).append(" EXCEL").on("click", function () {
+                    datatableDownload("EXCEL", downloadOpts)
                 });
                 $(_btnGroup).append(btnExcel);
             }
@@ -380,7 +416,7 @@ $.fn.baseTable = function (opt) {
                         css = this.css;
                     }
                     var _btn = $.parseHTML('<button type="button" class="btn btn-sm"></button>');
-                    $(_btn).text(" "+this.text).addClass(css);
+                    $(_btn).text(" " + this.text).addClass(css);
                     if (this.icon) {
                         var span = $.parseHTML('<span class="glyphicon glyphicon-' + this.icon + '"></span>');
                         $(_btn).prepend(span)
@@ -416,8 +452,14 @@ $.fn.baseTable = function (opt) {
  * @param opt
  */
 $.fn.baseForm = function (opt) {
+    opt = $.extend({
+        width: "80%",
+        title: "",
+        submit: null
+    }, opt);
     var div_modal = $.parseHTML('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>');
     var div_dialog = $.parseHTML('<div class="modal-dialog"></div>');
+    $(div_dialog).width(opt.width);
     var div_content = $.parseHTML('<div class="modal-content"></div>');
     var div_header = $.parseHTML('<div class="modal-header">' +
     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">' + opt.title + '</h4></div>');
@@ -430,15 +472,34 @@ $.fn.baseForm = function (opt) {
     $(this).removeClass("hide");
     //组装弹出层
     var modal_box = $.extend($(div_modal).append($(div_dialog).append($(div_content).append(div_header).append($(div_body).append($(this).append(hide_submit))).append(div_footer))), {
-        open: function (opt) {
+        open: function (opt,callback) {
             modal_box.modal("show");
             $(_form)[0].reset();
+            $("textarea:not(.note-codable)",_form).each(function(){
+               if($(this).code){
+                   $(this).code("");
+               }
+            });
             $("[type=hidden]", _form).val('');
             if (opt) {
                 opt.data = $.extend(opt.data, {index: opt.index});
                 if (opt.data) {
                     $(_form).autofill(opt.data);
                 }
+                if(opt.readOnly){
+                   $(div_footer).hide();
+                    $("input",_form).attr("disabled",true);
+                    $("div.note-editable",_form).attr("contenteditable",false);
+                }else{
+                   $(div_footer).show();
+                    $("input",_form).attr("disabled",false);
+                    $("div.note-editable",_form).attr("contenteditable",true);
+                }
+            }
+            if(callback){
+                $(modal_box).on('shown.bs.modal', function () {
+                    callback();
+                })
             }
         },
         close: function () {

@@ -166,7 +166,8 @@ function docReady() {
 
     //star rating
     $('.raty').raty({
-        score: 4 //default stars
+        score: 4 ,//default stars
+        path:"/img/"
     });
 
     //uploadify - multiple uploads
