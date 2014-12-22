@@ -11,6 +11,7 @@ import com.sargeraswang.webmanager.common.util.JsonUtil;
 import com.sargeraswang.webmanager.common.util.StatusUtil;
 import com.sargeraswang.webmanager.common.util.StringUtil;
 import com.sargeraswang.webmanager.service.BaseService;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -87,9 +91,10 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getStatusJS/{id}")
-    public String getStatusJS(@PathVariable("id") String id) {
+    public String getStatusJS(@PathVariable("id") String id, HttpServletResponse response) {
         Map<String, String> status = StatusUtil.getStatus(id);
         if (status != null) {
+            response.setContentType("application/javascript;charset=utf-8");
             StringBuilder sb = new StringBuilder();
             sb.append("var ").append(id).append("=");
             sb.append("{");
@@ -157,6 +162,36 @@ public class BaseController {
             outputStream.flush();
             outputStream.close();
         } catch (Exception e) {
+            LG.error(e.toString(),e);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/getTables")
+    public String getTables() {
+        try {
+            List<String> list = service.getTables();
+            return JsonUtil.toJson(list);
+        } catch (Exception e) {
+            LG.error(e.toString(), e);
+            return null;
+        }
+
+    }
+
+    @ResponseBody
+    @RequestMapping("/generateCode")
+    public void generateCode(HttpServletRequest request, HttpServletResponse response) {
+        String[] tables = request.getParameterValues("tables");
+        String[] types = request.getParameterValues("types");
+
+        ByteArrayOutputStream baos = service.generateCode(tables, types);
+        try {
+            response.setContentType("application/octet-stream;charset=utf-8");
+            response.setHeader("Content-disposition", "attachment; filename=code.zip");
+            IOUtils.write(baos.toByteArray(),response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException e) {
             LG.error(e.toString(),e);
         }
     }

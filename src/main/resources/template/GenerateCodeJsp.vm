@@ -1,0 +1,175 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <jsp:include page="../import.jsp" flush="true"/>
+</head>
+
+<body>
+<form id="myForm" role="form" class="hide">
+    <input type="hidden" name="index">
+#foreach($col in $columns)
+#if($col.isPrimaryKey)
+    <input type="hidden" name="${col.columnName}">
+#elseif($col.simpleType == 1)
+
+#elseif($col.type == -1)
+    <div class="form-group">
+        <label for="${col.columnName}">${col.remarks}</label>
+        <textarea id="${col.columnName}" name="${col.columnName}" placeholder="请输入${col.remarks}"></textarea>
+    </div>
+#elseif($col.simpleType == 2)
+    <div class="form-group">
+        <label for="${col.columnName}">${col.remarks}</label>
+        <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
+#if(${col.nullable}==0)
+ required##
+#end>
+    </div>
+#elseif($col.simpleType == 3)
+    <div class="form-group">
+        <label for="${col.columnName}">${col.remarks}</label>
+        <input type="number" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
+#if(${col.nullable}==0)
+ required##
+#end>
+    </div>
+#else
+    <div class="form-group">
+        <label for="${col.columnName}">${col.remarks}</label>
+        <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}"  placeholder="请输入${col.remarks}"##
+#if(${col.nullable}==0)
+ required##
+#end>
+    </div>
+#end
+#end
+</form>
+<div class="ch-container-main">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <table id="example"></table>
+        </div>
+    </div>
+</div>
+<jsp:include page="../externalJS.jsp" flush="true"/>
+<script>
+    $(document).ready(function () {
+        //初始化富文本编辑器
+#foreach($col in $columns)
+#if($col.type == -1)
+        $('#${col.columnName}').richEditor({
+            height: 200
+        });
+#end
+#end
+        resetHeight();
+        //初始化form
+        var myForm = $("#myForm").baseForm({
+            title: "${table}",
+            submit: function (data) {
+                ajaxUpdate({
+                    data: data,
+                    success: function (r) {
+                        if (r.status != -1) {
+                            tipMsg("操作成功!");
+                            table.draw(false);
+                        } else {
+                            tipMsg("错误原因" + r.message, "操作失败", "danger", 5000);
+                        }
+                    }
+                });
+            }
+        });
+        var table = $('#example').baseTable({
+            index: "${table}.selectAll",
+            single: true,
+            order: [[0, "asc"]],
+            columns: [
+#foreach($col in $columns)
+                #if(${velocityCount}!=1),#end{data: "${col.columnName}", title: "${col.remarks}"##
+#if($col.type == -1 || $col.isPrimaryKey)##
+,visible:false##
+#end##
+}
+#end
+            ],
+            search: [
+#set($searchCount = 0)
+#foreach($col in $columns)
+#if(!${col.isPrimaryKey})
+#set($searchCount = $searchCount + 1)
+                #if(${searchCount}!=1),#end##
+{column: "${col.columnName}","placeholder": "${col.remarks}"##
+#if(${col.simpleType} == 1)
+,date:true##
+#end
+}
+#end
+#end
+            ],
+            download: {
+                type: "all",
+                fileName: "${table}"
+            },
+            buttons: [
+                [
+                    {
+                        "text": "新增",
+                        "css": "btn-success",
+                        icon: "plus",
+                        allowNull: true,
+                        "method": function () {
+                            myForm.open({index: "${table}.insert"});
+                        }
+                    },
+                    {
+                        "text": "修改",
+                        "css": "btn-warning",
+                        icon: "edit",
+                        "method": function (datas) {
+                            myForm.open({data: datas[0], index: "${table}.update"});
+                        }
+                    },
+                    {
+                        text:"查看",
+                        icon:"eye-open",
+                        "css": "btn-info",
+                        method:function(datas){
+                            myForm.open({data: datas[0], readOnly: true });
+                        }
+                    },
+                    {
+                        "text": "删除",
+                        "css": "btn-danger",
+                        icon: "trash",
+                        "method": function (datas) {
+                            bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
+                                if (r) {
+                                    ajaxUpdate({
+                                        data: {index: "${table}.delete",##
+#foreach($col in $columns)
+#if(${col.isPrimaryKey})##
+${col.columnName}: datas[0].${col.columnName}##
+#end##
+#end##
+},
+                                        success: function (r) {
+                                            if (r.status == 1) {
+                                                tipMsg('操作成功!');
+                                                table.draw(false);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                ]
+            ]
+        });
+    });
+</script>
+</body>
+</html>

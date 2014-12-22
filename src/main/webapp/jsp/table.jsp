@@ -16,12 +16,12 @@
 
     <div class="form-group">
         <label for="title">文本</label>
-        <input type="text" class="form-control" id="title" name="title" maxlength="45"
+        <input type="text" class="form-control" id="title" name="title" maxlength="45" required
                placeholder="请输入文本">
     </div>
     <div class="form-group">
         <label for="level">级别</label>
-        <input type="number" class="form-control" id="level" name="level"
+        <input type="number" class="form-control" id="level" name="level" required
                placeholder="请输入级别">
     </div>
 </form>

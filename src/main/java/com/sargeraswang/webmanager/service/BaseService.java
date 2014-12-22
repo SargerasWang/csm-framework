@@ -3,17 +3,32 @@ package com.sargeraswang.webmanager.service;
 import com.sargeraswang.webmanager.bean.BaseExecuteAjaxBean;
 import com.sargeraswang.webmanager.bean.BaseExecuteParamater;
 import com.sargeraswang.webmanager.bean.BaseQueryParamater;
+import com.sargeraswang.webmanager.bean.BaseTableColumn;
 import com.sargeraswang.webmanager.common.util.JsonUtil;
 import com.sargeraswang.webmanager.common.util.StatusUtil;
 import com.sargeraswang.webmanager.common.util.StringUtil;
 import com.sargeraswang.webmanager.dao.BaseDao;
 import org.apache.log4j.Logger;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXWriter;
+import org.dom4j.io.XMLWriter;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by SagerasWang on 14/11/24.
@@ -103,4 +118,69 @@ public class BaseService {
     public Integer execute(BaseExecuteParamater paramater){
         return baseDao.execute(paramater);
     }
+
+    public List<String> getTables(){
+        return baseDao.getTables();
+    }
+
+    /**
+     * 生成代码
+     * @param tables 表名集合
+     * @param types 生成类型(JSP/XML)
+     */
+    public ByteArrayOutputStream generateCode(String[] tables,String[] types){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ZipOutputStream zos = null;
+        try {
+             zos = new ZipOutputStream(baos, Charset.forName("UTF-8"));
+            for(String table : tables){
+                List<BaseTableColumn> columns = baseDao.getColumns(table);
+                List<String> typeList = Arrays.asList(types);
+                if(typeList.contains("XML")){
+                    ZipEntry tEntry = new ZipEntry(table+"/"+table+".xml");
+                    zos.putNextEntry(tEntry);
+                    byte[] xml = createFile(table, columns, "template/GenerateCodeXml.vm");
+                    zos.write(xml);
+                    zos.closeEntry();
+                }
+                if(typeList.contains("JSP")){
+                    ZipEntry tEntry = new ZipEntry(table+"/"+table+".jsp");
+                    zos.putNextEntry(tEntry);
+                    byte[] jsp = createFile(table, columns, "template/GenerateCodeJsp.vm");
+                    zos.write(jsp);
+                    zos.closeEntry();
+                }
+            }
+        } catch (Exception e) {
+            LG.error(e.toString(),e);
+        } finally {
+            try {
+                zos.close();
+            } catch (IOException e) {
+                LG.error(e.toString(),e);
+            }
+        }
+        return baos;
+    }
+
+    private byte[] createFile(String tableName,List<BaseTableColumn> columns,String vmPath){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            VelocityEngine ve = new VelocityEngine();
+            ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+            ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+            ve.init();
+            VelocityContext context = new VelocityContext();
+            context.put("columns", columns);
+            context.put("table", tableName);
+            Template t = ve.getTemplate(vmPath,"UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(baos,"UTF-8");
+            t.merge(context,osw);
+            osw.close();
+        } catch (Exception e) {
+            LG.error(e.toString(),e);
+        }
+        return baos.toByteArray();
+    }
+
 }

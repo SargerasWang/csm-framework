@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="blog" >
   <select id="selectAll" resultType="java.util.HashMap" parameterType="java.util.HashMap" useCache="false">
-    SELECT title,id,level,date_format(ctime,'%Y/%m/%d %H:%i:%s') as ctime ,status,article FROM blog
+    SELECT title,id,level,date_format(ctime,'%Y/%m/%d %H:%i:%s') as ctime ,status,article,permissions,tags FROM blog
     <where>
       <if test="title != null">
         and title like "%"#{title}"%"
@@ -23,10 +23,10 @@
     ORDER BY ${_order_}
   </select>
   <insert id="insert" parameterType="java.util.HashMap">
-    insert into blog(title,article,level,status,ctime) values(#{title},#{article},#{level},0,NOW())
+    insert into blog(title,article,level,status,permissions,tags,ctime) values(#{title},#{article},#{level},0,#{permissions},#{tags},NOW())
   </insert>
   <update id="update" parameterType="java.util.HashMap">
-    update blog set title = #{title},level=#{level},article = #{article} where id=#{id}
+    update blog set title = #{title},level=#{level},article = #{article},permissions=#{permissions},tags=#{tags} where id=#{id}
   </update>
   <update id="updateStatus" parameterType="java.util.HashMap">
     update blog set status = #{status} where id=#{id}

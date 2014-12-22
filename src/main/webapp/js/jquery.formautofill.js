@@ -44,8 +44,19 @@
 								elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
 							}
 						} else if ( elt.length > 1 ) {
-							// radio
-							elt.val([v]);
+							// checkbox 并且 data中有逗号
+							if(self.find('input:checkbox[name="'+k+'"]').length == elt.length
+								&& v!=null && v.indexOf(",")!=-1){
+								var chkArr = v.split(",");
+								$(elt).each(function(){
+									if($.inArray(this.value,chkArr) != -1){
+										this.checked = true;
+									}
+								})
+							}else{
+								// radio
+								elt.val([v]);
+							}
 						} else {
 							selector = '[name="'+k+'[]"]';
 							elt = ( settings.restrict ) ? self.find( selector ) : $( selector );

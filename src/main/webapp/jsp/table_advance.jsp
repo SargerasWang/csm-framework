@@ -14,13 +14,13 @@
     <input type="hidden" name="id">
 
     <div class="form-group">
-        <label for="title">文本</label>
-        <input type="text" class="form-control" id="title" name="title" maxlength="45"
-               placeholder="请输入文本">
+        <label for="title">标题</label>
+        <input type="text" class="form-control" id="title" name="title" maxlength="45" required
+               placeholder="请输入标题">
     </div>
     <div class="form-group">
         <label for="level">级别</label>
-        <input type="number" class="form-control" id="level" name="level"
+        <input type="number" class="form-control" id="level" name="level" required
                placeholder="请输入级别">
     </div>
     <div class="form-group">
@@ -28,6 +28,40 @@
 
         <textarea id="article" name="article" placeholder="请撰写文章内容">
         </textarea>
+    </div>
+    <div class="form-group">
+        <label >权限</label>
+        <div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="permissions" id="permissions_1" value="1" checked>
+                    公开
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="permissions" id="permissions_2" value="2" >
+                    私有(仅本人可见)
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label >标签</label>
+        <div>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="tags" value="1"> 技术
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="tags" value="2"> 人文
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="tags" value="3"> 科技
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="tags" value="4"> 时事评论
+            </label>
+        </div>
     </div>
 </form>
 <div class="ch-container-main">
@@ -55,7 +89,7 @@
                     success: function (r) {
                         if (r.status != -1) {
                             tipMsg("操作成功!");
-                            table.reload();
+                            table.draw(false);
                         } else {
                             tipMsg("错误原因" + r.message, "操作失败", "danger", 5000);
                         }

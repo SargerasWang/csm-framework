@@ -3,6 +3,7 @@ package com.sargeraswang.webmanager.dao;
 import com.sargeraswang.webmanager.bean.BaseExecuteParamater;
 import com.sargeraswang.webmanager.bean.BaseParamater;
 import com.sargeraswang.webmanager.bean.BaseQueryParamater;
+import com.sargeraswang.webmanager.bean.BaseTableColumn;
 import com.sargeraswang.webmanager.common.Constants;
 import com.sargeraswang.webmanager.common.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -17,9 +18,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -130,5 +133,65 @@ public class BaseDao {
             logInfo(paramater, session);
         }
         return session.update(paramater.getIndex(),paramater);
+    }
+
+    /**
+     * 获得所有表名
+     * @return
+     */
+    public List<String> getTables(){
+        List<String> tables = new ArrayList<>();
+        SqlSession session = baseSqlSessionFactory.openSession();
+        try {
+            DatabaseMetaData metaData = session.getConnection().getMetaData();
+            ResultSet rs = metaData.getTables(null, null, "%", null);
+            while(rs.next()){
+                tables.add(rs.getString(3));
+            }
+        } catch (SQLException e) {
+            LG.error(e.toString(),e);
+        }
+        return tables;
+    }
+
+    /**
+     * 获得表的列信息
+     * @param table
+     * @return
+     */
+    public List<BaseTableColumn> getColumns(String table){
+        List<BaseTableColumn> list = new ArrayList<>();
+        try {
+            SqlSession session = baseSqlSessionFactory.openSession();
+            DatabaseMetaData md = session.getConnection().getMetaData();
+            ResultSet primaryKeys = md.getPrimaryKeys(null, null, table);
+            List<String> primary = new ArrayList<>();
+            while(primaryKeys.next()){
+                primary.add(primaryKeys.getString(4));
+            }
+
+            ResultSet columns = md.getColumns(null, null, table, "%");
+
+            while(columns.next()){
+                BaseTableColumn col = new BaseTableColumn();
+                //http://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html
+                col.setColumnName(columns.getString(4));//column name
+                col.setType(columns.getInt(5));//java.sql.Types
+                col.setSize(columns.getInt(7));//size
+                col.setDecimalDigits(columns.getInt(9));//decimal_digits
+                col.setNullable(columns.getInt(11));//nullable
+                col.setRemarks(columns.getString(12));//remarks
+                col.setLength(columns.getInt(16));//length
+                col.setSeq(columns.getInt(17));//seq
+                col.setAutoIncrement(columns.getString(23));//auto_increment
+                if(primary.contains(col.getColumnName())){
+                    col.setPrimaryKey(true);
+                }
+                list.add(col);
+            }
+        } catch (SQLException e) {
+            LG.error(e.toString(), e);
+        }
+        return list;
     }
 }

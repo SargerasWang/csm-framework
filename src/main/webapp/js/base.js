@@ -133,6 +133,9 @@ function datatableDownload(type, options) {
  * @param type 类型:info,success(默认),warning,danger
  * @param time 显示多长时间后关闭,默认800ms
  */
+function tipMsg(text){
+    tipMsg(text,"系统提示","success",800);
+}
 function tipMsg(text, title, type, time) {
     if (typeof title == "undefined") {
         title = "系统提示";
@@ -508,12 +511,27 @@ $.fn.baseForm = function (opt) {
     });
     //绑定提交事件
     $(_form).on("submit", function () {
-        opt.submit($(_form).serializeArray());
-        modal_box.close();
+        if($(_form)[0].checkValidity()){
+            var values = $(_form).serializeArray()
+            //处理相同name的value要用逗号相隔拼接
+            var finalValues=new Array();
+            $(values).each(function(i,field){
+                var repeat = false;
+                $(finalValues).each(function(){
+                   if(this.name == field.name){
+                       this.value += ","+field.value;
+                       repeat = true;
+                       return;
+                   }
+                });
+                if(!repeat){
+                    finalValues.push(field);
+                }
+            });
+            opt.submit(values);
+            modal_box.close();
+        }
         return false;
-    });
-    $(hide_submit).on("submit", function (e) {
-        e.preventDefault();
     });
     $("button", div_footer).on("click", function (e) {
         $(hide_submit).click();

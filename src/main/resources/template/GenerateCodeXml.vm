@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${table}">
+    <select id="selectAll" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT ##
+#foreach($col in ${columns} )
+#if(${velocityCount} !=1),#end
+#if(${col.simpleType} == 1)
+date_format(${col.columnName},'%Y/%m/%d %H:%i:%s') as ${col.columnName}##
+#else
+${col.columnName}##
+#end
+#end
+ FROM ${table}
+        <where>
+#foreach($col in ${columns} )
+#if(${velocityCount}==1)    #end##
+    #if(${col.simpleType} == 1)
+    <if test="${col.columnName}_0 != null">
+                and ${col.columnName} &gt;= #{${col.columnName}_0}
+            </if>
+            <if test="${col.columnName}_1 != null">
+                and ${col.columnName} &lt;= #{${col.columnName}_1}
+            </if>
+    #elseif(${col.simpleType} == 2)
+    <if test="${col.columnName} != null">
+                and ${col.columnName} like "%"#{$col.columnName}"%"
+            </if>
+    #else
+    <if test="${col.columnName} != null">
+                and ${col.columnName} = #{${col.columnName}}
+            </if>
+    #end
+#end
+    </where>
+        ORDER BY ${_order_}
+    </select>
+    <insert id="insert" parameterType="java.util.HashMap">
+        insert into ${table}(##
+#foreach($col in ${columns} )
+#if(${velocityCount} !=1),#end
+${col.columnName}##
+#end
+) values(##
+#foreach($col in ${columns} )
+#if(${velocityCount} !=1),#end
+#{${col.columnName}}##
+#end
+)
+    </insert>
+    <update id="update" parameterType="java.util.HashMap">
+        update ${table} set##
+#foreach($col in ${columns} )
+#if(${velocityCount} !=1),#end
+${col.columnName} = #{${col.columnName}}##
+#end
+ where##
+#foreach($col in ${columns} )
+#set ($conditions = 0)
+#if(${col.isPrimaryKey})
+#set($conditions = ${conditions} + 1)
+#if(${velocityCount} !=1) and #end
+ ${col.columnName} = #{${col.columnName}}##
+#end
+#end
+
+    </update>
+    <delete id="delete" parameterType="java.util.HashMap">
+        delete from ${table} where##
+#foreach($col in ${columns} )
+#set ($conditions = 0)
+#if(${col.isPrimaryKey})
+#set($conditions = ${conditions} + 1)
+#if(${velocityCount} !=1) and #end
+ ${col.columnName} = #{${col.columnName}}##
+#end
+#end
+
+    </delete>
+
+</mapper>
