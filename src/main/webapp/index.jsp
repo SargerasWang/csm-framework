@@ -102,6 +102,8 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">主菜单</li>
+                        <li><a href="#" url="/jsp/test.jsp"><i class="glyphicon glyphicon-leaf"></i><span> TEST</span></a>
+                        </li>
                         <li><a href="#" url="/jsp/generateCode.jsp"><i class="glyphicon glyphicon-leaf"></i><span> 代码生成</span></a>
                         </li>
                         <li><a class="ajax-link" href="#" url="/jsp/dashboard.jsp"><i

@@ -65,26 +65,36 @@ public class BaseService {
     public String[][] assembleTableData(String statusColumn, List datalist, String columns){
         //处理需要翻译字段
         List statList = JsonUtil.fromJson(statusColumn, List.class);
-        //用来翻译的字典集合
-        Map<String, Map<String, String>> dictMap = new HashMap<>();
         for (Object o : statList) {
             Map<String, String> map = (Map<String, String>) o;
-            String c = map.get("column");
-            String a = map.get("statusArr");
-            Map<String, String> s = StatusUtil.getStatus(a);
-            if (s == null) {
-                LG.warn("导出数据时,在status.XML中找不到名为[" + a + "]的翻译字段");
+            String column = map.get("column");
+            String statusArr = map.get("statusArr");
+            String statusType = map.get("statusType");
+
+            Map<String, String> statusMap = StatusUtil.getStatus(statusArr);
+            if (statusMap == null) {
+                LG.warn("导出数据时,在status.XML中找不到名为[" + statusArr + "]的翻译字段");
                 continue;
             }
-            dictMap.put(c, s);//c字段用s翻译
-        }
-        if (dictMap.size() > 0) {
+
             for (Object od : datalist) {
-                Map<String, Object> map = (Map<String, Object>) od;
-                for (String key : dictMap.keySet()) {
-                    String value = String.valueOf(map.get(key));
-                    String realValue = dictMap.get(key).get(value);
-                    map.put(key, realValue);
+                Map<String, Object> dataMap = (Map<String, Object>) od;
+                if(dataMap.get(column)!=null){
+                    String value = String.valueOf(dataMap.get(column));
+                    if("2".equals(statusType)){
+                        //多选
+                        StringBuffer realValue=new StringBuffer();
+                        String[] values=value.split(",");
+                        for(int i = 0;i<values.length;i++){
+                            if(i !=0){
+                                realValue.append(",");
+                            }
+                            realValue.append(statusMap.get(values[i]));
+                        }
+                        dataMap.put(column,realValue);
+                    }else{
+                        dataMap.put(column, statusMap.get(value));
+                    }
                 }
             }
         }
@@ -122,19 +132,42 @@ public class BaseService {
     public List<String> getTables(){
         return baseDao.getTables();
     }
+    public List<BaseTableColumn> getColumns(String table){
+        return baseDao.getColumns(table);
+    }
 
     /**
      * 生成代码
      * @param tables 表名集合
      * @param types 生成类型(JSP/XML)
      */
-    public ByteArrayOutputStream generateCode(String[] tables,String[] types){
+    public ByteArrayOutputStream generateCode(String[] tables,String[] types,Map<String,List<Map<String,String>>> configList){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ZipOutputStream zos = null;
         try {
              zos = new ZipOutputStream(baos, Charset.forName("UTF-8"));
             for(String table : tables){
                 List<BaseTableColumn> columns = baseDao.getColumns(table);
+                if(configList.get(table) != null){
+                    //用户在页面的设置要覆盖读出来的设置
+                    List<Map<String, String>> columnConfigs = configList.get(table);
+                    for(BaseTableColumn btc : columns){
+                        String columnName = btc.getColumnName();
+                        for(Map<String,String> detail : columnConfigs){
+                            if(columnName.equals(detail.get("column"))){
+                                if(detail.containsKey("remarks")) {
+                                    btc.setRemarks(detail.get("remarks"));
+                                }
+                                if(detail.containsKey("statusKey")) {
+                                    String key =detail.get("statusKey");
+                                    btc.setStatusKey(key);
+                                    btc.setStatusList(StatusUtil.getStatusArr(key));
+                                    btc.setStatusType(Integer.valueOf(detail.get("statusType")));
+                                }
+                            }
+                        }
+                    }
+                }
                 List<String> typeList = Arrays.asList(types);
                 if(typeList.contains("XML")){
                     ZipEntry tEntry = new ZipEntry(table+"/"+table+".xml");

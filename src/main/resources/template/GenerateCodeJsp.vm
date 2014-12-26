@@ -4,6 +4,11 @@
 <html>
 <head>
     <jsp:include page="../import.jsp" flush="true"/>
+#foreach($col in $columns)
+#if($col.statusKey)
+    <script src="<c:url value='/base/getStatusJS/${col.statusKey}.do'/>"></script>
+#end
+#end
 </head>
 
 <body>
@@ -12,14 +17,41 @@
 #foreach($col in $columns)
 #if($col.isPrimaryKey)
     <input type="hidden" name="${col.columnName}">
-#elseif($col.simpleType == 1)
+#elseif($col.statusKey)
+#if($col.statusType == 1)##单选
+    <div class="form-group">
+        <label>${col.remarks}</label>
+        <div>
+#foreach($status in $col.statusList)
+            <div class="radio">
+                <label>
+                    <input type="radio" name="${col.columnName}" id="${col.columnName}_${velocityCount}" value="${status.get(0)}" #if($velocityCount == 1)checked#end>
+                    ${status.get(1)}
+                </label>
+            </div>
+#end
+        </div>
+    </div>
+#else##多选
+    <div class="form-group">
+        <label>${col.remarks}</label>
+        <div>
+#foreach($status in $col.statusList)
+            <label class="checkbox-inline">
+                <input type="checkbox" name="${col.columnName}" value="${status.get(0)}"> ${status.get(1)}
+            </label>
+#end
+        </div>
+    </div>
+#end
+#elseif($col.simpleType == 1)##日期
 
-#elseif($col.type == -1)
+#elseif($col.type == -1)##超大文本
     <div class="form-group">
         <label for="${col.columnName}">${col.remarks}</label>
         <textarea id="${col.columnName}" name="${col.columnName}" placeholder="请输入${col.remarks}"></textarea>
     </div>
-#elseif($col.simpleType == 2)
+#elseif($col.simpleType == 2)##文本
     <div class="form-group">
         <label for="${col.columnName}">${col.remarks}</label>
         <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
@@ -27,7 +59,7 @@
  required##
 #end>
     </div>
-#elseif($col.simpleType == 3)
+#elseif($col.simpleType == 3)##数字
     <div class="form-group">
         <label for="${col.columnName}">${col.remarks}</label>
         <input type="number" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
@@ -35,7 +67,7 @@
  required##
 #end>
     </div>
-#else
+#else##其余都用文本框
     <div class="form-group">
         <label for="${col.columnName}">${col.remarks}</label>
         <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}"  placeholder="请输入${col.remarks}"##
@@ -89,8 +121,30 @@
             columns: [
 #foreach($col in $columns)
                 #if(${velocityCount}!=1),#end{data: "${col.columnName}", title: "${col.remarks}"##
-#if($col.type == -1 || $col.isPrimaryKey)##
+#if($col.type == -1 || $col.isPrimaryKey)##主键或者超长文本不显示
 ,visible:false##
+#end##
+#if($col.nullable != 0)
+,defaultContent:""
+#end
+#if($col.statusKey)##状态翻译
+#if($col.statusType == 1)##单选
+,render: function (data) {return ${col.statusKey}[data]}##
+#else##多选
+,render: function (data) {
+                var text = '';
+                if(data != null){
+                    var keys = data.split(',');
+                    for(var i =0;i<keys.length;i++){
+                        if(i != 0){
+                            text +=',';
+                        }
+                        text +=${col.statusKey}[keys[i]];
+                    }
+                }
+                return text;
+            }##
+#end
 #end##
 }
 #end
@@ -104,6 +158,8 @@
 {column: "${col.columnName}","placeholder": "${col.remarks}"##
 #if(${col.simpleType} == 1)
 ,date:true##
+#elseif(${col.statusKey})
+,select:true,data: convertObj2Arr(${col.statusKey})##
 #end
 }
 #end
@@ -111,7 +167,16 @@
             ],
             download: {
                 type: "all",
-                fileName: "${table}"
+                fileName: "${table}",
+                statusColumn: [
+#set($downcol = 0)
+#foreach($col in $columns)
+#if($col.statusKey)
+#set($downcol = $downcol +1)
+                    #if(${downcol} != 1),#end{column: "${col.columnName}", statusArr: "${col.statusKey}",statusType:"${col.statusType}"}
+#end
+#end
+                ]
             },
             buttons: [
                 [

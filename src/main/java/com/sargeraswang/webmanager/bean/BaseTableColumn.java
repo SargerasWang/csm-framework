@@ -1,6 +1,7 @@
 package com.sargeraswang.webmanager.bean;
 
 import java.sql.Types;
+import java.util.List;
 
 /**
  * Created by SagerasWang on 14/12/22.
@@ -23,6 +24,39 @@ public class BaseTableColumn {
     private int seq;
     private String autoIncrement;
     private boolean isPrimaryKey;
+    /**
+     * 翻译字段
+     */
+    private String statusKey;
+    /**
+     * 翻译字段类型(1:单选,2:多选)
+     */
+    private int statusType;
+    private List<String[]> statusList;
+
+    public List<String[]> getStatusList() {
+        return statusList;
+    }
+
+    public void setStatusList(List<String[]> statusList) {
+        this.statusList = statusList;
+    }
+
+    public int getStatusType() {
+        return statusType;
+    }
+
+    public void setStatusType(int statusType) {
+        this.statusType = statusType;
+    }
+
+    public String getStatusKey() {
+        return statusKey;
+    }
+
+    public void setStatusKey(String statusKey) {
+        this.statusKey = statusKey;
+    }
 
     public boolean getIsPrimaryKey() {
         return isPrimaryKey;
@@ -45,15 +79,15 @@ public class BaseTableColumn {
     }
 
     public void setSimpleType(int type) {
-        if(type == Types.DATE || type == Types.TIME || type == Types.TIMESTAMP){
+        if (type == Types.DATE || type == Types.TIME || type == Types.TIMESTAMP) {
             this.simpleType = 1;
-        }else if(type == Types.CHAR || type == Types.NCHAR || type == Types.VARCHAR || type==Types.NVARCHAR
-                || type == Types.LONGVARCHAR || type == Types.LONGNVARCHAR){
+        } else if (type == Types.CHAR || type == Types.NCHAR || type == Types.VARCHAR || type == Types.NVARCHAR
+                || type == Types.LONGVARCHAR || type == Types.LONGNVARCHAR) {
             this.simpleType = 2;
-        }else if(type == Types.INTEGER || type == Types.BIGINT || type == Types.SMALLINT || type == Types.TINYINT
-                || type == Types.DECIMAL || type == Types.DOUBLE){
+        } else if (type == Types.INTEGER || type == Types.BIGINT || type == Types.SMALLINT || type == Types.TINYINT
+                || type == Types.DECIMAL || type == Types.DOUBLE) {
             this.simpleType = 3;
-        }else{
+        } else {
             this.simpleType = 0;
         }
     }

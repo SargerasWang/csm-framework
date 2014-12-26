@@ -6,4 +6,14 @@
         <data key="2">已完成</data>
         <data key="3">已删除</data>
     </status>
+    <status id="blog_tags">
+        <data key="1">技术</data>
+        <data key="2">人文</data>
+        <data key="3">科技</data>
+        <data key="4">时事评论</data>
+    </status>
+    <status id="blog_permissions">
+        <data key="1">公开</data>
+        <data key="2">私有</data>
+    </status>
 </root>

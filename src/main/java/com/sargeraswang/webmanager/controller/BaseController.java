@@ -2,10 +2,7 @@ package com.sargeraswang.webmanager.controller;
 
 import com.csvreader.CsvWriter;
 import com.sargeraswang.excelutil.ExcelUtil;
-import com.sargeraswang.webmanager.bean.BaseExecuteAjaxBean;
-import com.sargeraswang.webmanager.bean.BaseExecuteParamater;
-import com.sargeraswang.webmanager.bean.BaseQueryAjaxBean;
-import com.sargeraswang.webmanager.bean.BaseQueryParamater;
+import com.sargeraswang.webmanager.bean.*;
 import com.sargeraswang.webmanager.common.Constants;
 import com.sargeraswang.webmanager.common.util.JsonUtil;
 import com.sargeraswang.webmanager.common.util.StatusUtil;
@@ -14,6 +11,7 @@ import com.sargeraswang.webmanager.service.BaseService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +27,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,16 +179,61 @@ public class BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/getColumns")
+    public String getColumns(@RequestParam Map<String, String> allRequestParams) {
+        try {
+            String table = allRequestParams.get("table");
+            List<BaseTableColumn> list = service.getColumns(table);
+            return JsonUtil.toJson(list);
+        } catch (Exception e) {
+            LG.error(e.toString(), e);
+            return null;
+        }
+
+    }
+
+    @ResponseBody
+    @RequestMapping("/getAllStatusMap")
+    public String getAllStatusMap() {
+        try {
+            Map<String, Map<String, String>> allStatusMap = StatusUtil.getAllStatusMap();
+            List<Map<String, Map<String, String>>> list = new ArrayList<>();
+            for(String key : allStatusMap.keySet()){
+                Map<String, Map<String, String>> map = new HashMap<>();
+                map.put(key,allStatusMap.get(key));
+                list.add(map);
+            }
+            return JsonUtil.toJson(list);
+        } catch (Exception e) {
+            LG.error(e.toString(), e);
+            return null;
+        }
+
+    }
+
+    @ResponseBody
     @RequestMapping("/generateCode")
     public void generateCode(HttpServletRequest request, HttpServletResponse response) {
         String[] tables = request.getParameterValues("tables");
         String[] types = request.getParameterValues("types");
+        //表设置
+        Map<String,List<Map<String,String>>> configList = new HashMap<>();
+        for(int i = 0;i<tables.length;i++){
+            String table = tables[i];
+            String[] arrConfig = request.getParameterValues(table + "_config");
+            if(arrConfig == null){
+                continue;
+            }
+            String config = arrConfig[0];
+            List<Map<String,String>> list = (List<Map<String,String>>)JsonUtil.fromJson(config, List.class);
+            configList.put(table,list);
+        }
 
-        ByteArrayOutputStream baos = service.generateCode(tables, types);
+        ByteArrayOutputStream baos = service.generateCode(tables, types,configList);
         try {
             response.setContentType("application/octet-stream;charset=utf-8");
             response.setHeader("Content-disposition", "attachment; filename=code.zip");
-            IOUtils.write(baos.toByteArray(),response.getOutputStream());
+            IOUtils.write(baos.toByteArray(), response.getOutputStream());
             response.flushBuffer();
         } catch (IOException e) {
             LG.error(e.toString(),e);

@@ -27,6 +27,7 @@ public final class StatusUtil {
 
     private static final transient Logger LOG = LoggerFactory.getLogger(StatusUtil.class);
     private static Map<String, Map<String, String>> statusMap;
+    private static Map<String, List<String[]>> statusListMap;
 
     static { // 静态块，初始化资源，保证线程安全
         try {
@@ -37,16 +38,24 @@ public final class StatusUtil {
             Element root = document.getRootElement();
             List<Element> statusList = castList(Element.class, root.elements("status"));
             statusMap = new HashMap<>();
+            statusListMap = new HashMap<>();
             for (Element status : statusList) {
                 String id = status.attribute("id").getStringValue();
                 List<Element> dataList = castList(Element.class, status.elements("data"));
                 Map<String, String> dataMap = new HashMap<>();
+                List<String[]> arrList = new ArrayList<>();
                 for (Element data : dataList) {
                     String key = data.attribute("key").getStringValue();
                     String value = data.getStringValue();
                     dataMap.put(key, value);
+
+                    String[] strArr = new String[2];
+                    strArr[0] = key;
+                    strArr[1] = value;
+                    arrList.add(strArr);
                 }
                 statusMap.put(id, dataMap);
+                statusListMap.put(id,arrList);
             }
             LOG.info("读取status.xml完成");
         } catch (IOException e) {
@@ -68,6 +77,22 @@ public final class StatusUtil {
         }
         Map<String, String> status = statusMap.get(id);
         return status;
+    }
+
+    public static List<String[]> getStatusArr(String id) {
+        if(statusListMap.containsKey(id) ==  false){
+            return null;
+        }
+        List<String[]>status = statusListMap.get(id);
+        return status;
+    }
+
+    /**
+     * 获取所有字典键和值
+     * @return
+     */
+    public static Map<String, Map<String, String>> getAllStatusMap(){
+        return statusMap;
     }
 
     private static <T> List<T> castList(Class<? extends T> clazz, Collection<?> c) {
