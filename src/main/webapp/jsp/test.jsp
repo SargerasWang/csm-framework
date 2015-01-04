@@ -173,7 +173,7 @@
                     {
                         "text": "新增",
                         "css": "btn-success",
-                        icon: "plus",
+                        icon: "glyphicon glyphicon-plus",
                         allowNull: true,
                         "method": function () {
                             myForm.open({index: "blog.insert"});
@@ -182,14 +182,14 @@
                     {
                         "text": "修改",
                         "css": "btn-warning",
-                        icon: "edit",
+                        icon: "glyphicon glyphicon-edit",
                         "method": function (datas) {
                             myForm.open({data: datas[0], index: "blog.update"});
                         }
                     },
                     {
                         text:"查看",
-                        icon:"eye-open",
+                        icon: "glyphicon glyphicon-eye-open",
                         "css": "btn-info",
                         method:function(datas){
                             myForm.open({data: datas[0], readOnly: true });
@@ -198,7 +198,7 @@
                     {
                         "text": "删除",
                         "css": "btn-danger",
-                        icon: "trash",
+                        icon: "glyphicon glyphicon-trash",
                         "method": function (datas) {
                             bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
                                 if (r) {

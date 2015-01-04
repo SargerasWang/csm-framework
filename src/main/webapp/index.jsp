@@ -102,53 +102,7 @@
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">主菜单</li>
-                        <li><a href="#" url="/jsp/test.jsp"><i class="glyphicon glyphicon-leaf"></i><span> TEST</span></a>
-                        </li>
-                        <li><a href="#" url="/jsp/generateCode.jsp"><i class="glyphicon glyphicon-leaf"></i><span> 代码生成</span></a>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/dashboard.jsp"><i
-                                class="glyphicon glyphicon-home"></i><span> 仪表盘</span></a>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/ui.jsp"><i
-                                class="glyphicon glyphicon-eye-open"></i><span> UI 特性</span></a>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/form.jsp"><i
-                                class="glyphicon glyphicon-edit"></i><span> 表单</span></a></li>
-                        <li><a class="ajax-link" href="#" url="/jsp/chart.jsp"><i
-                                class="glyphicon glyphicon-list-alt"></i><span> 图表</span></a>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/typography.jsp"><i class="glyphicon glyphicon-font"></i><span> 排版</span></a>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/gallery.jsp"><i class="glyphicon glyphicon-picture"></i><span> 照片墙</span></a>
-                        </li>
-                        <li class="nav-header hidden-md">Sample Section</li>
-                        <li class="accordion">
-                            <a href="#"><i class="glyphicon glyphicon-align-justify"></i><span> 表格</span></a>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#" url="/jsp/table.jsp">基本功能</a></li>
-                                <li><a href="#" url="/jsp/table_advance.jsp">进阶功能</a></li>
-                            </ul>
-                        </li>
-                        <li class="accordion">
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i><span> 手风琴菜单</span></a>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">子菜单1</a></li>
-                                <li><a href="#">子菜单2</a></li>
-                            </ul>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/calendar.jsp"><i class="glyphicon glyphicon-calendar"></i><span> 日历</span></a>
-                        </li>
-                        <li><a class="ajax-link" href="#" url="/jsp/grid.jsp"><i
-                                class="glyphicon glyphicon-th"></i><span> 网格</span></a></li>
-                        <li><a href="#" url="/jsp/tour.jsp"><i class="glyphicon glyphicon-globe"></i><span> 指引</span></a></li>
-                        <li><a class="ajax-link" href="#" url="/jsp/icon.jsp"><i
-                                class="glyphicon glyphicon-star"></i><span> Icons</span></a></li>
-                        <li><a href="#" url="/error.jsp"><i class="glyphicon glyphicon-ban-circle"></i><span> 错误页面</span></a>
-                        </li>
-                        <li><a href="#" url="/login.jsp"><i class="glyphicon glyphicon-lock"></i><span> 登陆页面</span></a>
-                        </li>
                     </ul>
-                    <label id="for-is-ajax" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax 菜单</label>
                 </div>
             </div>
         </div>
@@ -169,7 +123,7 @@
                 <ul class="nav nav-tabs">
 
                 </ul>
-                <div class="tabFullScreen" <%--title="全屏" data-toggle="tooltip" data-placement="bottom"--%>><i class="glyphicon glyphicon-resize-full"></i></div>
+                <div class="tabFullScreen" <%--title="全屏" data-toggle="tooltip" data-placement="bottom"--%>><i class="fa fa-expand"></i></div>
                 <div class="tab-content">
 
                 </div>
@@ -226,9 +180,16 @@
     //tab 右键菜单
     var $contextMenu = $("#contextMenu");
 
+    $(document).ready(function() {
+        //右键菜单
+        bindTabRightClick();
+        //读取菜单
+        ajaxLoadMenu();
+    });
+
     //全屏
     $("div.tabFullScreen").click(function(){
-        $("i",this).toggleClass("glyphicon-resize-full glyphicon-resize-small")
+        $("i",this).toggleClass("fa-expand fa-compress")
         if(!$("body div.topMenu").is(':visible')){
             $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
         }
@@ -242,7 +203,8 @@
             //$(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
     });
 
-    $(document).ready(function() {
+    //右侧tab页的右键菜单
+    function bindTabRightClick() {
         $contextMenu.on("click", "a", function (source) {
             var tabId = $(source.target).parents("div").attr("target");
             var i = $(source.target).attr("tabindex");
@@ -270,21 +232,64 @@
         $("body").bind("click", function () {
             $contextMenu.hide();
         });
-        //绑定menu事件
-        $("a","ul.nav-pills li").bind("click",function(){
-            $("li","ul.nav-pills").removeClass("active");
-            $(this).parent().addClass("active");
-            if($(this).parent().children("ul").length == 0 ){//有子菜单的父菜单无动作
-                $(this).openTab();
+    }
+    //ajax读取菜单
+    function ajaxLoadMenu() {
+        $.ajax({
+            url: "/login/getMenu.do",
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                $(data).each(function () {
+                    var li = $.parseHTML("<li></li>");
+                    var icon = this.icon ? this.icon : "";
+                    if (this.childrens.length > 0) {
+                        $(li).addClass("accordion");
+                        $(li).append('<a href="#"><i class="' + icon + '"></i><span> ' + this.name + '</span></a>')
+                        var subUl = $.parseHTML('<ul class="nav nav-pills nav-stacked"></ul>');
+                        $(this.childrens).each(function () {
+                            var subIcon = this.icon ? this.icon : "";
+                            $(subUl).append('<li><a href="#" url="' + this.url + '"><i class="' + subIcon + '"></i> ' + this.name + '</a></li>');
+                        })
+                        $(li).append(subUl);
+                    } else {
+                        var a = $.parseHTML('<a class="ajax-link" href="#" url="' + this.url + '"><i class="' + icon + '"></i><span> ' + this.name + '</span></a>');
+                        $(li).append(a);
+                    }
+                    $("ul.main-menu").append(li);
+                });
+                //二级菜单展开
+                $('.accordion > a').click(function (e) {
+                    e.preventDefault();
+                    var $ul = $(this).siblings('ul');
+                    var $li = $(this).parent();
+                    if ($ul.is(':visible')) $li.removeClass('active');
+                    else                    $li.addClass('active');
+                    $ul.slideToggle();
+                });
+
+                $('.accordion li.active:first').parents('ul').slideDown();
+                //绑定menu事件
+                $("a", "ul.nav-pills li").bind("click", function () {
+                    $("li", "ul.nav-pills").removeClass("active");
+                    $(this).parent().addClass("active");
+                    if ($(this).parent().children("ul").length == 0) {//有子菜单的父菜单无动作
+                        $(this).openTab();
+                    }
+                });
             }
         });
-    });
+    }
+
     //改变iframe高度
-    function resetIframeHeight(iframe){
+    function resetIframeHeight(iframe,height){
         if(iframe){
             var win = iframe.contentWindow || iframe.contentDocument.parentWindow;
             if(win.document.body){
                 iframe.height = win.document.documentElement.scrollHeight || win.document.body.scrollHeight;
+                if(height > iframe.height){
+                    iframe.height = height;
+                }
                 if($(".ch-container","body").height() > iframe.height){
                     iframe.height = $(".ch-container","body").height();
                 }
@@ -292,6 +297,7 @@
         }
     }
 
+    //打开tab
     function openTab(url,text){
         $(".tabbable").show();
         var ul = $(".nav-tabs",".tabbable");

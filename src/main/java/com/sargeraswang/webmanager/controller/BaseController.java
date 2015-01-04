@@ -51,15 +51,16 @@ public class BaseController {
             String echo = allRequestParams.get("draw");
             BaseQueryParamater bp = new BaseQueryParamater(allRequestParams);
             List<Object> list = service.queryForList(bp);
-            Integer allCount = service.queryCount(bp);
-            BaseQueryAjaxBean bean = new BaseQueryAjaxBean();
-            bean.setData(list);
-            bean.setRecordsTotal(allCount);
-            bean.setRecordsFiltered(allCount);
             if (StringUtils.isNotBlank(echo)) {
+                Integer allCount = service.queryCount(bp);
+                BaseQueryAjaxBean bean = new BaseQueryAjaxBean();
+                bean.setData(list);
+                bean.setRecordsTotal(allCount);
+                bean.setRecordsFiltered(allCount);
                 bean.setDraw(Integer.valueOf(echo));
+                return JsonUtil.toJson(bean);
             }
-            return JsonUtil.toJson(bean);
+            return JsonUtil.toJson(list);
         } catch (Exception e) {
             LG.error(e.toString(), e);
             return null;

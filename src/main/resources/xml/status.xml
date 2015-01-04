@@ -16,4 +16,17 @@
         <data key="1">公开</data>
         <data key="2">私有</data>
     </status>
+    <status id="user_status">
+        <data key="-1">已删除</data>
+        <data key="1">正常</data>
+        <data key="2">已锁定</data>
+        <data key="3">已禁用</data>
+    </status>
+    <status id="role_type">
+        <data key="-1">系统管理员</data>
+        <data key="1">一般角色</data>
+    </status>
+    <status id="role_status">
+        <data key="1">正常</data>
+    </status>
 </root>

@@ -20,14 +20,6 @@ public class Constants {
      */
     public static final int BUSS_ERROR = 2;
 	
-	public final static String PARAM_LOGIN_UID = "COOKIE_USER_ID";//当前登录用户ID参数名称
-	
-	//分页常量
-	public static final String PARAM_PAGE_NO = "page_no";
-	public static final String PARAM_PAGE_SIZE = "page_size";
-	public static final int PAGE_NO = 1;
-	public static final int PAGE_SIZE = 10;
-	
     /**
      * Session存userid
      */
@@ -62,4 +54,13 @@ public class Constants {
      * BaseParamater的iDisplayStart
      */
     public static final String BASEPARAMATER_START="_start_";
+    /**
+     * BaseParamater的_current_user_
+     */
+    public static final String BASEPARAMATER_CURRENT_USER="_current_user_";
+
+    /**
+     * 系统角色中系统管理员的类型
+     */
+    public static final Integer SYSTEM_ROLE_ADMIN_TYPE=-1;
 }

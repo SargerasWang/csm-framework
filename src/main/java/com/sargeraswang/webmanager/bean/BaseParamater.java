@@ -2,7 +2,10 @@ package com.sargeraswang.webmanager.bean;
 
 import com.sargeraswang.webmanager.common.Constants;
 import org.springframework.util.Assert;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +22,11 @@ public class BaseParamater extends HashMap<String, Object> {
         //特殊参数 key 特殊化
         this.put(Constants.BASEPARAMATER_INDEX, this.get("index"));
         this.remove("index");
+
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpSession session = attr.getRequest().getSession();
+        Object uid = session.getAttribute(Constants.SESSION_KEY_UID);
+        this.put(Constants.BASEPARAMATER_CURRENT_USER,uid);
     }
 
     public String getIndex() {

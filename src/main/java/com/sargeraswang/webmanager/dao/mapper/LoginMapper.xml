@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sargeraswang.webmanager.dao.mapper.LoginMapper" >
-  <select id="selectUserByLogin" resultType="java.util.HashMap" parameterType="java.util.HashMap">
-    SELECT id,loginname,storage_id,status,rid,name,gid,did FROM user_account where loginname=#{loginname} and password=MD5(#{password})
+<mapper namespace="com.sargeraswang.webmanager.dao.mapper.LoginMapper">
+    <resultMap id="userResultMap" type="SystemUser">
+        <id column="id" property="id"/>
+        <result column="id" property="id" />
+        <result column="loginname" property="login_name" />
+        <result column="status" property="status" />
+        <result column="name" property="name" />
+        <result column="error_num" property="error_num" />
+        <result column="info" property="info" />
+        <result column="mobile" property="mobile" />
+        <association property="role" javaType="SystemRole">
+            <id column="r_id" property="id"/>
+            <result column="r_name" property="name"/>
+            <result column="r_description" property="description"/>
+            <result column="r_status" property="status"/>
+            <result column="r_type" property="type"/>
+        </association>
+    </resultMap>
+    <select id="selectUserByLogin" parameterType="java.util.HashMap" resultMap="userResultMap">
+    SELECT u.id,u.loginname,u.status,u.name ,u.error_num,u.info,u.mobile,
+      r.id as r_id,r.name as r_name,r.description as r_description,r.status as r_status,r.type as r_type
+    FROM sys_user_account u
+    LEFT JOIN sys_role r ON (u.role_id = r.id)
+    where u.loginname=#{loginname} and u.password=MD5(#{password})
   </select>
-
+    <select id="selectAllMenus" resultType="SystemMenu">
+    SELECT id,name,url,level,parent,icon,remarks,seq FROM sys_menu order by seq
+  </select>
 </mapper>

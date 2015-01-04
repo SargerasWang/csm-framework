@@ -111,18 +111,6 @@ $(document).ready(function () {
         $clink.parent('li').addClass('active');
     });
 
-    $('.accordion > a').click(function (e) {
-        e.preventDefault();
-        var $ul = $(this).siblings('ul');
-        var $li = $(this).parent();
-        if ($ul.is(':visible')) $li.removeClass('active');
-        else                    $li.addClass('active');
-        $ul.slideToggle();
-    });
-
-    $('.accordion li.active:first').parents('ul').slideDown();
-
-
     //other things to do on document ready, separated for ajax calls
     docReady();
 });

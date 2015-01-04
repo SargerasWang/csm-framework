@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <jsp:include page="../import.jsp" flush="true"/>
+    <jsp:include page="/import.jsp" flush="true"/>
 #foreach($col in $columns)
 #if($col.statusKey)
     <script src="<c:url value='/base/getStatusJS/${col.statusKey}.do'/>"></script>
@@ -60,12 +60,14 @@
 #end>
     </div>
 #elseif($col.simpleType == 3)##数字
+#if($col.columnName != 'c_user')
     <div class="form-group">
         <label for="${col.columnName}">${col.remarks}</label>
         <input type="number" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
 #if(${col.nullable}==0)
  required##
 #end>
+#end##
     </div>
 #else##其余都用文本框
     <div class="form-group">
@@ -85,7 +87,7 @@
         </div>
     </div>
 </div>
-<jsp:include page="../externalJS.jsp" flush="true"/>
+<jsp:include page="/externalJS.jsp" flush="true"/>
 <script>
     $(document).ready(function () {
         //初始化富文本编辑器
@@ -114,6 +116,7 @@
                 });
             }
         });
+        //初始化table
         var table = $('#example').baseTable({
             index: "${table}.selectAll",
             single: true,
@@ -125,8 +128,8 @@
 ,visible:false##
 #end##
 #if($col.nullable != 0)
-,defaultContent:""
-#end
+,defaultContent:""##
+#end##
 #if($col.statusKey)##状态翻译
 #if($col.statusType == 1)##单选
 ,render: function (data) {return ${col.statusKey}[data]}##
@@ -183,7 +186,7 @@
                     {
                         "text": "新增",
                         "css": "btn-success",
-                        icon: "plus",
+                        icon: "glyphicon glyphicon-plus",
                         allowNull: true,
                         "method": function () {
                             myForm.open({index: "${table}.insert"});
@@ -192,15 +195,15 @@
                     {
                         "text": "修改",
                         "css": "btn-warning",
-                        icon: "edit",
+                        icon: "glyphicon glyphicon-edit",
                         "method": function (datas) {
                             myForm.open({data: datas[0], index: "${table}.update"});
                         }
                     },
                     {
                         text:"查看",
-                        icon:"eye-open",
                         "css": "btn-info",
+                        icon:"glyphicon glyphicon-eye-open",
                         method:function(datas){
                             myForm.open({data: datas[0], readOnly: true });
                         }
@@ -208,7 +211,7 @@
                     {
                         "text": "删除",
                         "css": "btn-danger",
-                        icon: "trash",
+                        icon: "glyphicon glyphicon-trash",
                         "method": function (datas) {
                             bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
                                 if (r) {

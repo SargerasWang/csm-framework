@@ -90,3 +90,9 @@
     /*height: 80px;*/
     z-index: 999;
 }
+
+.form-horizontal div.form-group label.col-sm-2{
+    height:34px;
+    line-height: 34px;
+    text-align: right;
+}

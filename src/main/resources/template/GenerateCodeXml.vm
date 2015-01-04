@@ -37,22 +37,40 @@ ${col.columnName}##
     </select>
     <insert id="insert" parameterType="java.util.HashMap">
         insert into ${table}(##
+#set($commaIndex = 0)
 #foreach($col in ${columns} )
-#if(${velocityCount} !=1),#end
+#if(!${col.isPrimaryKey})
+#set($commaIndex = $commaIndex +1)
+#if(${commaIndex} !=1),#end
 ${col.columnName}##
 #end
+#end
 ) values(##
+#set($commaIndex = 0)
 #foreach($col in ${columns} )
-#if(${velocityCount} !=1),#end
+#if(!${col.isPrimaryKey})
+#set($commaIndex = $commaIndex +1)
+#if(${commaIndex} !=1),#end
+#if(${col.columnName} == 'c_user')
+#{_current_user_}##
+#elseif(${col.columnName} == 'c_time')
+NOW()##
+#else
 #{${col.columnName}}##
+#end
+#end
 #end
 )
     </insert>
     <update id="update" parameterType="java.util.HashMap">
-        update ${table} set##
+        update ${table} set ##
+#set($commaIndex = 0)
 #foreach($col in ${columns} )
-#if(${velocityCount} !=1),#end
+#if(!${col.isPrimaryKey} && ${col.columnName} !='c_user' && ${col.columnName}!='c_time')
+#set($commaIndex = $commaIndex +1)
+#if(${commaIndex} !=1),#end
 ${col.columnName} = #{${col.columnName}}##
+#end
 #end
  where##
 #foreach($col in ${columns} )

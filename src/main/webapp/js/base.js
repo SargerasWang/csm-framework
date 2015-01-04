@@ -8,9 +8,9 @@ $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
 /**
  *重设iframe高度
  */
-function resetHeight() {
+function resetHeight(height) {
     //index.jsp's function
-    parent.resetIframeHeight(window.frameElement);
+    parent.resetIframeHeight(window.frameElement,height);
 }
 function convertObj2Arr(obj) {
     var arr = new Array();
@@ -133,8 +133,8 @@ function datatableDownload(type, options) {
  * @param type 类型:info,success(默认),warning,danger
  * @param time 显示多长时间后关闭,默认800ms
  */
-function tipMsg(text){
-    tipMsg(text,"系统提示","success",800);
+function tipMsg(text) {
+    tipMsg(text, "系统提示", "success", 800);
 }
 function tipMsg(text, title, type, time) {
     if (typeof title == "undefined") {
@@ -182,17 +182,17 @@ $.fn.dateRangeBox = function (opt) {
 /**
  * richEditor
  */
-$.fn.richEditor = function (opt){
+$.fn.richEditor = function (opt) {
     //placeholder
     var placeholder = false;
-    if($(this).attr("placeholder")){
+    if ($(this).attr("placeholder")) {
         placeholder = $(this).attr("placeholder");
     }
     this.summernote($.extend({
         height: 200,
         lang: 'zh-CN',
         disableResizeEditor: false,
-        placeholder:placeholder,
+        placeholder: placeholder,
         toolbar: [
             ['style', ['style']],
             ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -205,7 +205,33 @@ $.fn.richEditor = function (opt){
             ['view', ['fullscreen'/*, 'codeview'*/]]
             //,['help', ['help']]
         ]
-    },opt));
+    }, opt));
+}
+
+/**
+ * baseSelect 下拉菜单
+ */
+$.fn.baseSelect = function(opt){
+    var $opt = $.extend({},{
+        index:"",
+        text:"text",
+        value:"value",
+        hasNull:true
+    },opt);
+    var $sel = $(this);
+    ajaxQuery({
+        async:false,
+        data:{index:$opt.index},
+        success:function(data){
+            if($opt.hasNull){
+                $sel.append("<option value=''>请选择</option>");
+            }
+            for (var i = 0; i < data.length; i++) {
+                var obj = data[i];
+                $sel.append("<option value='" + obj[$opt.value] + "'>" + obj[$opt.text] + "</option>");
+            }
+        }
+    });
 }
 
 /**
@@ -217,7 +243,7 @@ $.fn.baseTable = function (opt) {
     this.addClass("table table-striped table-bordered");
     var table = this.DataTable(
         {
-            "autoWidth":false,
+            "autoWidth": false,
             "processing": true,
             "serverSide": true,
             "searching": false,
@@ -421,7 +447,7 @@ $.fn.baseTable = function (opt) {
                     var _btn = $.parseHTML('<button type="button" class="btn btn-sm"></button>');
                     $(_btn).text(" " + this.text).addClass(css);
                     if (this.icon) {
-                        var span = $.parseHTML('<span class="glyphicon glyphicon-' + this.icon + '"></span>');
+                        var span = $.parseHTML('<span class="' + this.icon + '"></span>');
                         $(_btn).prepend(span)
                     }
                     var method = this.method;
@@ -475,13 +501,13 @@ $.fn.baseForm = function (opt) {
     $(this).removeClass("hide");
     //组装弹出层
     var modal_box = $.extend($(div_modal).append($(div_dialog).append($(div_content).append(div_header).append($(div_body).append($(this).append(hide_submit))).append(div_footer))), {
-        open: function (opt,callback) {
+        open: function (opt, callback) {
             modal_box.modal("show");
             $(_form)[0].reset();
-            $("textarea:not(.note-codable)",_form).each(function(){
-               if($(this).code){
-                   $(this).code("");
-               }
+            $("textarea:not(.note-codable)", _form).each(function () {
+                if ($(this).code) {
+                    $(this).code("");
+                }
             });
             $("[type=hidden]", _form).val('');
             if (opt) {
@@ -489,21 +515,22 @@ $.fn.baseForm = function (opt) {
                 if (opt.data) {
                     $(_form).autofill(opt.data);
                 }
-                if(opt.readOnly){
-                   $(div_footer).hide();
-                    $("input",_form).attr("disabled",true);
-                    $("div.note-editable",_form).attr("contenteditable",false);
-                }else{
-                   $(div_footer).show();
-                    $("input",_form).attr("disabled",false);
-                    $("div.note-editable",_form).attr("contenteditable",true);
+                if (opt.readOnly) {
+                    $(div_footer).hide();
+                    $("input", _form).attr("disabled", true);
+                    $("div.note-editable", _form).attr("contenteditable", false);
+                } else {
+                    $(div_footer).show();
+                    $("input", _form).attr("disabled", false);
+                    $("div.note-editable", _form).attr("contenteditable", true);
                 }
             }
-            if(callback){
-                $(modal_box).on('shown.bs.modal', function () {
+            $(modal_box).on('shown.bs.modal hidden.bs.modal', function () {
+                resetHeight($(modal_box).children()[0].scrollHeight);
+                if (callback) {
                     callback();
-                })
-            }
+                }
+            })
         },
         close: function () {
             modal_box.modal("hide");
@@ -511,20 +538,20 @@ $.fn.baseForm = function (opt) {
     });
     //绑定提交事件
     $(_form).on("submit", function () {
-        if($(_form)[0].checkValidity()){
+        if ($(_form)[0].checkValidity()) {
             var values = $(_form).serializeArray()
             //处理相同name的value要用逗号相隔拼接
-            var finalValues=new Array();
-            $(values).each(function(i,field){
+            var finalValues = new Array();
+            $(values).each(function (i, field) {
                 var repeat = false;
-                $(finalValues).each(function(){
-                   if(this.name == field.name){
-                       this.value += ","+field.value;
-                       repeat = true;
-                       return;
-                   }
+                $(finalValues).each(function () {
+                    if (this.name == field.name) {
+                        this.value += "," + field.value;
+                        repeat = true;
+                        return;
+                    }
                 });
-                if(!repeat){
+                if (!repeat) {
                     finalValues.push(field);
                 }
             });

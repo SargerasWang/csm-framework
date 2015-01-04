@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sys_role">
+    <resultMap id="selectAllResultMap" type="HashMap">
+        <association property="c_user" column="c_user" select="sys_cache.selectUserNameById"/>
+    </resultMap>
+    <select id="selectAll" resultMap="selectAllResultMap" parameterType="java.util.HashMap">
+        SELECT id,name,description,status,date_format(c_time,'%Y/%m/%d %H:%i:%s') as c_time,c_user,type FROM sys_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="description != null">
+                and description like "%"#{description}"%"
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="c_time_0 != null">
+                and c_time &gt;= #{c_time_0}
+            </if>
+            <if test="c_time_1 != null">
+                and c_time &lt;= #{c_time_1}
+            </if>
+            <if test="c_user != null">
+                and c_user = #{c_user}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+        ORDER BY ${_order_}
+    </select>
+    <insert id="insert" parameterType="java.util.HashMap">
+        insert into sys_role(name,description,status,c_time,c_user,type) values(#{name},#{description},#{status},NOW(),#{_current_user_},#{type})
+    </insert>
+    <update id="update" parameterType="java.util.HashMap">
+        update sys_role set name = #{name},description = #{description},status = #{status},type = #{type} where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.util.HashMap">
+        delete from sys_role where id = #{id}
+    </delete>
+    <select id="selectRoleNameList" resultType="HashMap" parameterType="HashMap">
+        select id,name from sys_role where status =1
+    </select>
+</mapper>

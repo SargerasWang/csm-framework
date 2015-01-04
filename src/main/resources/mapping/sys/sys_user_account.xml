@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sys_user_account">
+    <resultMap id="selectAllResultMap" type="HashMap">
+        <result property="role_id" column="role_id"/>
+        <association property="role_name" column="role_id" select="sys_cache.selectRoleNameById"/>
+        <association property="c_user" column="c_user" select="sys_cache.selectUserNameById"/>
+    </resultMap>
+    <select id="selectAll" resultMap="selectAllResultMap" parameterType="java.util.HashMap" useCache="false">
+        SELECT id,role_id,loginname,name,info,status,mobile,error_num,date_format(c_time,'%Y/%m/%d %H:%i:%s') as c_time,c_user FROM sys_user_account
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="role_id != null">
+                and role_id like "%"#{role_id}"%"
+            </if>
+            <if test="loginname != null">
+                and loginname like "%"#{loginname}"%"
+            </if>
+            <if test="name != null">
+                and name like "%"#{name}"%"
+            </if>
+            <if test="info != null">
+                and info like "%"#{info}"%"
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="mobile != null">
+                and mobile like "%"#{mobile}"%"
+            </if>
+            <if test="error_num != null">
+                and error_num = #{error_num}
+            </if>
+            <if test="c_time_0 != null">
+                and c_time &gt;= #{c_time_0}
+            </if>
+            <if test="c_time_1 != null">
+                and c_time &lt;= #{c_time_1}
+            </if>
+            <if test="c_user != null">
+                and c_user = #{c_user}
+            </if>
+        </where>
+        ORDER BY ${_order_}
+    </select>
+    <insert id="insert" parameterType="java.util.HashMap">
+        insert into sys_user_account(role_id,loginname,name,info,status,mobile,error_num,c_time,c_user) values(#{role_id},#{loginname},#{name},#{info},1,#{mobile},0,NOW(),#{_current_user_})
+    </insert>
+    <update id="update" parameterType="java.util.HashMap">
+        update sys_user_account set role_id = #{role_id},loginname = #{loginname},name = #{name},info = #{info},mobile = #{mobile} where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.util.HashMap">
+        delete from sys_user_account where id = #{id}
+    </delete>
+    <update id="updatePassword!" parameterType="HashMap">
+        update sys_user_account set password = md5(#{password}) where id = #{id}
+    </update>
+</mapper>
