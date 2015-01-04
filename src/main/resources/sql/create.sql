@@ -1,92 +1,64 @@
-DROP TABLE
-blog;
-CREATE TABLE
-  blog
-(
-  id          INT                 NOT NULL AUTO_INCREMENT,
-  ctime       DATETIME            NOT NULL,
-  title       VARCHAR(45)         NOT NULL,
-  status      TINYINT DEFAULT '0' NOT NULL,
-  level       INT DEFAULT '1'     NOT NULL,
-  article     TEXT,
-  permissions TINYINT DEFAULT '1' NOT NULL
-  COMMENT '权限:1.公开 2.私有',
-  tags        VARCHAR(200) COMMENT '标签:多个用逗号隔开',
+DROP TABLE blog;
+CREATE TABLE blog (
+  id INT NOT NULL AUTO_INCREMENT,
+  ctime DATETIME NOT NULL,
+  title VARCHAR(45) NOT NULL,
+  status TINYINT DEFAULT '0' NOT NULL,
+  level INT DEFAULT '1' NOT NULL,
+  article TEXT,
+  permissions TINYINT DEFAULT '1' NOT NULL COMMENT '权限:1.公开 2.私有',
+  tags VARCHAR(200) COMMENT '标签:多个用逗号隔开',
   PRIMARY KEY (id)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-DROP TABLE
-sys_menu;
-CREATE TABLE
-  sys_menu
-(
-  id      INT             NOT NULL AUTO_INCREMENT,
-  name    VARCHAR(50)     NOT NULL,
-  url     VARCHAR(200),
-  level   INT             NOT NULL,
-  parent  INT DEFAULT '0' NOT NULL,
-  icon    VARCHAR(50),
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+DROP TABLE sys_menu;
+CREATE TABLE sys_menu (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  url VARCHAR(200),
+  level INT NOT NULL,
+  parent INT DEFAULT '0' NOT NULL,
+  icon VARCHAR(50),
   remarks VARCHAR(200),
-  c_time  DATETIME        NOT NULL,
-  c_user  INT             NOT NULL,
-  seq     INT DEFAULT '0' NOT NULL,
+  c_time DATETIME NOT NULL,
+  c_user INT NOT NULL,
+  seq INT DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-DROP TABLE
-sys_role;
-CREATE TABLE
-  sys_role
-(
-  id          INT                 NOT NULL AUTO_INCREMENT,
-  name        VARCHAR(100)        NOT NULL,
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+DROP TABLE sys_role;
+CREATE TABLE sys_role (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
   description VARCHAR(200),
-  status      TINYINT DEFAULT '1' NOT NULL,
-  c_time      DATETIME            NOT NULL,
-  c_user      INT                 NOT NULL,
-  type        TINYINT DEFAULT '1' NOT NULL,
+  status TINYINT DEFAULT '1' NOT NULL,
+  c_time DATETIME NOT NULL,
+  c_user INT NOT NULL,
+  type TINYINT DEFAULT '1' NOT NULL,
   PRIMARY KEY (id)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-DROP TABLE
-sys_role_menu;
-CREATE TABLE
-  sys_role_menu
-(
-  id      INT      NOT NULL AUTO_INCREMENT,
-  role_id INT      NOT NULL,
-  menu_id INT      NOT NULL,
-  c_time  DATETIME NOT NULL,
-  c_user  INT      NOT NULL,
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+DROP TABLE sys_role_menu;
+CREATE TABLE sys_role_menu (
+  id INT NOT NULL AUTO_INCREMENT,
+  role_id INT NOT NULL,
+  menu_id INT NOT NULL,
+  c_time DATETIME NOT NULL,
+  c_user INT NOT NULL,
   PRIMARY KEY (id)
-)
-  ENGINE =InnoDB
-  DEFAULT CHARSET =utf8;
-DROP TABLE
-sys_user_account;
-CREATE TABLE
-  sys_user_account
-(
-  id        INT         NOT NULL AUTO_INCREMENT,
-  role_id   VARCHAR(1000),
+)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+DROP TABLE sys_user_account;
+CREATE TABLE sys_user_account (
+  id INT NOT NULL AUTO_INCREMENT,
+  role_id VARCHAR(1000),
   loginname VARCHAR(50) NOT NULL,
-  name      VARCHAR(50)
-            COLLATE utf8_unicode_ci,
-  password  VARCHAR(255),
-  info      VARCHAR(1000)
-            COLLATE utf8_unicode_ci,
-  status    INT                  DEFAULT '1',
-  mobile    VARCHAR(32),
+  name VARCHAR(50) COLLATE UTF8_UNICODE_CI,
+  password VARCHAR(255),
+  info VARCHAR(1000) COLLATE UTF8_UNICODE_CI,
+  status INT DEFAULT '1',
+  mobile VARCHAR(32),
   error_num INT,
-  c_time    DATETIME,
-  c_user    INT,
+  c_time DATETIME,
+  c_user INT,
   PRIMARY KEY (id)
-)
-  ENGINE =MyISAM
-  DEFAULT CHARSET =utf8;
+)  ENGINE=MYISAM DEFAULT CHARSET=UTF8;
 
 ##insert sys_role
 INSERT INTO sys_role (name, description, status, c_time, c_user, type)
