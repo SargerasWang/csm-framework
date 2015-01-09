@@ -1,6 +1,6 @@
 package com.sargeraswang.webmanager.service;
 
-import com.sargeraswang.webmanager.bean.BaseExecuteAjaxBean;
+import com.sargeraswang.webmanager.bean.BaseExecuteBatchParamater;
 import com.sargeraswang.webmanager.bean.BaseExecuteParamater;
 import com.sargeraswang.webmanager.bean.BaseQueryParamater;
 import com.sargeraswang.webmanager.bean.BaseTableColumn;
@@ -11,22 +11,19 @@ import com.sargeraswang.webmanager.dao.BaseDao;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXWriter;
-import org.dom4j.io.XMLWriter;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -40,9 +37,9 @@ public class BaseService {
     BaseDao baseDao;
     public static final Logger LG = Logger.getLogger(BaseService.class);
 
-    public List<Object> queryForList(String index,Map<String,Object> paramater) {
+    public List<Object> queryForList(String index, Map<String, Object> paramater) {
 
-        return baseDao.queryForList(index,paramater);
+        return baseDao.queryForList(index, paramater);
     }
 
     public List<Object> queryForList(BaseQueryParamater paramater) {
@@ -57,12 +54,13 @@ public class BaseService {
 
     /**
      * 根据数据集和标题行,组成数据数组
+     *
      * @param statusColumn
      * @param datalist
      * @param columns
      * @return
      */
-    public String[][] assembleTableData(String statusColumn, List datalist, String columns){
+    public String[][] assembleTableData(String statusColumn, List datalist, String columns) {
         //处理需要翻译字段
         List statList = JsonUtil.fromJson(statusColumn, List.class);
         for (Object o : statList) {
@@ -79,20 +77,20 @@ public class BaseService {
 
             for (Object od : datalist) {
                 Map<String, Object> dataMap = (Map<String, Object>) od;
-                if(dataMap.get(column)!=null){
+                if (dataMap.get(column) != null) {
                     String value = String.valueOf(dataMap.get(column));
-                    if("2".equals(statusType)){
+                    if ("2".equals(statusType)) {
                         //多选
-                        StringBuffer realValue=new StringBuffer();
-                        String[] values=value.split(",");
-                        for(int i = 0;i<values.length;i++){
-                            if(i !=0){
+                        StringBuffer realValue = new StringBuffer();
+                        String[] values = value.split(",");
+                        for (int i = 0; i < values.length; i++) {
+                            if (i != 0) {
                                 realValue.append(",");
                             }
                             realValue.append(statusMap.get(values[i]));
                         }
-                        dataMap.put(column,realValue);
-                    }else{
+                        dataMap.put(column, realValue);
+                    } else {
                         dataMap.put(column, statusMap.get(value));
                     }
                 }
@@ -115,9 +113,9 @@ public class BaseService {
             String[] dataRow = dataArray[i + 1];
             for (int j = 0; j < colList.size(); j++) {
                 Object key = ((Map<String, Object>) colList.get(j)).get("data");
-                if(map.get(key) != null) {
+                if (map.get(key) != null) {
                     dataRow[j] = String.valueOf(map.get(key));
-                }else{
+                } else {
                     dataRow[j] = StringUtil.EMPTY;
                 }
             }
@@ -125,41 +123,43 @@ public class BaseService {
         return dataArray;
     }
 
-    public Integer execute(BaseExecuteParamater paramater){
+    public Integer execute(BaseExecuteParamater paramater) {
         return baseDao.execute(paramater);
     }
 
-    public List<String> getTables(){
+    public List<String> getTables() {
         return baseDao.getTables();
     }
-    public List<BaseTableColumn> getColumns(String table){
+
+    public List<BaseTableColumn> getColumns(String table) {
         return baseDao.getColumns(table);
     }
 
     /**
      * 生成代码
+     *
      * @param tables 表名集合
-     * @param types 生成类型(JSP/XML)
+     * @param types  生成类型(JSP/XML)
      */
-    public ByteArrayOutputStream generateCode(String[] tables,String[] types,Map<String,List<Map<String,String>>> configList){
+    public ByteArrayOutputStream generateCode(String[] tables, String[] types, Map<String, List<Map<String, String>>> configList) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ZipOutputStream zos = null;
         try {
-             zos = new ZipOutputStream(baos, Charset.forName("UTF-8"));
-            for(String table : tables){
+            zos = new ZipOutputStream(baos, Charset.forName("UTF-8"));
+            for (String table : tables) {
                 List<BaseTableColumn> columns = baseDao.getColumns(table);
-                if(configList.get(table) != null){
+                if (configList.get(table) != null) {
                     //用户在页面的设置要覆盖读出来的设置
                     List<Map<String, String>> columnConfigs = configList.get(table);
-                    for(BaseTableColumn btc : columns){
+                    for (BaseTableColumn btc : columns) {
                         String columnName = btc.getColumnName();
-                        for(Map<String,String> detail : columnConfigs){
-                            if(columnName.equals(detail.get("column"))){
-                                if(detail.containsKey("remarks")) {
+                        for (Map<String, String> detail : columnConfigs) {
+                            if (columnName.equals(detail.get("column"))) {
+                                if (detail.containsKey("remarks")) {
                                     btc.setRemarks(detail.get("remarks"));
                                 }
-                                if(detail.containsKey("statusKey")) {
-                                    String key =detail.get("statusKey");
+                                if (detail.containsKey("statusKey")) {
+                                    String key = detail.get("statusKey");
                                     btc.setStatusKey(key);
                                     btc.setStatusList(StatusUtil.getStatusArr(key));
                                     btc.setStatusType(Integer.valueOf(detail.get("statusType")));
@@ -169,15 +169,15 @@ public class BaseService {
                     }
                 }
                 List<String> typeList = Arrays.asList(types);
-                if(typeList.contains("XML")){
-                    ZipEntry tEntry = new ZipEntry(table+"/"+table+".xml");
+                if (typeList.contains("XML")) {
+                    ZipEntry tEntry = new ZipEntry(table + "/" + table + ".xml");
                     zos.putNextEntry(tEntry);
                     byte[] xml = createFile(table, columns, "template/GenerateCodeXml.vm");
                     zos.write(xml);
                     zos.closeEntry();
                 }
-                if(typeList.contains("JSP")){
-                    ZipEntry tEntry = new ZipEntry(table+"/"+table+".jsp");
+                if (typeList.contains("JSP")) {
+                    ZipEntry tEntry = new ZipEntry(table + "/" + table + ".jsp");
                     zos.putNextEntry(tEntry);
                     byte[] jsp = createFile(table, columns, "template/GenerateCodeJsp.vm");
                     zos.write(jsp);
@@ -185,18 +185,18 @@ public class BaseService {
                 }
             }
         } catch (Exception e) {
-            LG.error(e.toString(),e);
+            LG.error(e.toString(), e);
         } finally {
             try {
                 zos.close();
             } catch (IOException e) {
-                LG.error(e.toString(),e);
+                LG.error(e.toString(), e);
             }
         }
         return baos;
     }
 
-    private byte[] createFile(String tableName,List<BaseTableColumn> columns,String vmPath){
+    private byte[] createFile(String tableName, List<BaseTableColumn> columns, String vmPath) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             VelocityEngine ve = new VelocityEngine();
@@ -206,12 +206,12 @@ public class BaseService {
             VelocityContext context = new VelocityContext();
             context.put("columns", columns);
             context.put("table", tableName);
-            Template t = ve.getTemplate(vmPath,"UTF-8");
-            OutputStreamWriter osw = new OutputStreamWriter(baos,"UTF-8");
-            t.merge(context,osw);
+            Template t = ve.getTemplate(vmPath, "UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(baos, "UTF-8");
+            t.merge(context, osw);
             osw.close();
         } catch (Exception e) {
-            LG.error(e.toString(),e);
+            LG.error(e.toString(), e);
         }
         return baos.toByteArray();
     }

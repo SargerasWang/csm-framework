@@ -5,7 +5,8 @@
         <association property="c_user" column="c_user" select="sys_cache.selectUserNameById"/>
     </resultMap>
     <select id="selectAll" resultMap="selectAllResultMap" parameterType="java.util.HashMap">
-        SELECT id,name,url,level,parent,icon,remarks,date_format(c_time,'%Y/%m/%d %H:%i:%s') as c_time,c_user,seq FROM sys_menu
+        SELECT id,name,url,level,parent,icon,remarks,date_format(c_time,'%Y/%m/%d %H:%i:%s') as c_time,c_user,seq FROM
+        sys_menu
         <where>
             <if test="id != null">
                 and id = #{id}
@@ -41,7 +42,7 @@
                 and seq = #{seq}
             </if>
         </where>
-        ORDER BY ${_order_}
+        ORDER BY parent,seq
     </select>
     <insert id="insert" parameterType="java.util.HashMap">
         insert into sys_menu(name,url,level,parent,icon,remarks,c_time,c_user,seq) values(#{name},#{url},#{level},#{parent},#{icon},#{remarks},NOW(),#{_current_user_},#{seq})
@@ -55,5 +56,34 @@
     <select id="selectLevel1Menus" parameterType="HashMap" resultType="HashMap">
         select id,name from sys_menu where level=1
     </select>
-
+    <select id="selectRoleIdAndNameList" resultType="HashMap">
+        select id,name from sys_role where status=1 and type != -1
+    </select>
+    <select id="selectRoleListByMenuId" parameterType="HashMap" resultType="HashMap">
+        select role_id from sys_role_menu where menu_id=#{menu_id}
+    </select>
+    <update id="menuUpdateRoles" parameterType="HashMap">
+        delete from sys_role_menu where menu_id=#{menu_id};
+        <if test="role_id">
+            <foreach collection="role_id" item="item">
+                insert into sys_role_menu(role_id, menu_id, c_time, c_user)
+                values(#{item},#{menu_id},NOW(),#{_current_user_});
+            </foreach>
+            <if test="level == 1">
+                delete from sys_role_menu where menu_id in
+                  (select id from sys_menu where parent = #{menu_id});
+                <foreach collection="role_id" item="item">
+                  insert into sys_role_menu(role_id,menu_id,c_time,c_user)
+                    (SELECT #{item},sm.id,NOW(),#{_current_user_} FROM sys_menu sm left join sys_role_menu srm on(srm.menu_id = sm.id)
+                    where sm.parent = #{menu_id});
+                </foreach>
+            </if>
+            <if test="level == 2">
+                <foreach collection="role_id" item="item">
+                  delete from sys_role_menu where menu_id=(select parent from sys_menu where id = #{menu_id}) and role_id = #{item};
+                  insert into sys_role_menu(role_id,menu_id,c_time,c_user) values (#{item},(select parent from sys_menu where id = #{menu_id}),NOW(),#{_current_user_});
+                </foreach>
+            </if>
+        </if>
+    </update>
 </mapper>

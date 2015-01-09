@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class BaseParamater extends HashMap<String, Object> {
 
-    public BaseParamater(Map<? extends String, ?> m) {
+    public BaseParamater(Map<String, ?> m) {
         super(m);
         Assert.notNull(this.get("index"), "index不能为空!");
         this.put(Constants.BASEPARAMATER_JUDGE, true);

@@ -90,6 +90,27 @@ public class BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/executeBatch")
+    public String executeBatch(@RequestParam Map<String, String> allRequestParams) {
+        BaseExecuteAjaxBean bean = new BaseExecuteAjaxBean();
+        try {
+            BaseExecuteBatchParamater bp = new BaseExecuteBatchParamater(allRequestParams);
+            Integer r = service.execute(bp);
+            if (r > 0) {
+                bean.setStatus(1);
+            } else {
+                bean.setStatus(0);
+            }
+        } catch (Exception e) {
+            LG.error(e.toString(), e);
+            bean.setStatus(BaseExecuteAjaxBean.Status.ERROR);
+            bean.setMessage(e.toString());
+        }
+        return JsonUtil.toJson(bean);
+
+    }
+
+    @ResponseBody
     @RequestMapping("/getStatusJS/{id}")
     public String getStatusJS(@PathVariable("id") String id, HttpServletResponse response) {
         Map<String, String> status = StatusUtil.getStatus(id);

@@ -10,4 +10,5 @@ public interface LoginMapper {
 
     List<SystemUser> selectUserByLogin(Map<String,Object> params);
     List<SystemMenu> selectAllMenus();
+    List<SystemMenu> selectMenusByRoleId(Integer roleId);
 }

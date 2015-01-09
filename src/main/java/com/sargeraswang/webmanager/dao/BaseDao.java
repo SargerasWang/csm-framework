@@ -5,6 +5,7 @@ import com.sargeraswang.webmanager.bean.BaseParamater;
 import com.sargeraswang.webmanager.bean.BaseQueryParamater;
 import com.sargeraswang.webmanager.bean.BaseTableColumn;
 import com.sargeraswang.webmanager.common.Constants;
+import com.sargeraswang.webmanager.common.util.JsonUtil;
 import com.sargeraswang.webmanager.common.util.StringUtil;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -50,7 +51,7 @@ public class BaseDao {
             if (LG.isInfoEnabled()) {
                 String sql = session.getConfiguration().getMappedStatement(index).getBoundSql(paramater).getSql();
                 LG.info("[" + index + "]" + "[SQL]" + StringUtil.smartTrim(sql));
-                LG.info("[" + index + "]" + "[PARAMATER]" + paramater);
+                LG.info("[" + index + "]" + "[PARAMATER]" + JsonUtil.toJson(paramater));
             }
             return list;
         } finally {

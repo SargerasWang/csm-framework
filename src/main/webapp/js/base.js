@@ -10,7 +10,7 @@ $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
  */
 function resetHeight(height) {
     //index.jsp's function
-    parent.resetIframeHeight(window.frameElement,height);
+    parent.resetIframeHeight(window.frameElement, height);
 }
 function convertObj2Arr(obj) {
     var arr = new Array();
@@ -24,12 +24,12 @@ function convertObj2Arr(obj) {
  * @param opt
  */
 function ajaxQuery(opt) {
-    $.ajax($.extend({
+    var opt = $.extend({}, {
         url: "/base/query.do",
         type: "POST",
-        dataType: "json",
-        data: opt.data
-    }, opt));
+        dataType: "json"
+    }, opt);
+    $.ajax(opt);
 }
 /**
  *ajax更新
@@ -38,6 +38,18 @@ function ajaxQuery(opt) {
 function ajaxUpdate(opt) {
     $.ajax($.extend({
         url: "/base/execute.do",
+        type: "POST",
+        dataType: "json",
+        data: opt.data
+    }, opt));
+}
+/**
+ *ajax更新(带批量参数)
+ * @param opt
+ */
+function ajaxUpdateBatch(opt) {
+    $.ajax($.extend({
+        url: "/base/executeBatch.do",
         type: "POST",
         dataType: "json",
         data: opt.data
@@ -211,19 +223,19 @@ $.fn.richEditor = function (opt) {
 /**
  * baseSelect 下拉菜单
  */
-$.fn.baseSelect = function(opt){
-    var $opt = $.extend({},{
-        index:"",
-        text:"text",
-        value:"value",
-        hasNull:true
-    },opt);
+$.fn.baseSelect = function (opt) {
+    var $opt = $.extend({}, {
+        index: "",
+        text: "text",
+        value: "value",
+        hasNull: true
+    }, opt);
     var $sel = $(this);
     ajaxQuery({
-        async:false,
-        data:{index:$opt.index},
-        success:function(data){
-            if($opt.hasNull){
+        async: false,
+        data: {index: $opt.index},
+        success: function (data) {
+            if ($opt.hasNull) {
                 $sel.append("<option value=''>请选择</option>");
             }
             for (var i = 0; i < data.length; i++) {
@@ -241,7 +253,7 @@ $.fn.baseSelect = function(opt){
 $.fn.baseTable = function (opt) {
     var _this = this;
     this.addClass("table table-striped table-bordered");
-    var table = this.DataTable(
+    var table = this.DataTable($.extend({},
         {
             "autoWidth": false,
             "processing": true,
@@ -273,10 +285,12 @@ $.fn.baseTable = function (opt) {
                     //index
                     d.index = opt.index;
                     //order
-                    var order_index = d.order[0].column;
-                    var column = d.columns[order_index].data;
-                    var dir = d.order[0].dir;
-                    d.order = {"column": column, "dir": dir};
+                    if(d.order[0]){
+                        var order_index = d.order[0].column;
+                        var column = d.columns[order_index].data;
+                        var dir = d.order[0].dir;
+                        d.order = {"column": column, "dir": dir};
+                    }
                     //search
                     $(".baseSearch", $(_this).parent()).each(function () {
                         if ($(this).val() != '') {
@@ -303,7 +317,7 @@ $.fn.baseTable = function (opt) {
              "error": ajaxErrorCallback
              });
              }*/
-        }
+        },opt)
     );
     $(table).DataTable.ext.errMode = "throw";//出错时不alert
     //绑定选中事件
@@ -544,18 +558,18 @@ $.fn.baseForm = function (opt) {
             var finalValues = new Array();
             $(values).each(function (i, field) {
                 var repeat = false;
-                $(finalValues).each(function () {
-                    if (this.name == field.name) {
-                        this.value += "," + field.value;
+                for (var i = 0; i < finalValues.length; i++) {
+                    var o = finalValues[i];
+                    if (o.name == field.name) {
+                        o.value += "," + field.value;
                         repeat = true;
-                        return;
                     }
-                });
+                }
                 if (!repeat) {
                     finalValues.push(field);
                 }
             });
-            opt.submit(values);
+            opt.submit(finalValues);
             modal_box.close();
         }
         return false;

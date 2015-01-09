@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class BaseExecuteParamater extends BaseParamater {
 
-    public BaseExecuteParamater(Map<? extends String, ?> m) {
+    public BaseExecuteParamater(Map<String, ?> m) {
         super(m);
     }
 }

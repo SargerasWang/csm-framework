@@ -30,12 +30,19 @@ public class UserService {
         return loginMapper.selectUserByLogin(param);
     }
 
-    public List<SystemMenu> selectAllMenus(){
-        return loginMapper.selectAllMenus();
+    public List<TreeMenu> getAllTreeMenus(){
+        List<SystemMenu> systemMenus = loginMapper.selectAllMenus();
+        List<TreeMenu> treeMenus = generateTreeMenus(systemMenus);
+        return treeMenus;
     }
 
-    public List<TreeMenu> getAllTreeMenus(){
-        List<SystemMenu> systemMenus = selectAllMenus();
+    public List<TreeMenu> getTreeMenusByRoleId(Integer roleId){
+        List<SystemMenu> systemMenus = loginMapper.selectMenusByRoleId(roleId);
+        List<TreeMenu> treeMenus = generateTreeMenus(systemMenus);
+        return treeMenus;
+    }
+
+    private List<TreeMenu> generateTreeMenus(List<SystemMenu> systemMenus) {
         List<TreeMenu> treeMenus = new ArrayList<>();
         for(SystemMenu menu : systemMenus){
             if(menu.getLevel() == 1){

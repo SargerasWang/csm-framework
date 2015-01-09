@@ -68,15 +68,15 @@ public class LoginController {
     @ResponseBody
     @RequestMapping(value = "/getMenu")
     public String getMenu(HttpServletRequest request) {
-        List<TreeMenu> allTreeMenus = null;
+        List<TreeMenu> treeMenus = null;
         try {
             HttpSession session = request.getSession();
             SystemUser user = (SystemUser) session.getAttribute(Constants.SESSION_KEY_UINFO);
             if (user != null && user.getRole() != null) {
                 if (Constants.SYSTEM_ROLE_ADMIN_TYPE.equals(user.getRole().getType())) {
-                    allTreeMenus = loginService.getAllTreeMenus();
+                    treeMenus = loginService.getAllTreeMenus();
                 } else {
-
+                    treeMenus = loginService.getTreeMenusByRoleId(user.getRole().getId());
                 }
             } else {
                 LOG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
@@ -84,7 +84,7 @@ public class LoginController {
         } catch (Exception e) {
             LOG.error(e.toString(),e);
         }
-        return JsonUtil.toJson(allTreeMenus);
+        return JsonUtil.toJson(treeMenus);
     }
 
 }
