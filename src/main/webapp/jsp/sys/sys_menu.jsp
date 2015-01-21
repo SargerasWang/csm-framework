@@ -227,8 +227,6 @@
                     }
                 }
                 , {data: "remarks", title: "备注", defaultContent: ""}
-                , {data: "c_time", title: "创建时间"}
-                , {data: "c_user", title: "创建人"}
                 , {data: "seq", title: "排序"}
             ],
             buttons: [

@@ -112,7 +112,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getStatusJS/{id}")
-    public String getStatusJS(@PathVariable("id") String id, HttpServletResponse response) {
+    public BaseJsString getStatusJS(@PathVariable("id") String id, HttpServletResponse response) {
         Map<String, String> status = StatusUtil.getStatus(id);
         if (status != null) {
             response.setContentType("application/javascript;charset=utf-8");
@@ -125,7 +125,9 @@ public class BaseController {
                 sb.append("'").append(status.get(k)).append("',");
             }
             sb.append("};");
-            return sb.toString();
+            BaseJsString js = new BaseJsString();
+            js.setContent(sb.toString());
+            return js;
         } else {
             LG.warn("getStatusJS找不到对应的status,id=" + id);
             return null;

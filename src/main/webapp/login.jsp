@@ -5,40 +5,14 @@
 <head>
     <title>登入</title>
     <jsp:include page="import.jsp" flush="true"/>
-    <script>
-        if(top != self){
-            top.location.href = location.href;
+    <style>
+        #imgCaptcha {
+            position: absolute;
+            right: 3px;
+            top: 3px;
+            z-index: 999;
         }
-        $(function () {
-            $("#loginname").focus();
-
-            //登入按钮提交
-            $('#loginForm').submit(function (e) {
-                e.preventDefault();
-                $('#btnSubmit').button('loading');
-                $('#loginForm').serialize();
-                $('#loginForm').ajaxSubmit({
-                    type: 'post',
-                    url: "<c:url value='/login/login.do'/>",
-                    success: function (data) {
-                        if (data == 2) {
-                            $('#divInfo').addClass("alert-danger").text('用户名或密码错误!');
-                            $("#loginname").focus();
-                            $('#btnSubmit').button('reset');
-                        } else {
-                            location.href = "<c:url value='/'/>";
-                        }
-                    },
-                    error: function () {
-                        $('#divInfo').addClass("alert-danger").text('登入失败!');
-                        $('#btnSubmit').button('reset');
-                    }
-                });
-            });
-        });
-
-
-    </script>
+    </style>
 </head>
 
 <body>
@@ -73,14 +47,20 @@
                             <input name="password" type="password" class="form-control" placeholder="密码" required/>
                         </div>
                         <div class="clearfix"></div>
+                        <br>
 
-                        <div class="input-prepend">
-                            <label class="remember" for="remember"><input type="checkbox" id="remember">记住我</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-addon"><i style="font-size: 22px"
+                                                               class="fa fa-user-md red"></i></span>
+                            <img id="imgCaptcha" src="/login/captcha.do" onclick="reloadCaptcha()"/>
+                            <input id="captcha" name="captcha" maxlength="4" type="text" class="form-control" placeholder="验证码"
+                                   required/>
                         </div>
                         <div class="clearfix"></div>
 
                         <p class="center col-md-5">
-                            <button type="submit" id="btnSubmit" class="btn btn-primary" data-loading-text="登入中...">登入</button>
+                            <button type="submit" id="btnSubmit" class="btn btn-primary" data-loading-text="登入中...">登入
+                            </button>
                         </p>
                     </fieldset>
                 </form>
@@ -94,5 +74,50 @@
 </div>
 <!--/.fluid-container-->
 <jsp:include page="externalJS.jsp" flush="true"/>
+<script>
+    function reloadCaptcha(){
+        $("#imgCaptcha").attr("src","/login/captcha.do?"+new Date().getTime());
+    }
+    if (top != self) {
+        top.location.href = location.href;
+    }
+    $(function () {
+        $("#loginname").focus();
+
+        //登入按钮提交
+        $('#loginForm').submit(function (e) {
+            e.preventDefault();
+            $('#btnSubmit').button('loading');
+            $('#loginForm').serialize();
+            $('#loginForm').ajaxSubmit({
+                type: 'post',
+                url: "<c:url value='/login/login.do'/>",
+                success: function (data) {
+                    if (data == 3 || data == 4) {
+                        if (data == 3) {
+                            $('#divInfo').addClass("alert-danger").text('验证码失效,请重新输入!');
+                        } else {
+                            $('#divInfo').addClass("alert-danger").text('验证码错误,请重新输入!');
+                        }
+                        reloadCaptcha();
+                        $("#captcha").val("").focus();
+
+                        $('#btnSubmit').button('reset');
+                    } else if (data == 2) {
+                        $('#divInfo').addClass("alert-danger").text('用户名或密码错误!');
+                        $("#loginname").focus();
+                        $('#btnSubmit').button('reset');
+                    } else {
+                        location.href = "<c:url value='/'/>";
+                    }
+                },
+                error: function () {
+                    $('#divInfo').addClass("alert-danger").text('登入失败!');
+                    $('#btnSubmit').button('reset');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

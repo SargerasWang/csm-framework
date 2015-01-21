@@ -28,6 +28,11 @@ public class Constants {
      * Session存user 信息
      */
     public static final String SESSION_KEY_UINFO="SESSION_KEY_UINFO";
+
+    /**
+     * Session存验证码
+     */
+    public static final String SESSION_KEY_CAPTCHA="SESSION_KEY_CAPTCHA";
     /**
      * 菜单权限
      */

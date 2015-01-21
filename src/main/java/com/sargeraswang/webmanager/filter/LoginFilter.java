@@ -26,7 +26,7 @@ public class LoginFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        String[] notFilter = new String[]{"login/login.do","login/check.do","login.jsp","login/once_login.do"};
+        String[] notFilter = new String[]{"login/login.do","login.jsp","login/captcha.do"};
         
         String uri = request.getRequestURI();
         boolean doFilter=true;

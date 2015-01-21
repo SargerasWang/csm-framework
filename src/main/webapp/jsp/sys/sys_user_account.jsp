@@ -4,7 +4,7 @@
 <html>
 <head>
     <jsp:include page="/import.jsp" flush="true"/>
-    <script src="<c:url value='/base/getStatusJS/user_status.do'/>"></script>
+    <script  src="<c:url value='/base/getStatusJS/user_status.do'/>"></script>
 </head>
 
 <body>
