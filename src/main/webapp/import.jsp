@@ -7,9 +7,9 @@
 
 <!-- The styles -->
 <link href="<c:url value='/css/fonts.css'/>" rel="stylesheet">
-<link id="bs-css" href="/css/bootstrap-cerulean.min.css" rel="stylesheet">
+<link id="bs-css" href="/css/bootstrap.min.css" rel="stylesheet">
 <link href="<c:url value='/css/base.css'/>" rel="stylesheet">
-<link href="<c:url value='/css/bootstrap.min.css'/>" rel="stylesheet">
+<%--<link href="<c:url value='/css/bootstrap.min.css'/>" rel="stylesheet">--%>
 <link href="<c:url value='/css/charisma-app.css'/>" rel="stylesheet">
 <link href="<c:url value='/bower_components/fullcalendar/dist/fullcalendar.css'/>" rel='stylesheet'>
 <link href="<c:url value='/bower_components/fullcalendar/dist/fullcalendar.print.css'/>" rel='stylesheet' media='print'>

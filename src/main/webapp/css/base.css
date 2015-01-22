@@ -48,10 +48,10 @@
     display: none;
 }
 
-.tabbable .nav-tabs > li > a {
+/*.tabbable .nav-tabs > li > a {
     background-color: #f9f9f9;
     border-bottom: 1px solid #ddd;
-}
+}*/
 
 .tabbable .tabFullScreen{
     position: absolute;
@@ -74,7 +74,7 @@
 
 .dataTable tbody tr:hover td,
 .dataTable tbody tr:nth-child(odd):hover td{
-    background-color: #e5e5e5;
+    background-color: #CDCDCD;
 }
 .dataTable tbody tr.selected td,
 .dataTable tbody tr:nth-child(odd).selected td {

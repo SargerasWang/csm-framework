@@ -42,11 +42,17 @@ $(document).ready(function () {
 
 
     function switchTheme(themeName) {
+        var css_url;
         if (themeName == 'classic') {
-            $('#bs-css').attr('href', '/bower_components/bootstrap/dist/css/bootstrap.min.css');
+            css_url = '/bower_components/bootstrap/dist/css/bootstrap.min.css';
         } else {
-            $('#bs-css').attr('href', '/css/bootstrap-' + themeName + '.min.css');
+            css_url = '/css/bootstrap-' + themeName + '.min.css';
         }
+        $('#bs-css').attr('href', css_url);
+        //loop iframe
+        $("iframe").each(function(){
+            $("#bs-css",$(this).contents()).attr('href', css_url);
+        });
 
         $('#themes i').removeClass('glyphicon glyphicon-ok whitespace').addClass('whitespace');
         $('#themes a[data-value=' + themeName + ']').find('i').removeClass('whitespace').addClass('glyphicon glyphicon-ok');
