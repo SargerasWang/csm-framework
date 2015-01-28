@@ -23,8 +23,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand arial font-hei" href="index.jsp"> <img alt="Charisma Logo" src="/img/logo20.png" class="hidden-xs"/>
-            <span>XX后台管理</span></a>
+        <a class="navbar-brand arial font-hei" href="/"> <img alt="Charisma Logo" src="/img/logo20.png" class="hidden-xs"/>
+            <span>XXXXXXX后台管理系统</span></a>
 
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">
@@ -63,7 +63,7 @@
             </ul>
         </div>
         <!-- theme selector ends -->
-
+        <%--
         <ul class="collapse navbar-collapse nav navbar-nav top-menu">
             <li><a href="#"><i class="glyphicon glyphicon-globe"></i> 访问网站</a></li>
             <li class="dropdown">
@@ -86,7 +86,7 @@
                 </form>
             </li>
         </ul>
-
+--%>
     </div>
 </div>
 <!-- topbar ends -->

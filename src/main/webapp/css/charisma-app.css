@@ -319,8 +319,9 @@ div.center, p.center, img.center {
 
 .navbar-brand {
     letter-spacing: 2px;
-    width: 183px;
-    font-size: 17px;
+    width: 350px;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .navbar-brand img {

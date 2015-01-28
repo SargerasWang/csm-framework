@@ -3,6 +3,7 @@
 <mapper namespace="com.sargeraswang.webmanager.dao.mapper.LoginMapper">
     <resultMap id="userResultMap" type="SystemUser">
         <id column="id" property="id"/>
+        <result property="name" column="name"/>
         <association property="role" javaType="SystemRole">
             <id column="r_id" property="id"/>
             <result column="r_name" property="name"/>
