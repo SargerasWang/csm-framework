@@ -13,18 +13,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -261,6 +257,25 @@ public class BaseController {
             response.flushBuffer();
         } catch (IOException e) {
             LG.error(e.toString(),e);
+        }
+    }
+
+    @RequestMapping(value="/uploadFile", method= RequestMethod.POST)
+    public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
+                                                 @RequestParam("file") MultipartFile file){
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(new FileOutputStream(new File("/Users/SagerasWang/Downloads/"+name)));
+                stream.write(bytes);
+                stream.close();
+                return "You successfully uploaded " + name + "!";
+            } catch (Exception e) {
+                return "You failed to upload " + name + " => " + e.getMessage();
+            }
+        } else {
+            return "You failed to upload " + name + " because the file was empty.";
         }
     }
 

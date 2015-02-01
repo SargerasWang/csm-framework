@@ -22,6 +22,13 @@
 <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
+
+                <form method="POST" enctype="multipart/form-data"
+                      action="/base/uploadFile.do">
+                    File to upload: <input type="file" name="file"><br /> Name: <input
+                        type="text" name="name"><br /> <br />
+                    <input type="submit" value="Upload"> Press here to upload the file!
+                </form>
             <div class="box-header well" data-original-title="">
                 <h2><i class="glyphicon glyphicon-edit"></i> 富文本编辑器</h2>
 
