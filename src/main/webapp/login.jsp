@@ -52,7 +52,7 @@
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i style="font-size: 22px"
                                                                class="fa fa-user-md red"></i></span>
-                            <img id="imgCaptcha" src="/login/captcha.do" onclick="reloadCaptcha()"/>
+                            <img id="imgCaptcha" src="<c:url value='/login/captcha.do'/>" onclick="reloadCaptcha()"/>
                             <input id="captcha" name="captcha" maxlength="4" type="text" class="form-control" placeholder="验证码"
                                    required/>
                         </div>
@@ -76,7 +76,7 @@
 <jsp:include page="externalJS.jsp" flush="true"/>
 <script>
     function reloadCaptcha(){
-        $("#imgCaptcha").attr("src","/login/captcha.do?"+new Date().getTime());
+        $("#imgCaptcha").attr("src","<c:url value='/login/captcha.do?'/>"+new Date().getTime());
     }
     if (top != self) {
         top.location.href = location.href;

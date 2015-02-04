@@ -11,7 +11,7 @@
 <div class="ch-container-main">
     <div class="row">
         <div id="content" class="col-lg-12">
-            <form id="myForm" role="form" method="post" action="/base/generateCode.do">
+            <form id="myForm" role="form" method="post" action="<c:url value='/base/generateCode.do'/>">
                 <div class="form-group">
                     <label>选择表</label>
 
@@ -38,8 +38,8 @@
         //所有字典值
         var allStatusMap = new Object();
         $.ajax({
-            async:false,
-            url:"/base/getAllStatusMap.do",
+            async:true,
+            url:"<c:url value='/base/getAllStatusMap.do'/>",
             type:"POST",
             dataType:"json",
             success:function(data){
@@ -75,7 +75,7 @@
         $(divSelectStatus).append(selectStatus).append(statusType).append(selectText);
 
         $.ajax({
-            url: "/base/getTables.do",
+            url: "<c:url value='/base/getTables.do'/>",
             type: "POST",
             dataType: "json",
             success: function (data) {
@@ -87,7 +87,7 @@
                     $("#collapse_" + this, divPanel).on("show.bs.collapse", function () {
                         if (!$.fn.DataTable.isDataTable($("table", divPanel))) {
                             $.ajax({
-                                url: "/base/getColumns.do",
+                                url: "<c:url value='/base/getColumns.do'/>",
                                 type: "POST",
                                 data: {table: tableName},
                                 dataType: "json",

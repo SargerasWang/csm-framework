@@ -101,7 +101,7 @@
         $("#rolesList", menuRoleForm).empty();
         var data = new Array();
         ajaxQuery({
-            async: false,
+            async: true,
             data: {
                 index: "sys_menu.selectRoleListByMenuId",
                 menu_id: menu.id
@@ -153,7 +153,7 @@
 
         //父级菜单加载
         ajaxQuery({
-            async: false,
+            async: true,
             data: {index: "sys_menu.selectLevel1Menus"},
             success: function (data) {
                 var $sel = $("#myForm select#parent");

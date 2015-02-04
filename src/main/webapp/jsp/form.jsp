@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +25,7 @@
         <div class="box-inner">
 
                 <form method="POST" enctype="multipart/form-data"
-                      action="/base/uploadFile.do">
+                      action="<c:url value='/base/uploadFile.do'/>">
                     File to upload: <input type="file" name="file"><br /> Name: <input
                         type="text" name="name"><br /> <br />
                     <input type="submit" value="Upload"> Press here to upload the file!

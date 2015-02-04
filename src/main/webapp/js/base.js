@@ -1,3 +1,6 @@
+function getContextPath(){
+    return CsmContextPath?CsmContextPath:"";
+}
 /**
  * default
  */
@@ -25,7 +28,7 @@ function convertObj2Arr(obj) {
  */
 function ajaxQuery(opt) {
     var opt = $.extend({}, {
-        url: "/base/query.do",
+        url: getContextPath() + "/base/query.do",
         type: "POST",
         dataType: "json"
     }, opt);
@@ -37,7 +40,7 @@ function ajaxQuery(opt) {
  */
 function ajaxUpdate(opt) {
     $.ajax($.extend({
-        url: "/base/execute.do",
+        url: getContextPath() + "/base/execute.do",
         type: "POST",
         dataType: "json",
         data: opt.data
@@ -49,7 +52,7 @@ function ajaxUpdate(opt) {
  */
 function ajaxUpdateBatch(opt) {
     $.ajax($.extend({
-        url: "/base/executeBatch.do",
+        url: getContextPath() + "/base/executeBatch.do",
         type: "POST",
         dataType: "json",
         data: opt.data
@@ -62,7 +65,7 @@ function ajaxErrorCallback(err) {
     if (err.status == 200) {
         bootbox.alert("本次会话断开,即将重新登入...");
         setTimeout(function () {
-            location.href = "/login.jsp";
+            location.href = getContextPath() + "/login.jsp";
         }, 2000)
     } else {
         bootbox.alert("服务器发生错误,代码[" + err.status + "]");
@@ -128,7 +131,7 @@ function datatableDownload(type, options) {
             queryParam[this.id] = $(this).val();
         }
     });
-    ajax_download("/base/tableDownload.do", {
+    ajax_download(getContextPath() + "/base/tableDownload.do", {
         type: type,
         index: index,
         fileName: fileName,
@@ -232,7 +235,6 @@ $.fn.baseSelect = function (opt) {
     }, opt);
     var $sel = $(this);
     ajaxQuery({
-        async: false,
         data: {index: $opt.index},
         success: function (data) {
             if ($opt.hasNull) {
@@ -279,7 +281,7 @@ $.fn.baseTable = function (opt) {
                 }
             },
             "ajax": {
-                "url": "/base/query.do",
+                "url": getContextPath() + "/base/query.do",
                 "type": "POST",
                 "data": function (d) {
                     //index

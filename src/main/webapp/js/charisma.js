@@ -44,9 +44,9 @@ $(document).ready(function () {
     function switchTheme(themeName) {
         var css_url;
         if (themeName == 'classic') {
-            css_url = '/bower_components/bootstrap/dist/css/bootstrap.min.css';
+            css_url = getContextPath()+'/css/bootstrap.min.css';
         } else {
-            css_url = '/css/bootstrap-' + themeName + '.min.css';
+            css_url = getContextPath()+'/css/bootstrap-' + themeName + '.min.css';
         }
         $('#bs-css').attr('href', css_url);
         //loop iframe

@@ -23,7 +23,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand arial font-hei" href="/"> <img alt="Charisma Logo" src="/img/logo20.png" class="hidden-xs"/>
+        <a class="navbar-brand arial font-hei" href="<c:url value='/'/>"> <img alt="Charisma Logo" src="<c:url value='/img/logo20.png'/>" class="hidden-xs"/>
             <span>XXXXXXX后台管理系统</span></a>
 
         <!-- user dropdown starts -->
@@ -235,7 +235,7 @@
     //ajax读取菜单
     function ajaxLoadMenu() {
         $.ajax({
-            url: "/login/getMenu.do",
+            url: "<c:url value='/login/getMenu.do'/>",
             type: "POST",
             dataType: "json",
             success: function (data) {
@@ -298,6 +298,7 @@
 
     //打开tab
     function openTab(url,text){
+        url ="<c:url value='/'/>"+url;
         $(".tabbable").show();
         var ul = $(".nav-tabs",".tabbable");
         var div_p = $(".tab-content",".tabbable");
