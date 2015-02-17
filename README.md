@@ -3,6 +3,8 @@
 
 ###DEMO
 [http://csm.sargeraswang.com](http://csm.sargeraswang.com)
+账号:manong
+密码:manong
 
 登陆
 
