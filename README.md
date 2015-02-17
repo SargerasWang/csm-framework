@@ -1,6 +1,9 @@
 # csm-framework
 一个使用[charisma](https://github.com/usmanhalalit/charisma)+springmvc+mybatis的后台系统快速开发框架
 
+###DEMO
+[http://csm.sargeraswang.com](http://csm.sargeraswang.com)
+
 登陆
 
 ![](http://sargeraswang.com/images/blog_img/csm_framework/login.png)
