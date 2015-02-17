@@ -5,6 +5,20 @@
 <head>
     <title>表单</title>
     <jsp:include page="../import.jsp" flush="true"/>
+    <link href="<c:url value='/css/fileupload/jquery.fileupload.css'/>" rel='stylesheet'>
+    <link href="<c:url value='/css/fileupload/jquery.fileupload-ui.css'/>" rel='stylesheet'>
+    <noscript><link rel="stylesheet" href="<c:url value='/css/fileupload/jquery.fileupload-noscript.css'/>"></noscript>
+    <noscript><link rel="stylesheet" href="<c:url value='/css/fileupload/jquery.fileupload-ui-noscript.css'/>"></noscript>
+    <script src="<c:url value='/js/fileupload/vendor/jquery.ui.widget.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.iframe-transport.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/load-image.all.min.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload-process.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload-image.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload-audio.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload-video.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload-validate.js'/>"></script>
+    <script src="<c:url value='/js/fileupload/jquery.fileupload-ui.js'/>"></script>
 </head>
 
 <body>
@@ -19,17 +33,47 @@
         </li>
     </ul>
 </div>
-
 <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
-
-                <form method="POST" enctype="multipart/form-data"
-                      action="<c:url value='/base/uploadFile.do'/>">
-                    File to upload: <input type="file" name="file"><br /> Name: <input
-                        type="text" name="name"><br /> <br />
-                    <input type="submit" value="Upload"> Press here to upload the file!
-                </form>
+            <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-download-alt"></i> 上传下载</h2>
+            </div>
+            <div class="box-content">
+                <div class="control-group">
+                    <div class="row fileupload-buttonbar">
+                        <div class="col-lg-7">
+                            <span class="btn btn-success fileinput-button" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>添加文件...</span>
+                            <input type="file" name="files[]" multiple id="fileupload">
+                            </span>
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process"></span>
+                        </div>
+                        <!-- The global progress state -->
+                        <div class="col-lg-5 fileupload-progress fade">
+                            <!-- The global progress bar -->
+                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0"
+                                 aria-valuemax="100">
+                                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                            </div>
+                            <!-- The extended global progress state -->
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                    </div>
+                    <!-- The table listing the files available for upload/download -->
+                    <table role="presentation" class="table table-striped">
+                        <tbody class="files"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="box col-md-12">
+        <div class="box-inner">
             <div class="box-header well" data-original-title="">
                 <h2><i class="glyphicon glyphicon-edit"></i> 富文本编辑器</h2>
 
@@ -53,6 +97,10 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="box col-md-12">
         <div class="box-inner">
             <div class="box-header well" data-original-title="">
                 <h2><i class="glyphicon glyphicon-edit"></i> Form Elements</h2>
@@ -294,6 +342,16 @@
 <script>
     $(document).ready(function () {
        $("#article").richEditor();
+
+        // Initialize the jQuery File Upload widget:
+        $('#fileupload').fileupload({
+            type:'POST',
+            url: '<c:url value='/file/uploadFile.do'/>',
+            dataType:'text',
+            maxFileSize: 5000000,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i
+        });
+
     });
     function setText(){
         var sc = "<script>alert(1);</sc"+"ript>";

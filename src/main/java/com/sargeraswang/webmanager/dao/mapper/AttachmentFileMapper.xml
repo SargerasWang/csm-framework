@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sargeraswang.webmanager.dao.mapper.AttachmentFileMapper">
+    <insert id="insertAttachmentFile" parameterType="com.sargeraswang.webmanager.bean.sys.AttachmentFile" useGeneratedKeys="true"  keyProperty="id">
+      INSERT INTO comm_attachment_file (type, original_file_name, new_file_name, path, md5,unique_key, c_time, c_user)
+      VALUES (#{type},#{originalFileName},#{newFileName},#{path},#{md5},#{uniqueKey},NOW(),#{userId})
+    </insert>
+    <resultMap id="attachmentFileMap" type="com.sargeraswang.webmanager.bean.sys.AttachmentFile">
+        <result column="new_file_name" property="newFileName"/>
+        <result column="original_file_name" property="originalFileName"/>
+        <result column="upload_date" property="uploadDate"/>
+        <result column="user_id" property="userId"/>
+        <result column="unique_key" property="uniqueKey"/>
+    </resultMap>
+    <select id="selectAttachmentFileByKey" parameterType="String" resultMap="attachmentFileMap">
+        select * from comm_attachment_file where unique_key=#{key}
+    </select>
+</mapper>

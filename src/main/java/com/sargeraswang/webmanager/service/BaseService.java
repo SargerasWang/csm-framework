@@ -1,6 +1,5 @@
 package com.sargeraswang.webmanager.service;
 
-import com.sargeraswang.webmanager.bean.BaseExecuteBatchParamater;
 import com.sargeraswang.webmanager.bean.BaseExecuteParamater;
 import com.sargeraswang.webmanager.bean.BaseQueryParamater;
 import com.sargeraswang.webmanager.bean.BaseTableColumn;
@@ -8,12 +7,14 @@ import com.sargeraswang.webmanager.common.util.JsonUtil;
 import com.sargeraswang.webmanager.common.util.StatusUtil;
 import com.sargeraswang.webmanager.common.util.StringUtil;
 import com.sargeraswang.webmanager.dao.BaseDao;
+import com.sargeraswang.webmanager.dao.mapper.AttachmentFileMapper;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,6 +36,7 @@ public class BaseService {
 
     @Resource
     BaseDao baseDao;
+
     public static final Logger LG = Logger.getLogger(BaseService.class);
 
     public List<Object> queryForList(String index, Map<String, Object> paramater) {

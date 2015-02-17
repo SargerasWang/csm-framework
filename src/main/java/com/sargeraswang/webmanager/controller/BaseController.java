@@ -11,16 +11,18 @@ import com.sargeraswang.webmanager.service.BaseService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.JsonNode;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -137,24 +139,24 @@ public class BaseController {
         try {
             String type = allRequestParams.get("type");
             String index = allRequestParams.get("index");
-            String fileName = URLEncoder.encode(allRequestParams.get("fileName"),"UTF-8");
+            String fileName = URLEncoder.encode(allRequestParams.get("fileName"), "UTF-8");
             String columns = allRequestParams.get("columns");
             String statusColumn = allRequestParams.get("statusColumn");
             String params = allRequestParams.get("params");
             String _order = allRequestParams.get("order");
             //order
             Map<String, Object> paramater = new HashMap<>();
-            if(StringUtil.isNotBlank(_order)){
+            if (StringUtil.isNotBlank(_order)) {
                 String[] or = _order.split(",");
                 String o_col = StringUtil.transactSQLInjection(or[0]);
                 String o_dir;
-                if(or.length == 2 && or[1].equalsIgnoreCase("desc")){
+                if (or.length == 2 && or[1].equalsIgnoreCase("desc")) {
                     o_dir = "desc";
-                }else{
+                } else {
                     o_dir = "asc";
                 }
-                paramater.put(Constants.BASEPARAMATER_ORDER,o_col+" "+o_dir);
-            }else {
+                paramater.put(Constants.BASEPARAMATER_ORDER, o_col + " " + o_dir);
+            } else {
                 paramater.put(Constants.BASEPARAMATER_ORDER, "null");
             }
             //queryParams
@@ -165,23 +167,23 @@ public class BaseController {
             String[][] dataArray = service.assembleTableData(statusColumn, datalist, columns);
 
             ServletOutputStream outputStream = response.getOutputStream();
-            if(type.equalsIgnoreCase("CSV")){
+            if (type.equalsIgnoreCase("CSV")) {
                 response.setContentType("text/csv;charset=utf-8");
-                response.setHeader("Content-disposition", "attachment; filename="+fileName+".csv");
-                CsvWriter wr = new CsvWriter(outputStream,',',Charset.forName("UTF-8"));
-                for(String[] s : dataArray){
+                response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".csv");
+                CsvWriter wr = new CsvWriter(outputStream, ',', Charset.forName("UTF-8"));
+                for (String[] s : dataArray) {
                     wr.writeRecord(s);
                 }
                 wr.close();
-            }else{
+            } else {
                 response.setContentType("application/vnd.ms-excel;charset=utf-8");
-                response.setHeader("Content-disposition", "attachment; filename="+fileName+".xls");
+                response.setHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");
                 ExcelUtil.exportExcel(dataArray, outputStream);
             }
             outputStream.flush();
             outputStream.close();
         } catch (Exception e) {
-            LG.error(e.toString(),e);
+            LG.error(e.toString(), e);
         }
     }
 
@@ -218,9 +220,9 @@ public class BaseController {
         try {
             Map<String, Map<String, String>> allStatusMap = StatusUtil.getAllStatusMap();
             List<Map<String, Map<String, String>>> list = new ArrayList<>();
-            for(String key : allStatusMap.keySet()){
+            for (String key : allStatusMap.keySet()) {
                 Map<String, Map<String, String>> map = new HashMap<>();
-                map.put(key,allStatusMap.get(key));
+                map.put(key, allStatusMap.get(key));
                 list.add(map);
             }
             return JsonUtil.toJson(list);
@@ -237,45 +239,26 @@ public class BaseController {
         String[] tables = request.getParameterValues("tables");
         String[] types = request.getParameterValues("types");
         //表设置
-        Map<String,List<Map<String,String>>> configList = new HashMap<>();
-        for(int i = 0;i<tables.length;i++){
+        Map<String, List<Map<String, String>>> configList = new HashMap<>();
+        for (int i = 0; i < tables.length; i++) {
             String table = tables[i];
             String[] arrConfig = request.getParameterValues(table + "_config");
-            if(arrConfig == null){
+            if (arrConfig == null) {
                 continue;
             }
             String config = arrConfig[0];
-            List<Map<String,String>> list = (List<Map<String,String>>)JsonUtil.fromJson(config, List.class);
-            configList.put(table,list);
+            List<Map<String, String>> list = (List<Map<String, String>>) JsonUtil.fromJson(config, List.class);
+            configList.put(table, list);
         }
 
-        ByteArrayOutputStream baos = service.generateCode(tables, types,configList);
+        ByteArrayOutputStream baos = service.generateCode(tables, types, configList);
         try {
             response.setContentType("application/octet-stream;charset=utf-8");
             response.setHeader("Content-disposition", "attachment; filename=code.zip");
             IOUtils.write(baos.toByteArray(), response.getOutputStream());
             response.flushBuffer();
         } catch (IOException e) {
-            LG.error(e.toString(),e);
-        }
-    }
-
-    @RequestMapping(value="/uploadFile", method= RequestMethod.POST)
-    public @ResponseBody String handleFileUpload(@RequestParam("name") String name,
-                                                 @RequestParam("file") MultipartFile file){
-        if (!file.isEmpty()) {
-            try {
-                byte[] bytes = file.getBytes();
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File("/Users/SagerasWang/Downloads/"+name)));
-                stream.write(bytes);
-                stream.close();
-                return "You successfully uploaded " + name + "!";
-            } catch (Exception e) {
-                return "You failed to upload " + name + " => " + e.getMessage();
-            }
-        } else {
-            return "You failed to upload " + name + " because the file was empty.";
+            LG.error(e.toString(), e);
         }
     }
 

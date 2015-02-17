@@ -298,7 +298,7 @@
 
     //打开tab
     function openTab(url,text){
-        url ="<c:url value='/'/>"+url;
+        url =getContextPath()+url;
         $(".tabbable").show();
         var ul = $(".nav-tabs",".tabbable");
         var div_p = $(".tab-content",".tabbable");

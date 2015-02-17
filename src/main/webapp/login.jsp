@@ -32,7 +32,7 @@
                 <div id="divInfo" class="alert alert-info">
                     请输入您的用户名和密码.
                 </div>
-                <form id="loginForm" class="form-horizontal">
+                <form id="loginForm" class="form-horizontal" action="<c:url value='/login/login.do'/>">
                     <fieldset>
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>
@@ -81,18 +81,11 @@
     if (top != self) {
         top.location.href = location.href;
     }
-    $(function () {
+    $(document).ready(function() {
         $("#loginname").focus();
 
         //登入按钮提交
-        $('#loginForm').submit(function (e) {
-            e.preventDefault();
-            $('#btnSubmit').button('loading');
-            $('#loginForm').serialize();
-            $('#loginForm').ajaxSubmit({
-                type: 'post',
-                url: "<c:url value='/login/login.do'/>",
-                success: function (data) {
+        $('#loginForm').ajaxForm(function (data) {
                     if (data == 3 || data == 4) {
                         if (data == 3) {
                             $('#divInfo').addClass("alert-danger").text('验证码失效,请重新输入!');
@@ -108,15 +101,9 @@
                         $("#loginname").focus();
                         $('#btnSubmit').button('reset');
                     } else {
-                        location.href = "<c:url value='/'/>";
+                        location.href = getContextPath()+"index.jsp";
                     }
-                },
-                error: function () {
-                    $('#divInfo').addClass("alert-danger").text('登入失败!');
-                    $('#btnSubmit').button('reset');
-                }
-            });
-        });
+                });
     });
 </script>
 </body>
