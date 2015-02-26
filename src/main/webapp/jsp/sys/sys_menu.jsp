@@ -153,7 +153,7 @@
 
         //父级菜单加载
         ajaxQuery({
-            async: true,
+            async: false,
             data: {index: "sys_menu.selectLevel1Menus"},
             success: function (data) {
                 var $sel = $("#myForm select#parent");
