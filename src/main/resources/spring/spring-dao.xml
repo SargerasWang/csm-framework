@@ -27,7 +27,7 @@
         <property name="password" value="${DB_PASSWORD}"></property>
         <property name="initialPoolSize" value="5"/>
         <property name="minPoolSize" value="5"/>
-        <property name="maxPoolSize" value="50"/>
+        <property name="maxPoolSize" value="10"/>
         <property name="acquireRetryAttempts" value="31"></property>
         <property name="acquireRetryDelay" value="2000"></property>
         <property name="maxIdleTime" value="1800"></property>
@@ -37,11 +37,17 @@
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="ds"></property>
+        <property name="mapperLocations" >
+            <array>
+                <value>classpath:mapping/*.xml</value>
+                <value>classpath:mapping/sys/*.xml</value>
+            </array>
+        </property>
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.sargeraswang.webmanager.dao.mapper"></property>
+        <property name="basePackage" value="com.sargeraswang.csmframework.dao.mapper"></property>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
 
@@ -64,7 +70,7 @@
     </tx:advice>
     <aop:config>
         <aop:pointcut id="defaultServiceOperation"
-                      expression="execution(* com.sargeraswang.webmanager.service.*.*(..))"/>
+                      expression="execution(* com.sargeraswang.csmframework.service.*.*(..))"/>
         <aop:advisor pointcut-ref="defaultServiceOperation" advice-ref="txAdvice"/>
     </aop:config>
     <!-- aop式事务实现，可以支持多库 -->

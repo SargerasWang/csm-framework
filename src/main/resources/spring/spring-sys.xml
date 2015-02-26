@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="springBeanFactoryUtils" class="com.sargeraswang.webmanager.common.util.SpringBeanFactoryUtils"/>
+    <bean id="springBeanFactoryUtils" class="com.sargeraswang.csmframework.common.util.SpringBeanFactoryUtils"/>
     <bean id="sysProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>

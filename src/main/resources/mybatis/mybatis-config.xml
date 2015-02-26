@@ -6,8 +6,11 @@
         <setting name="defaultStatementTimeout" value="5"/>
     </settings>
     <typeAliases>
-        <typeAlias type="com.sargeraswang.webmanager.bean.sys.SystemMenu" alias="SystemMenu"></typeAlias>
-        <typeAlias type="com.sargeraswang.webmanager.bean.sys.SystemRole" alias="SystemRole"></typeAlias>
-        <typeAlias type="com.sargeraswang.webmanager.bean.sys.SystemUser" alias="SystemUser"></typeAlias>
+        <typeAlias type="com.sargeraswang.csmframework.bean.sys.SystemMenu" alias="SystemMenu"></typeAlias>
+        <typeAlias type="com.sargeraswang.csmframework.bean.sys.SystemRole" alias="SystemRole"></typeAlias>
+        <typeAlias type="com.sargeraswang.csmframework.bean.sys.SystemUser" alias="SystemUser"></typeAlias>
     </typeAliases>
+    <plugins>
+        <plugin interceptor="com.sargeraswang.csmframework.common.interceptor.PageInterceptor" ></plugin>
+    </plugins>
 </configuration>
