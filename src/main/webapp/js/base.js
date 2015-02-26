@@ -181,10 +181,10 @@ $.fn.dateRangeBox = function (opt) {
     }, opt);
     var html = '<span class="input-group-addon">' + opt.placeholder + ':</span>'
         + '<input type="text" class="input-sm form-control '
-        + opt.inputClass + '" id="' + opt.id + '_0' + '" />'
+        +  '" id="' + opt.id + '_0' + '" />'
         + '<span class="input-group-addon">~</span>'
         + '<input type="text" class="input-sm form-control '
-        + opt.inputClass + '" id="' + opt.id + '_1' + '" />';
+        +  '" id="' + opt.id + '_1' + '" />';
     this.append(html);
     this.addClass('input-daterange input-group');
     this.datepicker({
@@ -192,6 +192,7 @@ $.fn.dateRangeBox = function (opt) {
         format: "yyyy/mm/dd",
         autoclose: true
     });
+    this.css("marginRight","5px");
 }
 
 /**
@@ -221,6 +222,7 @@ $.fn.richEditor = function (opt) {
             //,['help', ['help']]
         ]
     }, opt));
+
 }
 
 /**
