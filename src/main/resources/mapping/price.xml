@@ -26,4 +26,20 @@
         ORDER BY ${_order_};
     </select>
 
+    <select id="selectForChart" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT UNIX_TIMESTAMP(price_time) as price_time,price FROM price
+        <where>
+            <if test="pid != null">
+                and pid = #{pid}
+            </if>
+            <if test="price_time != null and price_time !=0">
+                and price_time &gt;= DATE_SUB(NOW(),INTERVAL #{price_time} DAY)
+            </if>
+            <if test="province_id != null">
+                and province_id = #{province_id}
+            </if>
+        </where>
+        ORDER BY price_time;
+    </select>
+
 </mapper>

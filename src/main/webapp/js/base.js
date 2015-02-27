@@ -180,10 +180,10 @@ $.fn.dateRangeBox = function (opt) {
         id: ""
     }, opt);
     var html = '<span class="input-group-addon">' + opt.placeholder + ':</span>'
-        + '<input type="text" class="input-sm form-control '
+        + '<input type="text" class="input-sm form-control baseSearch'
         +  '" id="' + opt.id + '_0' + '" />'
         + '<span class="input-group-addon">~</span>'
-        + '<input type="text" class="input-sm form-control '
+        + '<input type="text" class="input-sm form-control baseSearch'
         +  '" id="' + opt.id + '_1' + '" />';
     this.append(html);
     this.addClass('input-daterange input-group');

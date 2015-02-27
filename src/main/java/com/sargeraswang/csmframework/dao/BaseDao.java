@@ -65,18 +65,14 @@ public class BaseDao {
      * @return
      */
     public List<Object> queryForList(BaseQueryParamater paramater) {
-        Long curr = System.currentTimeMillis();
         SqlSession session = sqlSessionFactory.openSession();
-        System.out.println("open:" + (System.currentTimeMillis() - curr));
 
         try {
             List<Object> list = session.selectList(paramater.getIndex(), paramater);
-            System.out.println("select2:" + (System.currentTimeMillis() - curr));
 
             if (LG.isInfoEnabled()) {
                 logInfo(paramater, session);
             }
-            System.out.println("dao:" + (System.currentTimeMillis() - curr));
             return list;
         } finally {
             session.close();

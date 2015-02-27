@@ -46,11 +46,9 @@ public class BaseController {
     @RequestMapping("/query")
     public String query(@RequestParam Map<String, String> allRequestParams) {
         try {
-            Long curr = System.currentTimeMillis();
             String echo = allRequestParams.get("draw");
             BaseQueryParamater bp = new BaseQueryParamater(allRequestParams);
             List<Object> list = service.queryForList(bp);
-                System.out.println(System.currentTimeMillis() - curr);
             if (StringUtils.isNotBlank(echo)) {
                 Integer allCount = service.queryCount(bp);
                 BaseQueryAjaxBean bean = new BaseQueryAjaxBean();

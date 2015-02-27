@@ -22,7 +22,7 @@
         $('#example').baseTable({
             index: "price.selectAll",
             single: true,
-//            order: [[3, "desc"]],
+            order: [[3, "desc"]],
             columns: [
                 {data: "id", title: "",visible:false}
                 ,{data: "pid", title: "商品ID"}
@@ -43,7 +43,14 @@
                 type: "all",
                 fileName: "price",
                 statusColumn: []
-            }
+            },
+            buttons:[[{text: "查看图表",
+                css: "btn-success",
+                icon: "fa fa-bar-chart",
+                allowNull: true,
+                method: function () {
+                    parent.openTab("/jsp/example/price_chart.jsp","价格图表");
+                }}]]
         });
     });
 </script>
