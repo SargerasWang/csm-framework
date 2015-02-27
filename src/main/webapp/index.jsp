@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>自由的 HTML5 Bootstrap 后台模板</title>
+    <title>Charisma SpringMVC Mybatis Framework Demo</title>
     <script>
         if(top != self){
             top.location.href = location.href;
