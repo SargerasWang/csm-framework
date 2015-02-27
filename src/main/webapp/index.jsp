@@ -28,7 +28,7 @@
 
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
                 <i class="glyphicon glyphicon-user"></i>
                 <span class="hidden-sm hidden-xs">
                     <c:out value="${SESSION_KEY_UINFO.name}"/>
@@ -45,7 +45,7 @@
 
         <!-- theme selector starts -->
         <div class="btn-group pull-right theme-container animated tada">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
                 <i class="glyphicon glyphicon-tint"></i><span
                     class="hidden-sm hidden-xs"> 切换主题 / 皮肤</span>
                 <span class="caret"></span>
@@ -164,10 +164,7 @@
     </div>
 
     <footer class="row">
-        <p class="col-md-9 col-sm-9 col-xs-12 copyright">&copy; <a href="http://www.sargeraswang.com" target="_blank">SargerasWang</a> 2014-2015</p>
-
-        <p class="col-md-3 col-sm-3 col-xs-12 powered-by">由: <a
-                href="http://www.sargeraswang.com">SargerasWang</a></p>
+        <div class="col-sm-12 col-lg-12 copyright">&copy; <a href="http://www.sargeraswang.com" target="_blank">SargerasWang</a> 2014-2015</div>
     </footer>
 
 </div>

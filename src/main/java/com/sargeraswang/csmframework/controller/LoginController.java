@@ -113,10 +113,9 @@ public class LoginController {
     @ResponseBody
     @RequestMapping(value = "/captcha")
     public BufferedImage generateCaptcha(HttpServletRequest request) {
-        int width = 200;
+        int width = 100;
         int height = 40;
-//        int charsToPrint = 4;
-        int charsToPrint = 6;
+        int charsToPrint = 4;
 
 //        String elegibleChars = "ABCDEFGHJKLMPQRSTUVWXYabcdefhjkmnpqrstuvwxy1234567890";
         String elegibleChars = "1234567890";
@@ -150,9 +149,9 @@ public class LoginController {
         for (int i = 0; i < data.length; i++) {
             //位置
 //            x += (Math.abs(r.nextInt()) % 15);
-            x += 30;
+            x += 15;
 //            y = 10 + Math.abs(r.nextInt(10));
-            y = 30 ;
+            y = 25 ;
             //旋转
 //            ro = Math.PI/3 -(r.nextDouble() );
 //            orig.rotate(ro);

@@ -317,11 +317,17 @@ div.center, p.center, img.center {
     margin-left: -2px;
 }
 
+.navbar{
+    min-height: 40px;
+    margin-bottom: 10px;
+}
+
 .navbar-brand {
     letter-spacing: 2px;
     width: 350px;
     font-size: 20px;
     font-family: Arial, Helvetica, sans-serif;
+    height:45px;
 }
 
 .navbar-brand img {
@@ -345,13 +351,9 @@ div.center, p.center, img.center {
 }
 
 .navbar-inner {
-    padding-top: 5px;
-    padding-bottom: 5px;
     line-height: 30px;
-    height: 60px;
+    height: 40px;
 }
-
-
 
 .navbar-inner .btn-group {
     margin: 7px 5px 0 5px;
@@ -536,6 +538,9 @@ ul.github-buttons li {
 }
 
 .center-text {
+    text-align: center;
+}
+.copyright {
     text-align: center;
 }
 

@@ -110,12 +110,10 @@ function ajax_download(url, data) {
         iframe_doc = iframe_doc.document;
     }
 
-    iframe_html = "<html><head></head><body><form method='POST' action='" +
-    url + "'>"
+    iframe_html = "<html><head></head><body><form method='POST' action='" + url + "'>"
 
     Object.keys(data).forEach(function (key) {
         iframe_html += "<input type='hidden' name='" + key + "' value='" + data[key] + "'>";
-
     });
 
     iframe_html += "</form></body></html>";
