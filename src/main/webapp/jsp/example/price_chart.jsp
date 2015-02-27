@@ -13,7 +13,7 @@
             <div id="choices">
                 时间:
                 <label><input type="radio" value="7" name="time">最近一周 </label>
-                <label><input type="radio" value="31"  name="time">最近一月</label>
+                <label><input type="radio" value="31" name="time">最近一月</label>
                 <label><input type="radio" value="90" name="time">最近3月 </label>
                 <label><input type="radio" value="183" checked name="time">最近半年 </label>
                 <label><input type="radio" value="365" name="time">最近一年 </label>
@@ -60,7 +60,6 @@
         }
     }
     function plotAccordingToChoices() {
-
         var choiceContainer = $("#choices");
 
         var pids = [];
@@ -106,17 +105,19 @@
                 });
             }
         }
-        $.plot($("#example"), datas,
-                {
-                    series: {
-                        lines: {show: true}//,                        points: {show: true}
-                    },
-                    legend: {position: "nw"},
-                    grid: {hoverable: true, backgroundColor: {colors: ["#fff", "#eee"]}},
-                    xaxis: {mode: "time", timeformat: "%Y/%m/%d"},
-                    yaxes: [{position: 'left', min: 1000, max: 6000},
-                        {position: 'right', min: 8, max: 20}]
-                });
+        $.plot($("#example"), datas, {
+            series: {
+                lines: {show: true}//,                        points: {show: true}
+            },
+            legend: {position: "nw"},
+            grid: {hoverable: true, backgroundColor: {colors: ["#fff", "#eee"]}},
+            xaxis: {mode: "time", timeformat: "%Y/%m/%d"},
+            yaxes: [{position: 'left', min: 1000, max: 6000},
+                {position: 'right', min: 8, max: 20}],
+            hooks:{drawOverlay:[function(){
+                loading("close");
+            }]}
+        });
         function showTooltip(x, y, contents) {
             var tooltip = $('<div id="tooltip">' + contents + '</div>').css({
                 position: 'absolute',
@@ -159,7 +160,6 @@
 
     $(document).ready(function () {
         resetHeight();
-
         var pids = [8, 9, 19, 20, 22];
         var province_ids = [0, 17];
 
@@ -188,11 +188,16 @@
             choiceContainer.append(html);
         }
         //筛选器绑定事件
-        choiceContainer.find("input").click(plotAccordingToChoices);
-
-
-        plotAccordingToChoices();
-
+        choiceContainer.find("input").click(function(){
+            loading("open");
+            setTimeout(function () {
+                plotAccordingToChoices();
+            },10);
+        });
+        loading("open");
+        setTimeout(function () {
+            plotAccordingToChoices();
+        },10);
 
     });
 </script>

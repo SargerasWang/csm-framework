@@ -104,3 +104,15 @@
     line-height: 34px;
     text-align: right;
 }
+
+#_loading {
+    position: absolute;
+    z-index: 999;
+    background-color: #1c1c1c;
+    opacity: 0.5;
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+    top:0px;
+    left:0px;
+}

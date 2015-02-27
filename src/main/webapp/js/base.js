@@ -23,6 +23,23 @@ function convertObj2Arr(obj) {
     return arr;
 }
 /**
+ * 正在加载的遮罩
+ * @param hide close关闭
+ */
+function loading(hide) {
+    if($("#_loading").length == 0){
+        var img = getContextPath()+"/img/ajax-loaders/ajax-loader-7.gif";
+        $("<div id=\"_loading\" style=\"display: none;\">正在加载<img src=\""+img+"\"></div>").prependTo("body");
+        $("#_loading").css("height", $("body").height() + "px");
+        $("#_loading").css("lineHeight", $("body").height() + "px");
+    }
+    if (hide == "close") {
+        $("#_loading").hide();
+    } else {
+        $("#_loading").show();
+    }
+}
+/**
  *ajax查询
  * @param opt
  */
