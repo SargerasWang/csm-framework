@@ -115,9 +115,11 @@ public class LoginController {
     public BufferedImage generateCaptcha(HttpServletRequest request) {
         int width = 200;
         int height = 40;
-        int charsToPrint = 4;
+//        int charsToPrint = 4;
+        int charsToPrint = 6;
 
-        String elegibleChars = "ABCDEFGHJKLMPQRSTUVWXYabcdefhjkmnpqrstuvwxy1234567890";
+//        String elegibleChars = "ABCDEFGHJKLMPQRSTUVWXYabcdefhjkmnpqrstuvwxy1234567890";
+        String elegibleChars = "1234567890";
 
         char[] chars = elegibleChars.toCharArray();
         StringBuffer finalString = new StringBuffer();
@@ -147,12 +149,13 @@ public class LoginController {
         AffineTransform orig = new AffineTransform();
         for (int i = 0; i < data.length; i++) {
             //位置
-            x += (Math.abs(r.nextInt()) % 15);
+//            x += (Math.abs(r.nextInt()) % 15);
             x += 30;
-            y = 10 + Math.abs(r.nextInt(10));
+//            y = 10 + Math.abs(r.nextInt(10));
+            y = 30 ;
             //旋转
-            ro = Math.PI/3 -(r.nextDouble() );
-            orig.rotate(ro);
+//            ro = Math.PI/3 -(r.nextDouble() );
+//            orig.rotate(ro);
             Font rotatedFont = font.deriveFont(orig);
             g2d.setFont(rotatedFont);
 

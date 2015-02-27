@@ -53,7 +53,7 @@
                             <span class="input-group-addon"><i style="font-size: 22px"
                                                                class="fa fa-user-md red"></i></span>
                             <img id="imgCaptcha" src="<c:url value='/login/captcha.do'/>" onclick="reloadCaptcha()"/>
-                            <input id="captcha" name="captcha" maxlength="4" type="text" class="form-control" placeholder="验证码"
+                            <input id="captcha" name="captcha" maxlength="8" type="text" class="form-control" placeholder="验证码"
                                    required/>
                         </div>
                         <div class="clearfix"></div>
