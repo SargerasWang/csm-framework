@@ -36,7 +36,7 @@ public class ExcelUtil {
      * 用来验证excel与Vo中的类型是否一致 <br>
      * Map<栏位类型,只能是哪些Cell类型>
      */
-    private static Map<Class<?>, Integer[]> validateMap = new HashMap<Class<?>, Integer[]>();
+    private static Map<Class<?>, Integer[]> validateMap = new HashMap<>();
 
     static {
         validateMap.put(String[].class, new Integer[]{Cell.CELL_TYPE_STRING});
@@ -268,9 +268,9 @@ public class ExcelUtil {
                 } else {
                     List<FieldForSortting> fields = sortFieldByAnno(t.getClass());
                     int cellNum = 0;
-                    for (int i = 0; i < fields.size(); i++) {
+                    for (FieldForSortting field1 : fields) {
                         HSSFCell cell = row.createCell(cellNum);
-                        Field field = fields.get(i).getField();
+                        Field field = field1.getField();
                         field.setAccessible(true);
                         Object value = field.get(t);
                         String textValue = null;
@@ -364,11 +364,11 @@ public class ExcelUtil {
         } catch (IOException e) {
             LG.error(e.toString(), e);
         }
-        List<T> list = new ArrayList<T>();
+        List<T> list = new ArrayList<>();
         HSSFSheet sheet = workBook.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.rowIterator();
         try {
-            List<ExcelLog> logList = new ArrayList<ExcelLog>();
+            List<ExcelLog> logList = new ArrayList<>();
             // Map<title,index>
             Map<String, Integer> titleMap = new HashMap<>();
 
@@ -404,7 +404,7 @@ public class ExcelUtil {
                 T t = null;
                 StringBuilder log = new StringBuilder();
                 if (clazz == Map.class) {
-                    Map<String, Object> map = new HashMap<String, Object>();
+                    Map<String, Object> map = new HashMap<>();
                     for (String k : titleMap.keySet()) {
                         Integer index = titleMap.get(k);
                         String value = row.getCell(index).getStringCellValue();
@@ -484,10 +484,7 @@ public class ExcelUtil {
                 }
             }
             logs.setLogList(logList);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(MessageFormat.format("can not instance class:{0}",
-                    clazz.getSimpleName()), e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(MessageFormat.format("can not instance class:{0}",
                     clazz.getSimpleName()), e);
         }
@@ -519,7 +516,7 @@ public class ExcelUtil {
             }
             ;
         } else if (cell.getCellType() == Cell.CELL_TYPE_BLANK && annoCell.valid().allowNull()) {
-            return result;
+            return null;
         } else {
             List<Integer> cellTypes = Arrays.asList(integers);
 
@@ -602,8 +599,8 @@ public class ExcelUtil {
      */
     private static List<FieldForSortting> sortFieldByAnno(Class<?> clazz) {
         Field[] fieldsArr = clazz.getDeclaredFields();
-        List<FieldForSortting> fields = new ArrayList<FieldForSortting>();
-        List<FieldForSortting> annoNullFields = new ArrayList<FieldForSortting>();
+        List<FieldForSortting> fields = new ArrayList<>();
+        List<FieldForSortting> annoNullFields = new ArrayList<>();
         for (Field field : fieldsArr) {
             ExcelCell ec = field.getAnnotation(ExcelCell.class);
             if (ec == null) {
@@ -632,7 +629,7 @@ public class ExcelUtil {
                 typeComp = ComparatorUtils.reversedComparator(typeComp);
             }
 
-            List<Object> sortCols = new ArrayList<Object>();
+            List<Object> sortCols = new ArrayList<>();
 
             if (props != null) {
                 for (String prop : props) {

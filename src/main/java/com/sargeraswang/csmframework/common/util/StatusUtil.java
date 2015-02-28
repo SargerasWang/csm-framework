@@ -56,9 +56,7 @@ public final class StatusUtil {
                 statusListMap.put(id,arrList);
             }
             LOG.info("读取status.xml完成");
-        } catch (IOException e) {
-            LOG.error("读取status.xml失败!", e);
-        } catch (DocumentException e) {
+        } catch (IOException | DocumentException e) {
             LOG.error("读取status.xml失败!", e);
         }
     }

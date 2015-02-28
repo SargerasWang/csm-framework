@@ -65,7 +65,7 @@ public class PageInterceptor implements Interceptor {
     }
 
     private String buildPageSql(String sql, int start, int length) {
-        StringBuffer sb = new StringBuffer(sql.trim());
+        StringBuilder sb = new StringBuilder(sql.trim());
         while(sb.lastIndexOf(";") == sb.length()-1){
             sb.deleteCharAt(sb.lastIndexOf(";"));
         }

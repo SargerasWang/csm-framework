@@ -55,10 +55,10 @@ public class BaseService {
     /**
      * 根据数据集和标题行,组成数据数组
      *
-     * @param statusColumn
-     * @param datalist
-     * @param columns
-     * @return
+     * @param statusColumn 状态列
+     * @param datalist 数据集
+     * @param columns 列集合
+     * @return 数据数组
      */
     public String[][] assembleTableData(String statusColumn, List datalist, String columns) {
         //处理需要翻译字段

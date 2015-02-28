@@ -31,7 +31,7 @@
 <link href="<c:url value='/css/font-awesome.min.css'/>" rel='stylesheet'>
 
 <!-- jQuery -->
-<script src="<c:url value='/bower_components/jquery/jquery.js'/>"></script>
+<script src="<c:url value='/bower_components/jquery/1.11.2/jquery-1.11.2.min.js'/>"></script>
 
 <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>

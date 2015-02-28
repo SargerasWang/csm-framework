@@ -41,11 +41,10 @@ public class BaseDao {
      *
      * @param index     index
      * @param paramater 查询条件
-     * @return
+     * @return 结果集
      */
     public List<Object> queryForList(String index, Map<String, Object> paramater) {
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             List<Object> list = session.selectList(index, paramater);
             if (LG.isInfoEnabled()) {
                 String sql = session.getConfiguration().getMappedStatement(index).getBoundSql(paramater).getSql();
@@ -53,29 +52,24 @@ public class BaseDao {
                 LG.info("[" + index + "]" + "[PARAMATER]" + JsonUtil.toJson(paramater));
             }
             return list;
-        } finally {
-            session.close();
         }
     }
 
     /**
      * 查询结果集
      *
-     * @param paramater
-     * @return
+     * @param paramater 条件
+     * @return 结果集
      */
     public List<Object> queryForList(BaseQueryParamater paramater) {
-        SqlSession session = sqlSessionFactory.openSession();
 
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             List<Object> list = session.selectList(paramater.getIndex(), paramater);
 
             if (LG.isInfoEnabled()) {
                 logInfo(paramater, session);
             }
             return list;
-        } finally {
-            session.close();
         }
     }
 
@@ -89,12 +83,11 @@ public class BaseDao {
     /**
      * 查询总数
      *
-     * @param paramater
-     * @return
+     * @param paramater 条件
+     * @return 数量
      */
     public Integer queryCount(BaseQueryParamater paramater) {
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             String sql = session.getConfiguration().getMappedStatement(paramater.getIndex()).getBoundSql(paramater).getSql();
             String countSql = generateCountSql(sql);
             try {
@@ -113,20 +106,18 @@ public class BaseDao {
                 LG.error(e.toString(), e);
             }
             return 0;
-        } finally {
-            session.close();
         }
     }
 
     /**
-     * 生成差总数sql
+     * 生成查总数sql
      *
-     * @param sql
-     * @return
+     * @param sql 原sql
+     * @return 查询总数的sql
      */
     private static String generateCountSql(String sql) {
         int i = sql.toUpperCase().indexOf("FROM");
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("select count(0) ");
         sb.append(sql.substring(i));
         if (LG.isInfoEnabled()) {
@@ -138,30 +129,26 @@ public class BaseDao {
     /**
      * 执行更新
      *
-     * @param paramater
-     * @return
+     * @param paramater 参数
+     * @return 影响行数
      */
     public Integer execute(BaseExecuteParamater paramater) {
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             if (LG.isInfoEnabled()) {
                 logInfo(paramater, session);
             }
             return session.update(paramater.getIndex(), paramater);
-        } finally {
-            session.close();
         }
     }
 
     /**
      * 获得所有表名
      *
-     * @return
+     * @return 表名列表
      */
     public List<String> getTables() {
         List<String> tables = new ArrayList<>();
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             DatabaseMetaData metaData = session.getConnection().getMetaData();
             ResultSet rs = metaData.getTables(null, null, "%", null);
             while (rs.next()) {
@@ -169,8 +156,6 @@ public class BaseDao {
             }
         } catch (SQLException e) {
             LG.error(e.toString(), e);
-        } finally {
-            session.close();
         }
         return tables;
     }
@@ -178,13 +163,12 @@ public class BaseDao {
     /**
      * 获得表的列信息
      *
-     * @param table
-     * @return
+     * @param table 表名
+     * @return 列信息
      */
     public List<BaseTableColumn> getColumns(String table) {
         List<BaseTableColumn> list = new ArrayList<>();
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
             DatabaseMetaData md = session.getConnection().getMetaData();
             ResultSet primaryKeys = md.getPrimaryKeys(null, null, table);
             List<String> primary = new ArrayList<>();
@@ -213,8 +197,6 @@ public class BaseDao {
             }
         } catch (SQLException e) {
             LG.error(e.toString(), e);
-        } finally {
-            session.close();
         }
         return list;
     }

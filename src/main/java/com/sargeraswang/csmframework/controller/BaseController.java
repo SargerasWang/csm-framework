@@ -240,8 +240,7 @@ public class BaseController {
         String[] types = request.getParameterValues("types");
         //表设置
         Map<String, List<Map<String, String>>> configList = new HashMap<>();
-        for (int i = 0; i < tables.length; i++) {
-            String table = tables[i];
+        for (String table : tables) {
             String[] arrConfig = request.getParameterValues(table + "_config");
             if (arrConfig == null) {
                 continue;
