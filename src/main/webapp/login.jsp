@@ -52,7 +52,7 @@
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i style="font-size: 22px"
                                                                class="fa fa-user-md red"></i></span>
-                            <img id="imgCaptcha" src="<c:url value='/login/captcha.do'/>" onclick="reloadCaptcha()"/>
+                            <img id="imgCaptcha" alt="点击更换验证码" src="<c:url value='/login/captcha.do'/>" onclick="reloadCaptcha()"/>
                             <input id="captcha" name="captcha" maxlength="8" type="text" class="form-control" placeholder="验证码"
                                    required/>
                         </div>
