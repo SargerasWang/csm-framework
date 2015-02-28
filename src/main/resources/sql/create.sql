@@ -1,64 +1,106 @@
 DROP TABLE blog;
 CREATE TABLE blog (
-  id INT NOT NULL AUTO_INCREMENT,
-  ctime DATETIME NOT NULL,
-  title VARCHAR(45) NOT NULL,
-  status TINYINT DEFAULT '0' NOT NULL,
-  level INT DEFAULT '1' NOT NULL,
-  article TEXT,
-  permissions TINYINT DEFAULT '1' NOT NULL COMMENT '权限:1.公开 2.私有',
-  tags VARCHAR(200) COMMENT '标签:多个用逗号隔开',
+  id          INT                 NOT NULL AUTO_INCREMENT,
+  ctime       DATETIME            NOT NULL,
+  title       VARCHAR(45)         NOT NULL,
+  status      TINYINT DEFAULT '0' NOT NULL,
+  level       INT DEFAULT '1'     NOT NULL,
+  article     TEXT,
+  permissions TINYINT DEFAULT '1' NOT NULL
+  COMMENT '权限:1.公开 2.私有',
+  tags        VARCHAR(200) COMMENT '标签:多个用逗号隔开',
   PRIMARY KEY (id)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = UTF8;
 DROP TABLE sys_menu;
 CREATE TABLE sys_menu (
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(50) NOT NULL,
-  url VARCHAR(200),
-  level INT NOT NULL,
-  parent INT DEFAULT '0' NOT NULL,
-  icon VARCHAR(50),
+  id      INT             NOT NULL AUTO_INCREMENT,
+  name    VARCHAR(50)     NOT NULL,
+  url     VARCHAR(200),
+  level   INT             NOT NULL,
+  parent  INT DEFAULT '0' NOT NULL,
+  icon    VARCHAR(50),
   remarks VARCHAR(200),
-  c_time DATETIME NOT NULL,
-  c_user INT NOT NULL,
-  seq INT DEFAULT '0' NOT NULL,
+  c_time  DATETIME        NOT NULL,
+  c_user  INT             NOT NULL,
+  seq     INT DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = UTF8;
 DROP TABLE sys_role;
 CREATE TABLE sys_role (
-  id INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(100) NOT NULL,
+  id          INT                 NOT NULL AUTO_INCREMENT,
+  name        VARCHAR(100)        NOT NULL,
   description VARCHAR(200),
-  status TINYINT DEFAULT '1' NOT NULL,
-  c_time DATETIME NOT NULL,
-  c_user INT NOT NULL,
-  type TINYINT DEFAULT '1' NOT NULL,
+  status      TINYINT DEFAULT '1' NOT NULL,
+  c_time      DATETIME            NOT NULL,
+  c_user      INT                 NOT NULL,
+  type        TINYINT DEFAULT '1' NOT NULL,
   PRIMARY KEY (id)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = UTF8;
 DROP TABLE sys_role_menu;
 CREATE TABLE sys_role_menu (
-  id INT NOT NULL AUTO_INCREMENT,
-  role_id INT NOT NULL,
-  menu_id INT NOT NULL,
-  c_time DATETIME NOT NULL,
-  c_user INT NOT NULL,
+  id      INT      NOT NULL AUTO_INCREMENT,
+  role_id INT      NOT NULL,
+  menu_id INT      NOT NULL,
+  c_time  DATETIME NOT NULL,
+  c_user  INT      NOT NULL,
   PRIMARY KEY (id)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = UTF8;
 DROP TABLE sys_user_account;
 CREATE TABLE sys_user_account (
-  id INT NOT NULL AUTO_INCREMENT,
-  role_id VARCHAR(1000),
+  id        INT         NOT NULL AUTO_INCREMENT,
+  role_id   VARCHAR(1000),
   loginname VARCHAR(50) NOT NULL,
-  name VARCHAR(50) COLLATE UTF8_UNICODE_CI,
-  password VARCHAR(255),
-  info VARCHAR(1000) COLLATE UTF8_UNICODE_CI,
-  status INT DEFAULT '1',
-  mobile VARCHAR(32),
+  name      VARCHAR(50)
+            COLLATE UTF8_UNICODE_CI,
+  password  VARCHAR(255),
+  info      VARCHAR(1000)
+            COLLATE UTF8_UNICODE_CI,
+  status    INT                  DEFAULT '1',
+  mobile    VARCHAR(32),
   error_num INT,
-  c_time DATETIME,
-  c_user INT,
+  c_time    DATETIME,
+  c_user    INT,
   PRIMARY KEY (id)
-)  ENGINE=MYISAM DEFAULT CHARSET=UTF8;
+)
+  ENGINE = MYISAM
+  DEFAULT CHARSET = UTF8;
+DROP TABLE price;
+CREATE TABLE price
+(
+  id            INT            NOT NULL AUTO_INCREMENT,
+  pid           INT            NOT NULL,
+  product_name  VARCHAR(45)    NOT NULL,
+  price_time    DATETIME       NOT NULL,
+  price         DECIMAL(10, 2) NOT NULL,
+  province_id   INT            NOT NULL,
+  province_name VARCHAR(45)    NOT NULL,
+  c_time        DATETIME       NOT NULL,
+  PRIMARY KEY (id),
+  INDEX idx_price_ptime (price_time)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+DROP TABLE sys_menu_sql_rel;
+CREATE TABLE sys_menu_sql_rel (
+  id        INT(11)     NOT NULL AUTO_INCREMENT,
+  menu_id   INT(11)     NOT NULL,
+  sql_index VARCHAR(60) NOT NULL,
+  c_time    DATETIME    NOT NULL,
+  c_user    INT(11)     NOT NULL,
+  PRIMARY KEY (id)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8;
+
 
 ##insert sys_role
 INSERT INTO sys_role (name, description, status, c_time, c_user, type)
@@ -139,3 +181,45 @@ INSERT INTO blog (ctime, title, status, level, article, permissions, tags)
 VALUES (NOW(), '大发的发的发家的浪费啦多发hh', 0, 1, NULL, 1, NULL);
 INSERT INTO blog (ctime, title, status, level, article, permissions, tags)
 VALUES (NOW(), '手机测试', 0, 1, 'abccdd', 1, NULL);
+#sys_menu_sql_rel
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (9, 'blog.insert', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (9, 'blog.updateStatus', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (9, 'blog.selectAll', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (9, 'blog.delete', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (9, 'blog.update', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (10, 'blog.insert', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (11, 'blog.insert', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (10, 'blog.updateStatus', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (11, 'blog.updateStatus', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (10, 'blog.selectAll', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (11, 'blog.selectAll', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (10, 'blog.delete', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (11, 'blog.delete', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (10, 'blog.update', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (11, 'blog.update', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user)
+VALUES (3, 'sys_menu.selectRoleListByMenuId', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.delete', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.menuUpdateRoles', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.menuUpdateSqlIndex', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user)
+VALUES (3, 'sys_menu.selectRoleIdAndNameList', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.insert', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.selectAll', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.update', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user)
+VALUES (3, 'sys_menu.selectSqlListByMenuId', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (3, 'sys_menu.selectLevel1Menus', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (15, 'sys_user_account.update', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (15, 'sys_user_account.insert', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (15, 'sys_user_account.selectAll', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user)
+VALUES (15, 'sys_user_account.updatePassword!', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (15, 'sys_user_account.delete', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 'sys_role.selectAll', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 'sys_role.delete', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 'sys_role.selectRoleNameList', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 'sys_role.insert', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 'sys_role.update', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (19, 'price.selectForChart', NOW(), 1);
+INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (19, 'price.selectAll', NOW(), 1);

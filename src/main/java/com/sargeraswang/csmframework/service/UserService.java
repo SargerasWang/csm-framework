@@ -41,6 +41,11 @@ public class UserService {
         return treeMenus;
     }
 
+    public List<String> selectSqlIndexByRoleId(Integer roleId){
+        List<String> sqlIndexList = loginMapper.selectSqlIndexByRoleId(roleId);
+        return sqlIndexList;
+    }
+
     private List<TreeMenu> generateTreeMenus(List<SystemMenu> systemMenus) {
         List<TreeMenu> treeMenus = new ArrayList<>();
         for(SystemMenu menu : systemMenus){

@@ -25,4 +25,7 @@
     <select id="selectMenusByRoleId" parameterType="Integer" resultType="SystemMenu">
     SELECT sm.* FROM sys_menu sm left join sys_role_menu srm on (sm.id = srm.menu_id) where srm.role_id=#{role_id} order by sm.seq;
     </select>
+    <select id="selectSqlIndexByRoleId" parameterType="Integer" resultType="String">
+    SELECT sql_index FROM sys_menu_sql_rel where menu_id in (select menu_id from sys_role_menu where role_id = #{role_id});
+    </select>
 </mapper>

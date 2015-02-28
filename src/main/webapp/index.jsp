@@ -101,7 +101,7 @@
 
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
-                        <li class="nav-header">菜&nbsp;单</li>
+                        <li class="nav-header">菜单</li>
                     </ul>
                 </div>
             </div>

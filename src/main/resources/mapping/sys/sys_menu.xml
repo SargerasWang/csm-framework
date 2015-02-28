@@ -86,4 +86,25 @@
             </if>
         </if>
     </update>
+    <select id="selectSqlListByMenuId" parameterType="HashMap" resultType="HashMap">
+        select sql_index from sys_menu_sql_rel where menu_id=#{menu_id}
+    </select>
+    <update id="menuUpdateSqlIndex" parameterType="HashMap">
+        delete from sys_menu_sql_rel where menu_id=#{menu_id};
+        <if test="sql_index">
+            <foreach collection="sql_index" item="item">
+                insert into sys_menu_sql_rel( menu_id,sql_index, c_time, c_user)
+                values(#{menu_id},#{item},NOW(),#{_current_user_});
+            </foreach>
+            <if test="level == 1">
+                delete from sys_menu_sql_rel where menu_id in
+                (select id from sys_menu where parent = #{menu_id});
+                <foreach collection="sql_index" item="item">
+                    insert into sys_menu_sql_rel(menu_id,sql_index, c_time, c_user)
+                    (SELECT sm.id,#{item},NOW(),#{_current_user_} FROM sys_menu sm left join sys_role_menu srm on(srm.menu_id = sm.id)
+                    where sm.parent = #{menu_id});
+                </foreach>
+            </if>
+        </if>
+    </update>
 </mapper>

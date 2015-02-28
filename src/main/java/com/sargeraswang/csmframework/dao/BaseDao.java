@@ -21,9 +21,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by SagerasWang on 14/11/24.
@@ -199,5 +197,27 @@ public class BaseDao {
             LG.error(e.toString(), e);
         }
         return list;
+    }
+
+    public Map<String,List<String>> getAllSqlIndex(){
+        Collection<String> indexNames = sqlSessionFactory.getConfiguration().getMappedStatementNames();
+
+        Map<String,List<String>> map = new HashMap<>();
+        for(String index : indexNames){
+            //没有.或者有多个.都说明不是一般sql,以sys_cache是缓存sql,不直接调用
+            if(index.contains(".") && index.split("\\.").length == 2 && !index.startsWith("sys_cache.")){
+                String namespace = index.substring(0,index.indexOf("."));
+
+                List<String> nameList ;
+                if(map.containsKey(namespace)){
+                    nameList = map.get(namespace);
+                }else{
+                    nameList = new ArrayList<>();
+                    map.put(namespace,nameList);
+                }
+                nameList.add(index);
+            }
+        }
+        return map;
     }
 }

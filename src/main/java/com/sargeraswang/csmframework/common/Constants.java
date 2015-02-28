@@ -24,9 +24,9 @@ public class Constants {
      */
     public static final String SESSION_KEY_CAPTCHA = "SESSION_KEY_CAPTCHA";
     /**
-     * 菜单权限
+     * sqlIndex权限
      */
-    public static final String SESSION_KEY_MENULIST = "SESSION_KEY_MENULIST";
+    public static final String SESSION_KEY_SQLINDEXLIST = "SESSION_KEY_SQLINDEXLIST";
 
 
     /**

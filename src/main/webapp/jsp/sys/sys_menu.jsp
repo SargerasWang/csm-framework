@@ -9,6 +9,12 @@
             font-size: 24px;
             margin: 2px;
         }
+        .sql_index{
+            margin-left: 20px;
+        }
+        #sqlList .list-group-item{
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -78,6 +84,13 @@
     <input type="hidden" name="repeat">
     <div id="rolesList"></div>
 </form>
+<form id="menuSqlForm" role="form" class="form-horizontal hide">
+    <input type="hidden" name="menu_id">
+    <input type="hidden" name="index">
+    <input type="hidden" name="level">
+    <input type="hidden" name="repeat">
+    <div id="sqlList"></div>
+</form>
 <div class="ch-container-main">
     <div class="row">
         <div id="content" class="col-lg-12">
@@ -101,7 +114,6 @@
         $("#rolesList", menuRoleForm).empty();
         var data = new Array();
         ajaxQuery({
-            async: true,
             data: {
                 index: "sys_menu.selectRoleListByMenuId",
                 menu_id: menu.id
@@ -110,21 +122,21 @@
                     var role = result[i];
                     data.push(role.role_id);
                 }
-            }
-        });
-        ajaxQuery({
-            data: {
-                index: "sys_menu.selectRoleIdAndNameList"
-            },
-            success: function (result) {
-                for (var i = 0; i < result.length; i++) {
-                    var role = result[i];
-                    var checked = "";
-                    if (data && $.inArray(role.id, data) != -1) {
-                        checked = "checked";
+                ajaxQuery({
+                    data: {
+                        index: "sys_menu.selectRoleIdAndNameList"
+                    },
+                    success: function (result) {
+                        for (var i = 0; i < result.length; i++) {
+                            var role = result[i];
+                            var checked = "";
+                            if (data && $.inArray(role.id, data) != -1) {
+                                checked = "checked";
+                            }
+                            $("#rolesList", menuRoleForm).append('<label><input type="checkbox" name="role_id" value="' + role.id + '" ' + checked + '>' + role.name + '</label><br>');
+                        }
                     }
-                    $("#rolesList", menuRoleForm).append('<label><input type="checkbox" name="role_id" value="' + role.id + '" ' + checked + '>' + role.name + '</label><br>');
-                }
+                });
             }
         });
         menuRoleForm.open({
@@ -136,6 +148,58 @@
             index: 'sys_menu.menuUpdateRoles'
         });
     }
+
+    //选择sqlIndex窗口
+    function initSqlList(menu, sqlForm) {
+        $("#sqlList", sqlForm).empty();
+        var data = new Array();
+        ajaxQuery({
+            data: {
+                index: "sys_menu.selectSqlListByMenuId",
+                menu_id: menu.id
+            }, success: function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    var sql = result[i];
+                    data.push(sql["sql_index"]);
+                }
+                ajaxQuery({
+                    url: getContextPath() + "/base/getAllSqlIndex.do",
+                    success: function (result) {
+                        var namespace = Object.keys(result);
+                        for(var i = 0;i<namespace.length;i++){
+                            var div_id = "namespace_"+i;
+                            var div = $.parseHTML("<div class='sql_index collapse' id='"+div_id+"'></div>");
+
+                            var indexs = result[namespace[i]];
+                            var hasCheck = false;
+                            for(var j =0;j<indexs.length;j++){
+
+                                var checked = "";
+                                if(data && $.inArray(indexs[j],data) !=-1){
+                                    checked = "checked";
+                                    hasCheck = true;
+                                }
+                                $(div).append('<label><input type="checkbox" name="sql_index" value="' + indexs[j] + '" ' + checked + '>' + indexs[j] + '</label><br>');
+                            }
+                            if(hasCheck){
+                                $(div).addClass("in");
+                            }
+                            $("#sqlList",sqlForm).append("<li class='list-group-item' data-toggle='collapse' data-target='#"+div_id+"'>"+namespace[i]+"</li>").append(div);
+                        }
+                    }
+                });
+            }
+        });
+        sqlForm.open({
+            data: {
+                menu_id: menu.id,
+                level:menu.level,
+                repeat:"sql_index"
+            },
+            index: 'sys_menu.menuUpdateSqlIndex'
+        });
+    }
+
     $(document).ready(function () {
         resetHeight();
         //初始化选择图标div
@@ -192,7 +256,22 @@
             }
         });
         var menuRoleForm = $("#menuRoleForm").baseForm({
-            title: "设置菜单权限",
+            title: "设置菜单用户权限",
+            submit: function (data) {
+                ajaxUpdateBatch({
+                    data: data,
+                    success: function (r) {
+                        if (r.status != -1) {
+                            tipMsg("操作成功!");
+                        } else {
+                            tipMsg("错误原因" + r.message, "操作失败", "danger", 5000);
+                        }
+                    }
+                });
+            }
+        });
+        var menuSqlForm = $("#menuSqlForm").baseForm({
+            title: "设置菜单数据权限",
             submit: function (data) {
                 ajaxUpdateBatch({
                     data: data,
@@ -291,12 +370,12 @@
                     }
                 ], [
                     {
-                        text: "设置菜单权限",
-                        css: "btn-warning",
+                        text: "用户权限",
+                        css: "btn-success",
                         icon: "fa fa-key",
                         method: function (datas) {
                             var menu = datas[0];
-                            if (menu.level == 1) {
+                            if (menu.level == 1 && menu.url == "") {
                                 bootbox.confirm('对父菜单设置权限将覆盖其所有子菜单的权限设置,您确定么?', function (r) {
                                     if (r) {
                                         initRolesList(menu, menuRoleForm);
@@ -304,6 +383,22 @@
                                 });
                             } else {
                                 initRolesList(menu, menuRoleForm);
+                            }
+                        }
+                    },{
+                        text: "数据权限",
+                        css: "btn-success",
+                        icon: "fa fa-database",
+                        method: function (datas) {
+                            var menu = datas[0];
+                            if (menu.level == 1 && menu.url == "") {
+                                bootbox.confirm('对父菜单设置权限将覆盖其所有子菜单的权限设置,您确定么?', function (r) {
+                                    if (r) {
+                                        initSqlList(menu, menuSqlForm);
+                                    }
+                                });
+                            } else {
+                                initSqlList(menu, menuSqlForm);
                             }
                         }
                     }

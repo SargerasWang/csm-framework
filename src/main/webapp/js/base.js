@@ -75,18 +75,30 @@ function ajaxUpdateBatch(opt) {
         data: opt.data
     }, opt));
 }
+
+function gotoLoginPage(){
+    setTimeout(function () {
+        location.href = getContextPath() + "/login.jsp";
+    }, 2000);
+}
 /**
  * ajax error callback
  */
 function ajaxErrorCallback(err) {
-    if (err.status == 200) {
-        bootbox.alert("本次会话断开,即将重新登入...");
-        setTimeout(function () {
-            location.href = getContextPath() + "/login.jsp";
-        }, 2000)
-    } else {
-        bootbox.alert("服务器发生错误,代码[" + err.status + "]");
-        console.debug(err);
+    switch (err.status){
+        case 200:
+            bootbox.alert("本次会话断开,即将重新登入...");
+            gotoLoginPage();
+            break;
+        case 401:
+            bootbox.alert("请登录后操作");
+            gotoLoginPage();
+            break;
+        case 402:
+            bootbox.alert("您无权限访问该数据");
+            break;
+        default :
+            bootbox.alert("服务器发生错误,代码[" + err.status + "]");
     }
 }
 /**

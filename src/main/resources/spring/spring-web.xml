@@ -39,4 +39,13 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/base/query*"/>
+            <mvc:mapping path="/base/execute*"/>
+            <mvc:mapping path="/base/executeBatch*"/>
+            <mvc:mapping path="/base/tableDownload*"/>
+            <bean class="com.sargeraswang.csmframework.filter.DataPermissionsFilter"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

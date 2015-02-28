@@ -52,12 +52,12 @@ public class LoginController {
         String ip = request.getRemoteAddr();
         try {
             Object objcaptcha = session.getAttribute(Constants.SESSION_KEY_CAPTCHA);
-            if(objcaptcha == null){
+            if (objcaptcha == null) {
                 LOG.info(MessageFormat.format("用户验证码不存在于Session，loginname={0},ip={1}", loginname, ip));
                 return "3";
             }
-            if(!objcaptcha.toString().equalsIgnoreCase(captcha)){
-                LOG.info(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip,objcaptcha,captcha));
+            if (!objcaptcha.toString().equalsIgnoreCase(captcha)) {
+                LOG.info(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip, objcaptcha, captcha));
                 session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
                 return "4";
             }
@@ -82,9 +82,8 @@ public class LoginController {
 
     @RequestMapping(value = "/logout")
     public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
         LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
-        request.getSession().removeAttribute(Constants.SESSION_KEY_UID);
-        request.getSession().removeAttribute(Constants.SESSION_KEY_UINFO);
         return "redirect:/login.jsp";
     }
 
@@ -100,6 +99,9 @@ public class LoginController {
                     treeMenus = loginService.getAllTreeMenus();
                 } else {
                     treeMenus = loginService.getTreeMenusByRoleId(user.getRole().getId());
+                    //获取数据权限
+                    List<String> indexList = loginService.selectSqlIndexByRoleId(user.getRole().getId());
+                    session.setAttribute(Constants.SESSION_KEY_SQLINDEXLIST,indexList);
                 }
             } else {
                 LOG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
@@ -151,7 +153,7 @@ public class LoginController {
 //            x += (Math.abs(r.nextInt()) % 15);
             x += 15;
 //            y = 10 + Math.abs(r.nextInt(10));
-            y = 25 ;
+            y = 25;
             //旋转
 //            ro = Math.PI/3 -(r.nextDouble() );
 //            orig.rotate(ro);
@@ -162,7 +164,7 @@ public class LoginController {
         }
 
         g2d.dispose();
-        request.getSession().setAttribute(Constants.SESSION_KEY_CAPTCHA,finalString);
+        request.getSession().setAttribute(Constants.SESSION_KEY_CAPTCHA, finalString);
         return bufferedImage;
     }
 

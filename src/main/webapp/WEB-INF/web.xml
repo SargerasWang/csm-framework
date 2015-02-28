@@ -12,14 +12,6 @@
         <servlet-name>WebManager</servlet-name>
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>captcha</servlet-name>
-        <servlet-class>com.octo.captcha.servlet.image.SimpleImageCaptchaServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>captcha</servlet-name>
-        <url-pattern>/captcha.jpg</url-pattern>
-    </servlet-mapping>
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

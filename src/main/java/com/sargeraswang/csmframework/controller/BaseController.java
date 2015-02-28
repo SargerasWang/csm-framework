@@ -234,6 +234,19 @@ public class BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/getAllSqlIndex")
+    public String getAllSqlIndex() {
+        try {
+            Map<String, List<String>> map = service.getAllSqlIndex();
+            return JsonUtil.toJson(map);
+        } catch (Exception e) {
+            LG.error(e.toString(), e);
+            return null;
+        }
+
+    }
+
+    @ResponseBody
     @RequestMapping("/generateCode")
     public void generateCode(HttpServletRequest request, HttpServletResponse response) {
         String[] tables = request.getParameterValues("tables");

@@ -216,4 +216,8 @@ public class BaseService {
         return baos.toByteArray();
     }
 
+    public Map<String,List<String>> getAllSqlIndex(){
+        return baseDao.getAllSqlIndex();
+    }
+
 }
