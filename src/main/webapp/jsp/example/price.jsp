@@ -49,7 +49,7 @@
                 icon: "fa fa-bar-chart",
                 allowNull: true,
                 method: function () {
-                    parent.openTab("/jsp/example/price_chart.jsp","价格图表");
+                    parent.openTab("/view/example.price_chart.do","价格图表");
                 }}]]
         });
     });

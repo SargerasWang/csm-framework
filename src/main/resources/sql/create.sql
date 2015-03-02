@@ -223,3 +223,9 @@ INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 's
 INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (17, 'sys_role.update', NOW(), 1);
 INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (19, 'price.selectForChart', NOW(), 1);
 INSERT INTO sys_menu_sql_rel (menu_id, sql_index, c_time, c_user) VALUES (19, 'price.selectAll', NOW(), 1);
+
+##权限改版
+update sys_menu set url = replace(url,'.jsp','.do');
+update sys_menu set url = replace(url,'/jsp/','/view/');
+update sys_menu set url = replace(url,'/sys/','/sys.');
+update sys_menu set url = replace(url,'/example/','/example.');

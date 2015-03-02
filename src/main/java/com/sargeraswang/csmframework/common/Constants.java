@@ -24,6 +24,14 @@ public class Constants {
      */
     public static final String SESSION_KEY_CAPTCHA = "SESSION_KEY_CAPTCHA";
     /**
+     * Session存有权限的菜单
+     */
+    public static final String SESSION_KEY_MENULIST = "SESSION_KEY_MENULIST";
+    /**
+     * Session存所有菜单
+     */
+    public static final String SESSION_KEY_MENULIST_ALL = "SESSION_KEY_MENULIST_ALL";
+    /**
      * sqlIndex权限
      */
     public static final String SESSION_KEY_SQLINDEXLIST = "SESSION_KEY_SQLINDEXLIST";

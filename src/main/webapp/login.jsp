@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>登入</title>
+    <title>Charisma SpringMVC Mybatis Framework Demo Login Page</title>
     <jsp:include page="import.jsp" flush="true"/>
     <style>
         #imgCaptcha {

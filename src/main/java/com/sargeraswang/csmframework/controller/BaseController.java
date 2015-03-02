@@ -3,6 +3,8 @@ package com.sargeraswang.csmframework.controller;
 import com.csvreader.CsvWriter;
 import com.sargeraswang.csmframework.bean.*;
 import com.sargeraswang.csmframework.common.Constants;
+import com.sargeraswang.csmframework.common.ControllerPermissionType;
+import com.sargeraswang.csmframework.common.annotation.ControllerPermission;
 import com.sargeraswang.csmframework.common.util.JsonUtil;
 import com.sargeraswang.csmframework.common.util.StatusUtil;
 import com.sargeraswang.csmframework.common.util.StringUtil;
@@ -44,6 +46,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/query")
+    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public String query(@RequestParam Map<String, String> allRequestParams) {
         try {
             String echo = allRequestParams.get("draw");
@@ -68,6 +71,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/execute")
+    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public String execute(@RequestParam Map<String, String> allRequestParams) {
         BaseExecuteAjaxBean bean = new BaseExecuteAjaxBean();
         try {
@@ -89,6 +93,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/executeBatch")
+    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public String executeBatch(@RequestParam Map<String, String> allRequestParams) {
         BaseExecuteAjaxBean bean = new BaseExecuteAjaxBean();
         try {
@@ -110,6 +115,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getStatusJS/{id}")
+    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public BaseJsString getStatusJS(@PathVariable("id") String id, HttpServletResponse response) {
         Map<String, String> status = StatusUtil.getStatus(id);
         if (status != null) {
@@ -135,6 +141,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/tableDownload")
+    @ControllerPermission(value = ControllerPermissionType.AFTER_LOGIN)
     public void tableDownload(@RequestParam Map<String, String> allRequestParams, HttpServletResponse response) {
         try {
             String type = allRequestParams.get("type");
@@ -189,6 +196,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getTables")
+    @ControllerPermission(value = ControllerPermissionType.CUSTOMER, prefix = "/view/generateCode.do")
     public String getTables() {
         try {
             List<String> list = service.getTables();
@@ -202,6 +210,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getColumns")
+    @ControllerPermission(value = ControllerPermissionType.CUSTOMER, prefix = "/view/generateCode.do")
     public String getColumns(@RequestParam Map<String, String> allRequestParams) {
         try {
             String table = allRequestParams.get("table");
@@ -216,6 +225,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getAllStatusMap")
+    @ControllerPermission(value = ControllerPermissionType.CUSTOMER, prefix = "/view/generateCode.do")
     public String getAllStatusMap() {
         try {
             Map<String, Map<String, String>> allStatusMap = StatusUtil.getAllStatusMap();
@@ -235,6 +245,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/getAllSqlIndex")
+    @ControllerPermission(ControllerPermissionType.ONLY_ADMIN)
     public String getAllSqlIndex() {
         try {
             Map<String, List<String>> map = service.getAllSqlIndex();
@@ -248,6 +259,7 @@ public class BaseController {
 
     @ResponseBody
     @RequestMapping("/generateCode")
+    @ControllerPermission(value = ControllerPermissionType.CUSTOMER, prefix = "/view/generateCode.do")
     public void generateCode(HttpServletRequest request, HttpServletResponse response) {
         String[] tables = request.getParameterValues("tables");
         String[] types = request.getParameterValues("types");

@@ -1,7 +1,7 @@
 /**
  * @author SargerasWang
  */
-package com.sargeraswang.csmframework.filter;
+package com.sargeraswang.csmframework.common.filter;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;

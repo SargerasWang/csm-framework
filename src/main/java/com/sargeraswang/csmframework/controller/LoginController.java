@@ -3,9 +3,12 @@
  */
 package com.sargeraswang.csmframework.controller;
 
+import com.sargeraswang.csmframework.bean.sys.SystemMenu;
 import com.sargeraswang.csmframework.bean.sys.SystemUser;
 import com.sargeraswang.csmframework.bean.sys.TreeMenu;
 import com.sargeraswang.csmframework.common.Constants;
+import com.sargeraswang.csmframework.common.ControllerPermissionType;
+import com.sargeraswang.csmframework.common.annotation.ControllerPermission;
 import com.sargeraswang.csmframework.common.util.JsonUtil;
 import com.sargeraswang.csmframework.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +42,7 @@ public class LoginController {
 
     @ResponseBody
     @RequestMapping(value = "/login")
+    @ControllerPermission(ControllerPermissionType.PUBLIC)
     public String login(@RequestParam Map<String, String> allRequestParams,
                         HttpServletRequest request) {
         String loginname = allRequestParams.get("loginname");
@@ -81,6 +85,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/logout")
+    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
         LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
@@ -89,20 +94,26 @@ public class LoginController {
 
     @ResponseBody
     @RequestMapping(value = "/getMenu")
+    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public String getMenu(HttpServletRequest request) {
         List<TreeMenu> treeMenus = null;
+        List<SystemMenu> sysMenus;
         try {
             HttpSession session = request.getSession();
             SystemUser user = (SystemUser) session.getAttribute(Constants.SESSION_KEY_UINFO);
             if (user != null && user.getRole() != null) {
                 if (Constants.SYSTEM_ROLE_ADMIN_TYPE.equals(user.getRole().getType())) {
-                    treeMenus = loginService.getAllTreeMenus();
+                    sysMenus = loginService.getAllSystemMenus();
                 } else {
-                    treeMenus = loginService.getTreeMenusByRoleId(user.getRole().getId());
+                    sysMenus = loginService.getSystemMenusByRoleId(user.getRole().getId());
                     //获取数据权限
                     List<String> indexList = loginService.selectSqlIndexByRoleId(user.getRole().getId());
-                    session.setAttribute(Constants.SESSION_KEY_SQLINDEXLIST,indexList);
+                    session.setAttribute(Constants.SESSION_KEY_SQLINDEXLIST, indexList);
+                    session.setAttribute(Constants.SESSION_KEY_MENULIST, sysMenus);
+                    //存所有菜单是用于判断页面权限 ViewController.toPage()
+                    session.setAttribute(Constants.SESSION_KEY_MENULIST_ALL, loginService.getAllSystemMenus());
                 }
+                treeMenus = loginService.generateTreeMenus(sysMenus);
             } else {
                 LOG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
             }
@@ -114,6 +125,7 @@ public class LoginController {
 
     @ResponseBody
     @RequestMapping(value = "/captcha")
+    @ControllerPermission(ControllerPermissionType.PUBLIC)
     public BufferedImage generateCaptcha(HttpServletRequest request) {
         int width = 100;
         int height = 40;

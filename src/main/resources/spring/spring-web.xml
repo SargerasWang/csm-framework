@@ -41,11 +41,15 @@
     </mvc:annotation-driven>
     <mvc:interceptors>
         <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.sargeraswang.csmframework.common.filter.ControllerPermissionsFilter"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
             <mvc:mapping path="/base/query*"/>
             <mvc:mapping path="/base/execute*"/>
             <mvc:mapping path="/base/executeBatch*"/>
             <mvc:mapping path="/base/tableDownload*"/>
-            <bean class="com.sargeraswang.csmframework.filter.DataPermissionsFilter"/>
+            <bean class="com.sargeraswang.csmframework.common.filter.DataPermissionsFilter"/>
         </mvc:interceptor>
     </mvc:interceptors>
 </beans>

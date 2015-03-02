@@ -29,16 +29,14 @@ public class UserService {
         return loginMapper.selectUserByLogin(param);
     }
 
-    public List<TreeMenu> getAllTreeMenus(){
+    public List<SystemMenu> getAllSystemMenus(){
         List<SystemMenu> systemMenus = loginMapper.selectAllMenus();
-        List<TreeMenu> treeMenus = generateTreeMenus(systemMenus);
-        return treeMenus;
+        return systemMenus;
     }
 
-    public List<TreeMenu> getTreeMenusByRoleId(Integer roleId){
+    public List<SystemMenu> getSystemMenusByRoleId(Integer roleId){
         List<SystemMenu> systemMenus = loginMapper.selectMenusByRoleId(roleId);
-        List<TreeMenu> treeMenus = generateTreeMenus(systemMenus);
-        return treeMenus;
+        return systemMenus;
     }
 
     public List<String> selectSqlIndexByRoleId(Integer roleId){
@@ -46,7 +44,7 @@ public class UserService {
         return sqlIndexList;
     }
 
-    private List<TreeMenu> generateTreeMenus(List<SystemMenu> systemMenus) {
+    public List<TreeMenu> generateTreeMenus(List<SystemMenu> systemMenus) {
         List<TreeMenu> treeMenus = new ArrayList<>();
         for(SystemMenu menu : systemMenus){
             if(menu.getLevel() == 1){

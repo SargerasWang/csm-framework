@@ -25,8 +25,16 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter>
+        <filter-name>jspFilter</filter-name>
+        <filter-class>com.sargeraswang.csmframework.common.filter.JspFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>jspFilter</filter-name>
+        <url-pattern>/jsp/*</url-pattern>
+    </filter-mapping>
+    <filter>
         <filter-name>loginFilter</filter-name>
-        <filter-class>com.sargeraswang.csmframework.filter.LoginFilter</filter-class>
+        <filter-class>com.sargeraswang.csmframework.common.filter.LoginFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>loginFilter</filter-name>

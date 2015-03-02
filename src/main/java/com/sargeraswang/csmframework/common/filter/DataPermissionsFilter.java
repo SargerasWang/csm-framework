@@ -1,8 +1,7 @@
-package com.sargeraswang.csmframework.filter;
+package com.sargeraswang.csmframework.common.filter;
 
 import com.sargeraswang.csmframework.bean.sys.SystemUser;
 import com.sargeraswang.csmframework.common.Constants;
-import com.sargeraswang.csmframework.common.util.JsonUtil;
 import com.sargeraswang.csmframework.common.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -11,9 +10,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by SagerasWang on 15/2/28.
@@ -46,7 +43,7 @@ public class DataPermissionsFilter extends HandlerInterceptorAdapter {
             return false;
         }
         if(indexList.contains(index) == false){
-            LG.info("当前用户无权限操作SqlIndex["+index+"],拒绝请求");
+            LG.info("当前用户无权限操作SqlIndex[" + index + "],拒绝请求");
             response.setStatus(HttpServletResponse.SC_PAYMENT_REQUIRED);
             response.flushBuffer();
             return false;
