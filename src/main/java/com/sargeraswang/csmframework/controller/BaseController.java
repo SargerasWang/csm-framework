@@ -317,13 +317,15 @@ public class BaseController {
     @ResponseBody
     @RequestMapping("/disconnectSession")
     @ControllerPermission(ControllerPermissionType.ONLY_ADMIN)
-    public String disconnectSession(@RequestParam("session_id")String session_id){
+    public String disconnectSession(@RequestParam("session_id")String session_id,HttpServletRequest request){
         Map<String,String> result = new HashMap<>(1);
         SessionContext context = SpringBeanFactoryUtils.getBean(SessionContext.class);
         HttpSession session = context.getSession(session_id);
         if(session == null){
             result.put("msg","该用户在操作之前已断开.");
         }else{
+            LG.info("用户["+session.getAttribute(Constants.SESSION_KEY_UID)+"]被管理员["+
+                    request.getSession().getAttribute(Constants.SESSION_KEY_UID)+"]强制下线");
             session.invalidate();
             result.put("msg","操作成功.");
         }

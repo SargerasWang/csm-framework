@@ -96,4 +96,14 @@ public class SystemUser {
     public void setC_user(Integer c_user) {
         this.c_user = c_user;
     }
+
+    @Override
+    public String toString() {
+        return "SystemUser{" +
+                "id=" + id +
+                ", role=" + role +
+                ", login_name='" + login_name + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

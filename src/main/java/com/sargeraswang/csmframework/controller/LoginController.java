@@ -92,8 +92,8 @@ public class LoginController {
     @RequestMapping(value = "/logout")
     @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
     public String logout(HttpServletRequest request) {
-        request.getSession().invalidate();
         LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
+        request.getSession().invalidate();
         SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
         sessionContext.removeSession(request.getSession());
         return "redirect:/login.jsp";
