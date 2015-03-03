@@ -8,8 +8,10 @@ import com.sargeraswang.csmframework.bean.sys.SystemUser;
 import com.sargeraswang.csmframework.bean.sys.TreeMenu;
 import com.sargeraswang.csmframework.common.Constants;
 import com.sargeraswang.csmframework.common.ControllerPermissionType;
+import com.sargeraswang.csmframework.common.SessionContext;
 import com.sargeraswang.csmframework.common.annotation.ControllerPermission;
 import com.sargeraswang.csmframework.common.util.JsonUtil;
+import com.sargeraswang.csmframework.common.util.SpringBeanFactoryUtils;
 import com.sargeraswang.csmframework.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -76,6 +78,9 @@ public class LoginController {
                 LOG.warn("用户登陆成功，user=" + list.get(0) + ",ip=" + ip);
                 session.setAttribute(Constants.SESSION_KEY_UID, list.get(0).getId());
                 session.setAttribute(Constants.SESSION_KEY_UINFO, list.get(0));
+
+                SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
+                sessionContext.addSession(session,ip);
                 return "1";
             }
         } catch (Exception e) {
@@ -89,6 +94,8 @@ public class LoginController {
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
         LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
+        SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
+        sessionContext.removeSession(request.getSession());
         return "redirect:/login.jsp";
     }
 

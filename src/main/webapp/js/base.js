@@ -522,6 +522,32 @@ $.fn.baseTable = function (opt) {
 //baseTable End
 
 /**
+ * modalWin
+ * @param opt
+ * @returns {*|jQuery}
+ */
+$.fn.modalWin=function(opt){
+    opt = $.extend({},{
+        width:"80%",
+        title:""
+    },opt);
+    var div_modal = $.parseHTML('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>');
+    var div_dialog = $.parseHTML('<div class="modal-dialog"></div>');
+    $(div_dialog).width(opt.width);
+    var div_content = $.parseHTML('<div class="modal-content"></div>');
+    var div_header = $.parseHTML('<div class="modal-header">' +
+    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">' + opt.title + '</h4></div>');
+    var div_body = $.parseHTML('<div class="modal-body"></div>');
+
+    var div_tmp = $(div_content).append(div_header).append($(div_body).append($(this)));
+    if(opt.footer){
+        div_tmp.append(opt.footer);
+    }
+    var modal_box = $(div_modal).append($(div_dialog).append(div_tmp));
+    return modal_box;
+}
+
+/**
  * baseForm
  * @param opt
  */
@@ -531,21 +557,21 @@ $.fn.baseForm = function (opt) {
         title: "",
         submit: null
     }, opt);
-    var div_modal = $.parseHTML('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>');
-    var div_dialog = $.parseHTML('<div class="modal-dialog"></div>');
-    $(div_dialog).width(opt.width);
-    var div_content = $.parseHTML('<div class="modal-content"></div>');
-    var div_header = $.parseHTML('<div class="modal-header">' +
-    '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">' + opt.title + '</h4></div>');
-    var div_body = $.parseHTML('<div class="modal-body"></div>');
+
     var div_footer = $.parseHTML('<div class="modal-footer">' +
     '<button type="button" class="btn btn-primary">提交</button></div>');
     //隐藏的提交按钮
     var hide_submit = $.parseHTML('<input type="submit" class="hide" >');
     var _form = this;
     $(this).removeClass("hide");
+    //模式化窗口
+    var modal_win = $(this.append(hide_submit)).modalWin({
+       width:opt.width,
+        title:opt.title,
+        footer:div_footer
+    });
     //组装弹出层
-    var modal_box = $.extend($(div_modal).append($(div_dialog).append($(div_content).append(div_header).append($(div_body).append($(this).append(hide_submit))).append(div_footer))), {
+    var modal_box = $.extend( $(modal_win), {
         open: function (opt, callback) {
             modal_box.modal("show");
             $(_form)[0].reset();

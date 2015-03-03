@@ -6,8 +6,15 @@
     <servlet>
         <servlet-name>WebManager</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-*.xml</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <listener>
+        <listener-class>com.sargeraswang.csmframework.common.listener.SessionListener</listener-class>
+    </listener>
     <servlet-mapping>
         <servlet-name>WebManager</servlet-name>
         <url-pattern>*.do</url-pattern>

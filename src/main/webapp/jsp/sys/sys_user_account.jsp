@@ -48,8 +48,45 @@
         </div>
     </div>
 </div>
+<div id="onlineDiv">
+    <table id="onlineTable" class="table table-striped table-bordered "></table>
+</div>
 <jsp:include page="/externalJS.jsp" flush="true"/>
 <script>
+    function disconnect(session_id){
+        ajaxQuery({
+            url:"<c:url value='/base/disconnectSession.do'/>",
+            data:{session_id:session_id},
+            success:function(){
+                showOnlineUser()
+            }
+        });
+    }
+
+    function showOnlineUser(){
+        $("#onlineTable").empty();
+        var th = "<tr><th>用户</th><th>上线时间</th><th>IP</th><th>操作</th></tr>";
+        $("#onlineTable").append(th);
+        ajaxQuery({
+            url: "<c:url value='/base/getOnlineUsers.do'/>",
+            success: function (datas) {
+                for (var i = 0; i < datas.length; i++) {
+                    var data = datas[i];
+
+                    var tr = $.parseHTML("<tr><td>" + data['user_name'] + "</td>"
+                    + "<td>" + data['start_time'] + "</td>"
+                    + "<td>" + data['ip'] + "</td>"
+                    + "<td><a class='btn btn-danger btn-sm' sid='"+data['session_id']+"' href='#' ><i class='glyphicon glyphicon-remove-sign'></i> 强制下线</a></td>"
+                    + "</tr>");
+                    $("a",tr).click(function(){
+                        disconnect($(this).attr('sid'));
+                    });
+                    $("#onlineTable").append(tr);
+                }
+            }
+        });
+    }
+
     $(document).ready(function () {
         resetHeight();
         //角色下拉菜单
@@ -59,6 +96,13 @@
             text:"name",
             hasNull:false
         });
+        //在线用户列表
+        var onlineDiv = $("#onlineDiv").modalWin({
+           title:"在线用户 <i style='margin-left: 20px;cursor: pointer;color:green;' class='glyphicon glyphicon-refresh' onclick='showOnlineUser()'></i>"
+        }).on('shown.bs.modal', function () {
+            showOnlineUser()
+        });
+
         //初始化form
         var myForm = $("#myForm").baseForm({
             title: "sys_user_account",
@@ -98,15 +142,14 @@
             order: [[0, "asc"]],
             columns: [
                 {data: "id", title: "ID",visible:true}
-                ,{data: "role_id", title: "角色",defaultContent:"",render:function(d,a,b,c){
-                    return b.role_name;
+                ,{data: "role_id", title: "角色",defaultContent:"",render:function(d,a,b){
+                    return b['role_name'];
                 }}
                 ,{data: "loginname", title: "账号"}
                 ,{data: "name", title: "姓名",defaultContent:""}
                 ,{data: "info", title: "描述",defaultContent:""}
-                ,{data: "status", title: "状态",defaultContent:"",render: function (data) {return user_status[data]}}
+//                ,{data: "status", title: "状态",defaultContent:"",render: function (data) {return user_status[data]}}
                 ,{data: "mobile", title: "手机号",defaultContent:""}
-                ,{data: "error_num", title: "密码错误次数",defaultContent:""}
                 ,{data: "c_time", title: "创建时间",defaultContent:""}
                 ,{data: "c_user", title: "创建人",defaultContent:""}
             ],
@@ -115,7 +158,7 @@
                 ,{column: "loginname","placeholder": "账号"}
                 ,{column: "name","placeholder": "姓名"}
                 ,{column: "info","placeholder": "描述"}
-                ,{column: "status","placeholder": "状态",select:true,data: convertObj2Arr(user_status)}
+//                ,{column: "status","placeholder": "状态",select:true,data: convertObj2Arr(user_status)}
                 ,{column: "mobile","placeholder": "手机号"}
                 ,{column: "c_time","placeholder": "创建时间",date:true}
             ],
@@ -173,6 +216,16 @@
                         icon: "glyphicon glyphicon-edit",
                         "method": function (datas) {
                             passwordForm.open({data: datas[0], index: "sys_user_account.updatePassword!"});
+                        }
+                    }
+                ],[
+                    {
+                        "text": "查看在线用户",
+                        "css": "btn-info",
+                        icon: "fa fa-link",
+                        allowNull: true,
+                        "method": function () {
+                            onlineDiv.modal("show");
                         }
                     }
                 ]

@@ -2,14 +2,15 @@ package com.sargeraswang.csmframework.controller;
 
 import com.csvreader.CsvWriter;
 import com.sargeraswang.csmframework.bean.*;
+import com.sargeraswang.csmframework.bean.sys.SystemUser;
 import com.sargeraswang.csmframework.common.Constants;
 import com.sargeraswang.csmframework.common.ControllerPermissionType;
+import com.sargeraswang.csmframework.common.SessionContext;
 import com.sargeraswang.csmframework.common.annotation.ControllerPermission;
-import com.sargeraswang.csmframework.common.util.JsonUtil;
-import com.sargeraswang.csmframework.common.util.StatusUtil;
-import com.sargeraswang.csmframework.common.util.StringUtil;
+import com.sargeraswang.csmframework.common.util.*;
 import com.sargeraswang.csmframework.service.BaseService;
 import com.sargeraswang.excelutil.ExcelUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -23,14 +24,13 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by SagerasWang on 14/11/24.
@@ -284,6 +284,50 @@ public class BaseController {
         } catch (IOException e) {
             LG.error(e.toString(), e);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping("/getOnlineUsers")
+    @ControllerPermission(ControllerPermissionType.ONLY_ADMIN)
+    public String getOnlineUsers(){
+        SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
+        Collection<BaseHttpSession> sessionList = sessionContext.getSessionList();
+        List<Map<String,String>> list = new ArrayList<>(sessionList.size());
+        if(CollectionUtils.isEmpty(sessionList)){
+            return JsonUtil.toJson(list);
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        for(BaseHttpSession s : sessionList){
+            HttpSession httpSession = s.getSession();
+            SystemUser user = (SystemUser) httpSession.getAttribute(Constants.SESSION_KEY_UINFO);
+            if(user == null){
+                continue;
+            }
+            Map<String,String> m = new HashMap<>(5);
+            m.put("user_name",user.getName());
+            m.put("ip",s.getRemoteIp());
+            m.put("start_time", sdf.format(new Date(httpSession.getCreationTime())));
+            m.put("session_id",httpSession.getId());
+            list.add(m);
+        }
+        return JsonUtil.toJson(list);
+    }
+
+    @ResponseBody
+    @RequestMapping("/disconnectSession")
+    @ControllerPermission(ControllerPermissionType.ONLY_ADMIN)
+    public String disconnectSession(@RequestParam("session_id")String session_id){
+        Map<String,String> result = new HashMap<>(1);
+        SessionContext context = SpringBeanFactoryUtils.getBean(SessionContext.class);
+        HttpSession session = context.getSession(session_id);
+        if(session == null){
+            result.put("msg","该用户在操作之前已断开.");
+        }else{
+            session.invalidate();
+            result.put("msg","操作成功.");
+        }
+        return JsonUtil.toJson(result);
     }
 
 }

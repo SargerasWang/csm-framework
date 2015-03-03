@@ -5,24 +5,19 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-    <bean id="viewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/"
+
+    <!--<context:component-scan base-package="com.sargeraswang.csmframework" />-->
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/"
           p:suffix=".jsp"/>
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-    </bean>
-    <context:component-scan base-package="com.sargeraswang.csmframework"/>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    <bean id="sessionContext" class="com.sargeraswang.csmframework.common.SessionContext"/>
     <mvc:annotation-driven>
-        <mvc:message-converters>
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <property name="supportedMediaTypes">
-                    <list>
-                        <value>text/plain;charset=UTF-8</value>
-                    </list>
-                </property>
+        <mvc:message-converters  register-defaults="true">
+            <bean class="com.sargeraswang.csmframework.common.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value = "*/*" />
             </bean>
-            <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter">
-            </bean>
+            <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
             <bean class="com.sargeraswang.csmframework.common.converter.MappingJsStringHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
@@ -52,4 +47,5 @@
             <bean class="com.sargeraswang.csmframework.common.filter.DataPermissionsFilter"/>
         </mvc:interceptor>
     </mvc:interceptors>
+    <context:component-scan base-package="com.sargeraswang.csmframework"/>
 </beans>
