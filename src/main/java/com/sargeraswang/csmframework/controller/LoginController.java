@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -42,10 +43,9 @@ public class LoginController {
 
     private static final transient Logger LOG = LoggerFactory.getLogger(LoginController.class);
 
-    @ResponseBody
     @RequestMapping(value = "/login")
     @ControllerPermission(ControllerPermissionType.PUBLIC)
-    public String login(@RequestParam Map<String, String> allRequestParams,
+    public ModelAndView login(@RequestParam Map<String, String> allRequestParams,
                         HttpServletRequest request) {
         String loginname = allRequestParams.get("loginname");
         String password = allRequestParams.get("password");
@@ -54,18 +54,22 @@ public class LoginController {
         Assert.notNull(password);
         Assert.notNull(captcha);
 
+        ModelAndView loginView = new ModelAndView("/login");
+
         HttpSession session = request.getSession();
         String ip = request.getRemoteAddr();
         try {
             Object objcaptcha = session.getAttribute(Constants.SESSION_KEY_CAPTCHA);
             if (objcaptcha == null) {
                 LOG.info(MessageFormat.format("用户验证码不存在于Session，loginname={0},ip={1}", loginname, ip));
-                return "3";
+                loginView.addObject("msg","3");
+                return loginView;
             }
             if (!objcaptcha.toString().equalsIgnoreCase(captcha)) {
                 LOG.info(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip, objcaptcha, captcha));
                 session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
-                return "4";
+                loginView.addObject("msg","4");
+                return loginView;
             }
             session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
 
@@ -73,7 +77,8 @@ public class LoginController {
 
             if (CollectionUtils.isEmpty(list)) {
                 LOG.info(MessageFormat.format("用户登入失败，loginname={0},password={1},ip={2}", loginname, password, ip));
-                return "2";
+                loginView.addObject("msg","2");
+                return loginView;
             } else {
                 LOG.warn("用户登陆成功，user=" + list.get(0) + ",ip=" + ip);
                 session.setAttribute(Constants.SESSION_KEY_UID, list.get(0).getId());
@@ -81,11 +86,13 @@ public class LoginController {
 
                 SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
                 sessionContext.addSession(session,ip);
-                return "1";
+
+                return new ModelAndView("redirect:/");
             }
         } catch (Exception e) {
             LOG.error(e.toString(), e);
-            return "2";
+            loginView.addObject("msg","2");
+            return loginView;
         }
     }
 
