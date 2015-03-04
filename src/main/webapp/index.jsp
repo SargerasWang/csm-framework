@@ -97,9 +97,9 @@
         <div class="col-sm-2 col-lg-2 leftMenu">
             <div class="sidebar-nav">
                 <div class="nav-canvas">
-                    <div class="nav-sm nav nav-stacked">
+                    <%--<div class="nav-sm nav nav-stacked">--%>
 
-                    </div>
+                    <%--</div>--%>
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li class="nav-header">菜单</li>
                     </ul>
@@ -259,19 +259,29 @@
                     e.preventDefault();
                     var $ul = $(this).siblings('ul');
                     var $li = $(this).parent();
-                    if ($ul.is(':visible')) $li.removeClass('active');
-                    else                    $li.addClass('active');
+                    if ($ul.is(':visible')){
+                        $li.removeClass('active');
+                    }else{
+                        $li.addClass('active');
+                    }
+                    $("ul.main-menu > li > ul").not($ul).slideUp();
                     $ul.slideToggle();
                 });
 
                 $('.accordion li.active:first').parents('ul').slideDown();
                 //绑定menu事件
                 $("a", "ul.nav-pills li").bind("click", function () {
-                    $("li", "ul.nav-pills").removeClass("active");
-                    $(this).parent().addClass("active");
+                    NProgress.start();
+                    NProgress.inc();
                     if ($(this).parent().children("ul").length == 0) {//有子菜单的父菜单无动作
                         $(this).openTab();
                     }
+                    var $t = $(this);
+                    setTimeout(function(){
+                        $("li", "ul.nav-pills").removeClass("active");
+                        $t.parent().addClass("active");
+                        NProgress.done();
+                    },200);
                 });
             }
         });
@@ -344,6 +354,9 @@
             text = $(this).parent().parent().prev().last().text() + "-" + $(this).text();
         }
         openTab(url,text);
+        if($(window).width()<767){
+            $(".sidebar-nav").removeClass("active");
+        }
     };
     //关闭tab标签页
     function closeTab(id){

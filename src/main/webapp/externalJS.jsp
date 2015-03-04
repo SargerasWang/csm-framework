@@ -49,6 +49,8 @@
 <script src="<c:url value='/js/summernote-zh-CN.js'/>"></script>
 <!--form auto fill -->
 <script src="<c:url value='/js/jquery.formautofill.js'/>"></script>
+<!--nprogress -->
+<script src="<c:url value='/js/nprogress.js'/>"></script>
 <!-- base.js -->
 <script src="<c:url value='/js/base.js'/>"></script>
 

@@ -7,6 +7,10 @@ function getContextPath(){
 bootbox.setDefaults({locale: "zh_CN"});
 $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
     ajaxErrorCallback(jqXHR);
+}).ajaxStart(function(){
+    NProgress.start();
+}).ajaxStop(function(){
+    NProgress.done();
 });
 /**
  *重设iframe高度
@@ -287,14 +291,14 @@ $.fn.baseTable = function (opt) {
     var table = this.DataTable($.extend({},
         {
             "autoWidth": false,
-            "processing": true,
+            //"processing": true,
             "serverSide": true,
             "searching": false,
             "dom": "<'row-fluid'r>t<'row'<'col-md-3'l><'col-md-6 center'p><'col-md-3 right'i>>",
             "paginationType": "bootstrap",
             "columns": opt.columns,
             "language": {
-                "sProcessing": "正在加载中......",
+                //"sProcessing": "正在加载中......",
                 "sLengthMenu": "每页显示 _MENU_ 条记录",
                 "sZeroRecords": "对不起，查询不到相关数据！",
                 "sEmptyTable": "对不起，查询不到相关数据！",

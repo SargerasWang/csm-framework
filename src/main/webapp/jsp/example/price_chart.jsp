@@ -103,6 +103,7 @@
                         );
                     }
                 });
+                NProgress.inc();
             }
         }
         $.plot($("#example"), datas, {
@@ -115,7 +116,7 @@
             yaxes: [{position: 'left', min: 1000, max: 6000},
                 {position: 'right', min: 8, max: 20}],
             hooks:{drawOverlay:[function(){
-                loading("close");
+                NProgress.done();
             }]}
         });
         function showTooltip(x, y, contents) {
@@ -189,12 +190,12 @@
         }
         //筛选器绑定事件
         choiceContainer.find("input").click(function(){
-            loading("open");
+            NProgress.start();
             setTimeout(function () {
                 plotAccordingToChoices();
             },10);
         });
-        loading("open");
+        NProgress.start();
         setTimeout(function () {
             plotAccordingToChoices();
         },10);

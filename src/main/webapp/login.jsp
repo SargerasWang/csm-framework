@@ -100,27 +100,9 @@
         }
         $("#btnSubmit").click(function(){
             $(this).button("loading");
+            NProgress.start();
+            NProgress.inc();
         });
-//        //登入按钮提交
-//        $('#loginForm').ajaxForm(function (data) {
-//            if (data == 3 || data == 4) {
-//                if (data == 3) {
-//                    $('#divInfo').addClass("alert-danger").text('验证码失效,请重新输入!');
-//                } else {
-//                    $('#divInfo').addClass("alert-danger").text('验证码错误,请重新输入!');
-//                }
-//                reloadCaptcha();
-//                $("#captcha").val("").focus();
-//
-//                $('#btnSubmit').button('reset');
-//            } else if (data == 2) {
-//                $('#divInfo').addClass("alert-danger").text('用户名或密码错误!');
-//                $("#loginname").focus();
-//                $('#btnSubmit').button('reset');
-//            } else {
-//                location.href = getContextPath() + "index.jsp";
-//            }
-//        });
     });
 </script>
 </body>
