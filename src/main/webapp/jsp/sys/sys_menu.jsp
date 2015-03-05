@@ -91,7 +91,7 @@
     <input type="hidden" name="repeat">
     <div id="sqlList"></div>
 </form>
-<div class="ch-container-main">
+<div class="container-fluid">
     <div class="row">
         <div id="content" class="col-lg-12">
             <table id="example"></table>
@@ -290,7 +290,7 @@
             single: true,
             ordering:false,
             columns: [
-                {data: "id", title: "ID"}
+                {data: "id", title: "ID",width:"10px"}
                 , {data: "name", title: "菜单名称"}
                 , {data: "url", title: "链接"}
                 , {data: "level", title: "层级"}

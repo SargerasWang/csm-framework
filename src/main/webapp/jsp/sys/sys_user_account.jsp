@@ -41,7 +41,7 @@
         <input type="password" class="form-control" id="password" name="password" maxlength="50" placeholder="请输入密码" required>
     </div>
 </form>
-<div class="ch-container-main">
+<div class="container-fluid">
     <div class="row">
         <div id="content" class="col-lg-12">
             <table id="example"></table>
@@ -76,7 +76,7 @@
                     var tr = $.parseHTML("<tr><td>" + data['user_name'] + "</td>"
                     + "<td>" + data['start_time'] + "</td>"
                     + "<td>" + data['ip'] + "</td>"
-                    + "<td><a class='btn btn-danger btn-sm' sid='"+data['session_id']+"' href='#' ><i class='glyphicon glyphicon-remove-sign'></i> 强制下线</a></td>"
+                    + "<td><a class='btn btn-danger btn-sm' sid='"+data['session_id']+"' href='#' ><i class='fa fa-chain-broken'></i></a></td>"
                     + "</tr>");
                     $("a",tr).click(function(){
                         disconnect($(this).attr('sid'));

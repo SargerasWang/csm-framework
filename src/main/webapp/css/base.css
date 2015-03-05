@@ -18,6 +18,13 @@
 .row-fluid .input-group, .input-daterange, .chosen-container {
     margin-bottom: 5px;
 }
+.row-fluid .panel .panel-heading{
+    padding: 0px 5px;
+}
+.row-fluid .panel .panel-heading .btn-toolbar .btn-group{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
 
 /*分页footer信息居右*/
 .dataTables_wrapper > .row > div.center {
@@ -29,9 +36,8 @@
 }
 
 .mainFrame {
-    overflow: hidden;
+    overflow: auto;
     border: none;
-    width: 100%;
 }
 
 .ch-container-main {
@@ -40,9 +46,9 @@
 
 .tabbable .tab-close {
     position: absolute;
-    top: 5px;
-    right: 7px;
-    font-size: 12px;
+    top: -11px;
+    right: -4px;
+    font-size: 22px;
     color: #ababab;
 }
 
@@ -115,4 +121,11 @@
     color: #ffffff;
     top:0px;
     left:0px;
+}
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+    /*input[type="file"]{*/
+        /*max-width:240px;*/
+    /*}*/
 }

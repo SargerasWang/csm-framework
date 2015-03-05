@@ -12,6 +12,7 @@
 </head>
 
 <body>
+<div class="container-fluid">
 <form id="myForm" role="form" class="hide">
     <input type="hidden" name="index">
 #foreach($col in $columns)
@@ -80,7 +81,6 @@
 #end
 #end
 </form>
-<div class="ch-container-main">
     <div class="row">
         <div id="content" class="col-lg-12">
             <table id="example"></table>

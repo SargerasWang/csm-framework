@@ -63,30 +63,6 @@
             </ul>
         </div>
         <!-- theme selector ends -->
-        <%--
-        <ul class="collapse navbar-collapse nav navbar-nav top-menu">
-            <li><a href="#"><i class="glyphicon glyphicon-globe"></i> 访问网站</a></li>
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown"><i class="glyphicon glyphicon-star"></i> 下拉菜单 <span
-                        class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">动作</a></li>
-                    <li><a href="#">另一个动作</a></li>
-                    <li><a href="#">一些别的</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">特殊链接</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">更多的特殊链接</a></li>
-                </ul>
-            </li>
-            <li>
-                <form class="navbar-search pull-left">
-                    <input placeholder="搜索" class="search-query form-control col-md-10" name="query"
-                           type="text">
-                </form>
-            </li>
-        </ul>
---%>
     </div>
 </div>
 <!-- topbar ends -->
@@ -124,12 +100,12 @@
 
                 </ul>
                 <div class="tabFullScreen" <%--title="全屏" data-toggle="tooltip" data-placement="bottom"--%>><i class="fa fa-expand"></i></div>
-                <div class="tab-content">
+                <div class="tab-content row">
 
                 </div>
             </div>
         </div>
-        <div id="contextMenu" class="dropdown clearfix" target="">
+        <div id="contextMenu" class="dropdown clearfix" >
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
                 <li><a tabindex="1" href="#">关闭标签页</a></li>
                 <li><a tabindex="2" href="#">关闭所有标签页</a></li>
@@ -181,6 +157,10 @@
         bindTabRightClick();
         //读取菜单
         ajaxLoadMenu();
+
+        $(window).resize(function() {
+            $('iframe').css("width",$('iframe').parent().parent().width()+"px");
+        });
     });
 
     //全屏
@@ -299,6 +279,9 @@
                 if($(".ch-container","body").height() > iframe.height){
                     iframe.height = $(".ch-container","body").height();
                 }
+//                if($(iframe).width() > $(iframe).parent().width()){
+//                    $(iframe).css("width",$(iframe).parent().width()+"px");
+//                }
             }
         }
     }
@@ -319,7 +302,7 @@
         }
         var index = ++_tab_index ;
         var id= "tab_"+index;
-        var li = $.parseHTML('<li><a id="a_'+id+'" href="#'+id+'" data-toggle="tab">'+text+'</a><span class="tab-close">X</span></li>');
+        var li = $.parseHTML('<li><a id="a_'+id+'" href="#'+id+'" data-toggle="tab">'+text+'</a><span class="tab-close"><i class="fa fa-close"></i></span></li>');
         var div = $.parseHTML('<div class="tab-pane" id="'+id+'">'
             +'<iframe scrolling="no" src="'+url+'" class="mainFrame" onload="resetIframeHeight(this)"></iframe>'
             +'</div>');
@@ -340,6 +323,7 @@
         });
         $(ul).append(li);
         $(div_p).append(div);
+        $("iframe",div).css("width",$(div_p).width()+"px");
         $(li).children().first().click();
     }
     //点击menu
@@ -353,10 +337,10 @@
             //二级菜单
             text = $(this).parent().parent().prev().last().text() + "-" + $(this).text();
         }
-        openTab(url,text);
         if($(window).width()<767){
             $(".sidebar-nav").removeClass("active");
         }
+        openTab(url,text);
     };
     //关闭tab标签页
     function closeTab(id){

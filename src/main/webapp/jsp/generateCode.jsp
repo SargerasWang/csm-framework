@@ -8,7 +8,7 @@
 </head>
 
 <body>
-<div class="ch-container-main">
+<div class="container-fluid">
     <div class="row">
         <div id="content" class="col-lg-12">
             <form id="myForm" role="form" method="post" action="<c:url value='/base/generateCode.do'/>">
@@ -120,6 +120,7 @@
                        resetHeight();
                     });
                     $("#tableList").append(divPanel);
+                    resetHeight();
                 })
             }
         });

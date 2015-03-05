@@ -287,18 +287,16 @@ $.fn.baseSelect = function (opt) {
  */
 $.fn.baseTable = function (opt) {
     var _this = this;
-    this.addClass("table table-striped table-bordered");
+    this.addClass("table table-striped table-bordered responsive");
     var table = this.DataTable($.extend({},
         {
             "autoWidth": false,
-            //"processing": true,
             "serverSide": true,
             "searching": false,
             "dom": "<'row-fluid'r>t<'row'<'col-md-3'l><'col-md-6 center'p><'col-md-3 right'i>>",
             "paginationType": "bootstrap",
             "columns": opt.columns,
             "language": {
-                //"sProcessing": "正在加载中......",
                 "sLengthMenu": "每页显示 _MENU_ 条记录",
                 "sZeroRecords": "对不起，查询不到相关数据！",
                 "sEmptyTable": "对不起，查询不到相关数据！",
@@ -339,6 +337,7 @@ $.fn.baseTable = function (opt) {
             "drawCallback": function () {
                 //加载完数据后,通知外层改变iframe高度
                 resetHeight();
+                dataTable_drawCallback();
             }
             /*,"fnServerData": function (sSource, aoData, fnCallback) {
              console.debug(sSource);
@@ -532,7 +531,7 @@ $.fn.baseTable = function (opt) {
  */
 $.fn.modalWin=function(opt){
     opt = $.extend({},{
-        width:"80%",
+        width:"",
         title:""
     },opt);
     var div_modal = $.parseHTML('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>');

@@ -7,7 +7,7 @@
 </head>
 
 <body>
-<div class="ch-container-main">
+<div class="container-fluid">
     <div class="row">
         <div id="content" class="col-lg-12 col-sm-12">
             <!-- content starts -->

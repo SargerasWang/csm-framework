@@ -25,7 +25,7 @@
                placeholder="请输入级别">
     </div>
 </form>
-<div class="ch-container-main">
+<div class="container-fluid">
     <div class="row">
         <div id="content" class="col-lg-12">
             <table id="example"></table>
