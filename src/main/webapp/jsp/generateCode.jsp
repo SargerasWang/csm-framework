@@ -38,7 +38,7 @@
         //所有字典值
         var allStatusMap = new Object();
         $.ajax({
-            async:true,
+            async:false,
             url:"<c:url value='/base/getAllStatusMap.do'/>",
             type:"POST",
             dataType:"json",
