@@ -82,7 +82,7 @@
                 $(data).each(function () {
                     var divPanel = $.parseHTML('<div class="panel panel-info"><div class="panel-heading"><h4 class="panel-title">' +
                     '<input type="checkbox" name="tables" value="' + this + '"><a data-toggle="collapse" data-parent="#accordion" href="#collapse_' + this + '">' + this + '</a>' +
-                    '</h4></div><div id="collapse_' + this + '" class="panel-collapse collapse"><div class="panel-body"><table class="table" id="dataTable_'+this+'"></table></div></div></div>');
+                    '</h4></div><div id="collapse_' + this + '" class="panel-collapse collapse"><div class="panel-body"><table class="table responsive" id="dataTable_'+this+'"></table></div></div></div>');
                     var tableName = this;
                     $("#collapse_" + this, divPanel).on("show.bs.collapse", function () {
                         if (!$.fn.DataTable.isDataTable($("table", divPanel))) {
@@ -97,8 +97,8 @@
                                         paging: false,
                                         ordering: false,
                                         columns: [
-                                            {data: "columnName", title: "字段",width:"150px"},
-                                            {data: "remarks", title: "名称",width:"150px",render:function(data){
+                                            {data: "columnName", title: "字段"},
+                                            {data: "remarks", title: "名称",render:function(data){
                                                 return '<input type="text" value="'+data+'">';
                                             }},
                                             {title:"使用字典翻译",render:function(d,t,r){
@@ -108,7 +108,11 @@
                                                 return "";
                                             }}
                                         ],
-                                        data: data
+                                        data: data,
+                                        drawCallback: function () {
+                                            resetHeight();
+                                            dataTable_drawCallback();
+                                        }
                                     });
                                     $(".selectAllStatusMap",divPanel).append(divSelectStatus);
                                     $("table", divPanel).before("<input type='hidden' id='"+tableName+"_config' name='"+tableName+"_config' >");
