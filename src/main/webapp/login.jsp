@@ -33,29 +33,29 @@
                 <div id="divInfo" class="alert alert-info">
                     请输入您的用户名和密码.
                 </div>
-                <form id="loginForm" class="form-horizontal" method="post" action="<c:url value='/login/login.do'/>">
+                <form id="loginForm" onsubmit="return validateForm()" class="form-horizontal" method="post" action="<c:url value='/login/login.do'/>">
                     <fieldset>
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>
-                            <input id="loginname" name="loginname" type="text" class="form-control" placeholder="用户名"
-                                   required/>
+                            <input id="loginname" name="loginname" type="text" class="form-control" placeholder="用户名"/>
                         </div>
                         <div class="clearfix"></div>
                         <br>
 
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>
-                            <input name="password" type="password" class="form-control" placeholder="密码" required/>
+                            <input name="password" type="password" class="form-control" placeholder="密码"/>
                         </div>
                         <div class="clearfix"></div>
                         <br>
 
                         <div class="input-group input-group-lg">
-                            <span class="input-group-addon"><i style="font-size: 22px" class="fa fa-user-md red"></i></span>
+                            <span class="input-group-addon"><i style="font-size: 22px"
+                                                               class="fa fa-user-md red"></i></span>
                             <img id="imgCaptcha" alt="点击更换验证码" src="<c:url value='/login/captcha.do'/>"
                                  onclick="reloadCaptcha()"/>
                             <input id="captcha" name="captcha" maxlength="8" type="text" class="form-control"
-                                   placeholder="验证码" required/>
+                                   placeholder="验证码"/>
                         </div>
                         <div class="clearfix"></div>
 
@@ -79,14 +79,30 @@
     function reloadCaptcha() {
         $("#imgCaptcha").attr("src", "<c:url value='/login/captcha.do?'/>" + new Date().getTime());
     }
+    function validateForm() {
+        if ($("#loginname").val() == '') {
+            $('#divInfo').addClass("alert-danger").text('请填写用户名!');
+            return false;
+        } else if ($("#password").val() == '') {
+            $('#divInfo').addClass("alert-danger").text('请填写密码!');
+            return false;
+        } else if ($("#captcha").val() == '') {
+            $('#divInfo').addClass("alert-danger").text('请填写验证码!');
+            return false;
+        }
+        $(this).button("loading");
+        NProgress.start();
+        NProgress.inc();
+        return true;
+    }
     if (top != self) {
         top.location.href = location.href;
     }
     $(document).ready(function () {
         $("#loginname").focus();
         var msg = "${msg}";
-        if(msg){
-            switch (msg){
+        if (msg) {
+            switch (msg) {
                 case "2":
                     $('#divInfo').addClass("alert-danger").text('用户名或密码错误!');
                     break;
@@ -98,11 +114,6 @@
                     break;
             }
         }
-        $("#btnSubmit").click(function(){
-            $(this).button("loading");
-            NProgress.start();
-            NProgress.inc();
-        });
     });
 </script>
 </body>
