@@ -36,7 +36,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a href='<c:url value="/base/sendTestMail.do"/>' target="_blank">[发送测试邮件]</a></li>
+                <li><a href='#' onclick="sendTestMail()">[发送测试邮件]</a></li>
                 <li><a href="#">配置</a></li>
                 <li class="divider"></li>
                 <li><a href="<c:url value='/login/logout.do'/>">注销</a></li>
@@ -353,6 +353,15 @@
         }else{
             $(".tabbable").hide();
         }
+    }
+
+    function sendTestMail(){
+        ajaxQuery({
+           url:'<c:url value="/base/sendTestMail.do"/>',
+            success:function(d){
+                tipMsg(d['msg']);
+            }
+        });
     }
 </script>
 </body>

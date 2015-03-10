@@ -332,10 +332,14 @@ public class BaseController {
         return JsonUtil.toJson(result);
     }
 
+    @ResponseBody
     @RequestMapping("/sendTestMail")
     @ControllerPermission(ControllerPermissionType.ONLY_ADMIN)
-    public void sendTestMail(){
+    public String sendTestMail(){
         LG.error("测试一下发送Error邮件是否可用",new NullPointerException("一个测试异常"));
+        Map<String,String> map = new HashMap<>(1);
+        map.put("msg","已抛出异常");
+        return JsonUtil.toJson(map);
     }
 
 }
