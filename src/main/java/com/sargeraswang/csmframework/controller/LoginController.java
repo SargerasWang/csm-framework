@@ -97,7 +97,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/logout")
-    @ControllerPermission(ControllerPermissionType.AFTER_LOGIN)
+    @ControllerPermission(ControllerPermissionType.PUBLIC)
     public String logout(HttpServletRequest request) {
         try {
             LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
