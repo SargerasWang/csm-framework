@@ -36,6 +36,7 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
+                <li><a href='<c:url value="/base/sendTestMail.do"/>' target="_blank">[发送测试邮件]</a></li>
                 <li><a href="#">配置</a></li>
                 <li class="divider"></li>
                 <li><a href="<c:url value='/login/logout.do'/>">注销</a></li>
@@ -47,7 +48,7 @@
         <div class="btn-group pull-right theme-container animated tada">
             <button class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
                 <i class="glyphicon glyphicon-tint"></i><span
-                    class="hidden-sm hidden-xs"> 切换主题 / 皮肤</span>
+                    class="hidden-sm hidden-xs"> 换肤</span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" id="themes">
