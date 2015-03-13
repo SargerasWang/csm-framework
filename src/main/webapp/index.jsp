@@ -47,7 +47,7 @@
         <!-- theme selector starts -->
         <div class="btn-group pull-right theme-container animated tada">
             <button class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
-                <i class="glyphicon glyphicon-tint"></i><span
+                <i class="fa fa-paint-brush"></i><span
                     class="hidden-sm hidden-xs"> 换肤</span>
                 <span class="caret"></span>
             </button>
@@ -166,19 +166,23 @@
 
     //全屏
     $("div.tabFullScreen").click(function(){
-        $("i",this).toggleClass("fa-expand fa-compress")
+        $("i",this).toggleClass("fa-expand fa-compress");
         if(!$("body div.topMenu").is(':visible')){
-            $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
+            changeChcontainer()
         }
         var toggleFlag = 0;
         $("body div.topMenu,.ch-container div.leftMenu").toggle(400,function(){
             toggleFlag ++;
             if(toggleFlag == 2 && !$("body div.topMenu").is(':visible')){
-                $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
+                changeChcontainer()
             }
         });
-            //$(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12");
     });
+    function changeChcontainer(){
+        $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12").promise().done(function(){
+            $('iframe').css("width",$('iframe').parent().parent().width()+"px");
+        });
+    }
 
     //右侧tab页的右键菜单
     function bindTabRightClick() {
@@ -252,8 +256,6 @@
                 $('.accordion li.active:first').parents('ul').slideDown();
                 //绑定menu事件
                 $("a", "ul.nav-pills li").bind("click", function () {
-                    NProgress.start();
-                    NProgress.inc();
                     if ($(this).parent().children("ul").length == 0) {//有子菜单的父菜单无动作
                         $(this).openTab();
                     }
@@ -261,7 +263,6 @@
                     setTimeout(function(){
                         $("li", "ul.nav-pills").removeClass("active");
                         $t.parent().addClass("active");
-                        NProgress.done();
                     },200);
                 });
             }
