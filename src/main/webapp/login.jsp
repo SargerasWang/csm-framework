@@ -90,7 +90,7 @@
             $('#divInfo').addClass("alert-danger").text('请填写验证码!');
             return false;
         }
-        $(this).button("loading");
+        $("#btnSubmit").button("loading");
         NProgress.start();
         NProgress.inc();
         return true;
