@@ -9,6 +9,7 @@ $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
     ajaxErrorCallback(jqXHR);
 }).ajaxStart(function(){
     NProgress.start();
+    NProgress.inc();
 }).ajaxStop(function(){
     NProgress.done();
 });
