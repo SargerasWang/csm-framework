@@ -46,7 +46,7 @@ public class LoginController {
     @RequestMapping(value = "/login")
     @ControllerPermission(ControllerPermissionType.PUBLIC)
     public ModelAndView login(@RequestParam Map<String, String> allRequestParams,
-                        HttpServletRequest request) {
+                              HttpServletRequest request) {
         String loginname = allRequestParams.get("loginname");
         String password = allRequestParams.get("password");
         String captcha = allRequestParams.get("captcha");
@@ -62,13 +62,13 @@ public class LoginController {
             Object objcaptcha = session.getAttribute(Constants.SESSION_KEY_CAPTCHA);
             if (objcaptcha == null) {
                 LOG.info(MessageFormat.format("用户验证码不存在于Session，loginname={0},ip={1}", loginname, ip));
-                loginView.addObject("msg","3");
+                loginView.addObject("msg", "3");
                 return loginView;
             }
             if (!objcaptcha.toString().equalsIgnoreCase(captcha)) {
                 LOG.info(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip, objcaptcha, captcha));
                 session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
-                loginView.addObject("msg","4");
+                loginView.addObject("msg", "4");
                 return loginView;
             }
             session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
@@ -77,7 +77,7 @@ public class LoginController {
 
             if (CollectionUtils.isEmpty(list)) {
                 LOG.info(MessageFormat.format("用户登入失败，loginname={0},password={1},ip={2}", loginname, password, ip));
-                loginView.addObject("msg","2");
+                loginView.addObject("msg", "2");
                 return loginView;
             } else {
                 LOG.warn("用户登陆成功，user=" + list.get(0) + ",ip=" + ip);
@@ -85,13 +85,13 @@ public class LoginController {
                 session.setAttribute(Constants.SESSION_KEY_UINFO, list.get(0));
 
                 SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
-                sessionContext.addSession(session,ip);
+                sessionContext.addSession(session, ip);
 
                 return new ModelAndView("redirect:/");
             }
         } catch (Exception e) {
             LOG.error(e.toString(), e);
-            loginView.addObject("msg","2");
+            loginView.addObject("msg", "2");
             return loginView;
         }
     }
@@ -99,14 +99,10 @@ public class LoginController {
     @RequestMapping(value = "/logout")
     @ControllerPermission(ControllerPermissionType.PUBLIC)
     public String logout(HttpServletRequest request) {
-        try {
-            LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
-            request.getSession().invalidate();
-            SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
-            sessionContext.removeSession(request.getSession());
-        }catch (Exception e){
-            LOG.error(e.toString(),e);
-        }
+        LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
+        request.getSession().invalidate();
+        SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
+        sessionContext.removeSession(request.getSession());
         return "redirect:/login.jsp";
     }
 
@@ -116,27 +112,23 @@ public class LoginController {
     public String getMenu(HttpServletRequest request) {
         List<TreeMenu> treeMenus = null;
         List<SystemMenu> sysMenus;
-        try {
-            HttpSession session = request.getSession();
-            SystemUser user = (SystemUser) session.getAttribute(Constants.SESSION_KEY_UINFO);
-            if (user != null && user.getRole() != null) {
-                if (Constants.SYSTEM_ROLE_ADMIN_TYPE.equals(user.getRole().getType())) {
-                    sysMenus = loginService.getAllSystemMenus();
-                } else {
-                    sysMenus = loginService.getSystemMenusByRoleId(user.getRole().getId());
-                    //获取数据权限
-                    List<String> indexList = loginService.selectSqlIndexByRoleId(user.getRole().getId());
-                    session.setAttribute(Constants.SESSION_KEY_SQLINDEXLIST, indexList);
-                    session.setAttribute(Constants.SESSION_KEY_MENULIST, sysMenus);
-                    //存所有菜单是用于判断页面权限 ViewController.toPage()
-                    session.setAttribute(Constants.SESSION_KEY_MENULIST_ALL, loginService.getAllSystemMenus());
-                }
-                treeMenus = loginService.generateTreeMenus(sysMenus);
+        HttpSession session = request.getSession();
+        SystemUser user = (SystemUser) session.getAttribute(Constants.SESSION_KEY_UINFO);
+        if (user != null && user.getRole() != null) {
+            if (Constants.SYSTEM_ROLE_ADMIN_TYPE.equals(user.getRole().getType())) {
+                sysMenus = loginService.getAllSystemMenus();
             } else {
-                LOG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
+                sysMenus = loginService.getSystemMenusByRoleId(user.getRole().getId());
+                //获取数据权限
+                List<String> indexList = loginService.selectSqlIndexByRoleId(user.getRole().getId());
+                session.setAttribute(Constants.SESSION_KEY_SQLINDEXLIST, indexList);
+                session.setAttribute(Constants.SESSION_KEY_MENULIST, sysMenus);
+                //存所有菜单是用于判断页面权限 ViewController.toPage()
+                session.setAttribute(Constants.SESSION_KEY_MENULIST_ALL, loginService.getAllSystemMenus());
             }
-        } catch (Exception e) {
-            LOG.error(e.toString(), e);
+            treeMenus = loginService.generateTreeMenus(sysMenus);
+        } else {
+            LOG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
         }
         return JsonUtil.toJson(treeMenus);
     }

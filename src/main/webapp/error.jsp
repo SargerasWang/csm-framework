@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <link href='http://fonts_googleapis_com/css?family=Creepster|Audiowide' rel='stylesheet' type='text/css'>
 
     <style>
         * {
@@ -86,12 +86,8 @@
 <div class="content">
     The page your are looking for is not found.
     <br>
-    <a href="index.jsp">Go Home</a>
-    or
+    <a href=''<c:url value="/index.jsp"/>' >Go Home</a>
     <br>
-    <br>
-
-    <form>Search<br><input autofocus type="text" name="search"/></form>
 </div>
 </body>
 </html>
