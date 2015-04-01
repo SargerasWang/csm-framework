@@ -44,7 +44,7 @@
 
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock red"></i></span>
-                            <input name="password" type="password" class="form-control" placeholder="密码"/>
+                            <input id="password" name="password" type="password" class="form-control" placeholder="密码"/>
                         </div>
                         <div class="clearfix"></div>
                         <br>

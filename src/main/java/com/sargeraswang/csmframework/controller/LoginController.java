@@ -50,9 +50,9 @@ public class LoginController {
         String loginname = allRequestParams.get("loginname");
         String password = allRequestParams.get("password");
         String captcha = allRequestParams.get("captcha");
-        Assert.notNull(loginname);
-        Assert.notNull(password);
-        Assert.notNull(captcha);
+        Assert.hasText(loginname);
+        Assert.hasText(password);
+        Assert.hasText(captcha);
 
         ModelAndView loginView = new ModelAndView("/login");
 
