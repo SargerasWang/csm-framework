@@ -288,13 +288,13 @@ $.fn.baseSelect = function (opt) {
  */
 $.fn.baseTable = function (opt) {
     var _this = this;
-    this.addClass("table table-striped table-bordered responsive");
+    this.addClass("table table-striped table-bordered");
     var table = this.DataTable($.extend({},
         {
             "autoWidth": false,
             "serverSide": true,
             "searching": false,
-            "dom": "<'row-fluid'r>t<'row'<'col-md-3'l><'col-md-6 center'p><'col-md-3 right'i>>",
+            "dom": "<'row-fluid'r><'table-responsive' t><'row'<'col-sm-3'l><'col-sm-5 text-center'p><'col-sm-3'i>>",
             "paginationType": "bootstrap",
             "columns": opt.columns,
             "language": {
@@ -307,8 +307,8 @@ $.fn.baseTable = function (opt) {
                 "sSearch": "搜索",
                 "oPaginate": {
                     "sFirst": "首页",
-                    "sPrevious": "上一页",
-                    "sNext": "下一页",
+                    "sPrevious": "",
+                    "sNext": "",
                     "sLast": "末页"
                 }
             },
@@ -326,7 +326,7 @@ $.fn.baseTable = function (opt) {
                         d.order = {"column": column, "dir": dir};
                     }
                     //search
-                    $(".baseSearch", $(_this).parent()).each(function () {
+                    $(".baseSearch", $(_this).parent().parent()).each(function () {
                         if ($(this).val() != '') {
                             d[this.id] = $(this).val();
                         }
@@ -338,7 +338,7 @@ $.fn.baseTable = function (opt) {
             "drawCallback": function () {
                 //加载完数据后,通知外层改变iframe高度
                 resetHeight();
-                dataTable_drawCallback();
+                //dataTable_drawCallback();
             }
             /*,"fnServerData": function (sSource, aoData, fnCallback) {
              console.debug(sSource);
@@ -377,7 +377,7 @@ $.fn.baseTable = function (opt) {
         var panel_heading = $.parseHTML('<div class="panel-heading"></div>');
         var panel_body = $.parseHTML('<div class="panel-body" style="display:none"></div>');
         var btn_toolbar = $.parseHTML('<div class="btn-toolbar" role="toolbar"></div>');
-        $(_this).prev().append(panel);
+        $(_this).parent().prev().append(panel);
         $(panel).append(panel_heading);
         $(panel_heading).append(btn_toolbar);
 
@@ -464,7 +464,7 @@ $.fn.baseTable = function (opt) {
                 index: opt.index,
                 columns: opt.columns,
                 statusColumn: option.statusColumn,
-                queryParams: $(".baseSearch", $(_this).parent()),
+                queryParams: $(".baseSearch", $(_this).parent().parent()),
                 order: table.order()
             };
             if (option.type == "all" || option.type == "csv") {
@@ -521,6 +521,8 @@ $.fn.baseTable = function (opt) {
     table = $.extend(table, {
         reload: table.ajax.reload
     });
+    //移动设备上显示 向左滑动显示更多
+    $(_this).parent().prev().append("<div class='text-muted visible-xs'> <i class='fa fa-hand-o-left'/>向左滑动显示更多</div>");
     return table;
 }
 //baseTable End

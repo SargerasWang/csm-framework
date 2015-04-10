@@ -23,8 +23,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand arial font-hei" href="<c:url value='/'/>"> <img alt="Charisma Logo" src="<c:url value='/img/logo20.png'/>" class="hidden-xs"/>
-            <span>XXXXXXX后台管理系统</span></a>
+        <a class="navbar-brand " href="<c:url value='/'/>"> <img alt="Charisma Logo" src="<c:url value='/img/logo20.png'/>" class="hidden-xs"/>
+            <span>Csm Framework Demo</span></a>
 
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">
