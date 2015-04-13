@@ -15,15 +15,12 @@
 <!-- data table plugin -->
 <script src="<c:url value='/js/jquery.dataTables.min.js'/>"></script>
 <script src="<c:url value='/js/dataTables.bootstrap.js'/>"></script>
-
 <!-- select or dropdown enhancer -->
 <script src="<c:url value='/bower_components/chosen/chosen.jquery.min.js'/>"></script>
 <!-- plugin for gallery image view -->
 <script src="<c:url value='/bower_components/colorbox/jquery.colorbox-min.js'/>"></script>
 <!-- notification plugin -->
 <script src="<c:url value='/js/jquery.noty.js'/>"></script>
-<!-- library for making tables responsive -->
-<script src="<c:url value='/bower_components/responsive-tables/responsive-tables.js'/>"></script>
 <!-- tour plugin -->
 <script src="<c:url value='/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js'/>"></script>
 <!-- star rating plugin -->

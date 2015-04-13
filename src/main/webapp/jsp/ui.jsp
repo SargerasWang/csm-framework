@@ -35,80 +35,84 @@
                     </div>
                 </div>
                 <div class="box-content">
-                    <table class="table table-bordered table-striped responsive">
-                        <tbody>
-                        <tr>
-                            <td><h3>Multiple File Upload</h3></td>
-                            <td>
-                                <input data-no-uniform="true" type="file" name="file_upload" id="file_upload">
-                            </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><h3>CSS3 Animations</h3></td>
-                            <td>
-                                <h3 class="animated rubberBand">Animation</h3>
-                            </td>
-                            <td>
-                                <code>&lt;h3 class="animated rubberBand"&gt;Animation&lt;/h3&gt;</code>
-                                <br>
-                                For all more animation classes like <code>rubberBand</code>, please refer to
-                                <a target="_blank" href="http://daneden.github.io/animate.css/">http://daneden.github.io/animate.css/</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><h3>Star Rating</h3></td>
-                            <td>
-                                <div class="raty"></div>
-                            </td>
-                            <td><code>&lt;div class="raty"&gt;&lt;/div&gt;</code></td>
-                        </tr>
-                        <tr>
-                            <td><h3>Toggle Switch</h3></td>
-                            <td>
-                                <input data-no-uniform="true" checked="" type="checkbox" class="iphone-toggle">
-                            </td>
-                            <td><code>&lt;input data-no-uniform="true" type="checkbox" class="iphone-toggle"&gt;</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><h3>Auto Growing Textarea</h3></td>
-                            <td>
-                                <textarea class="autogrow">Press enter here, it will grow automatically.</textarea>
-                            </td>
-                            <td><code>&lt;textarea class="autogrow"&gt;&lt;/textarea&gt;</code></td>
-                        </tr>
-                        <tr>
-                            <td><h3>Popover</h3></td>
-                            <td>
-                                <a href="#" class="btn btn-danger" data-toggle="popover"
-                                   data-content="And here's some amazing content. It's very engaging. right?"
-                                   title="A Title">Click for popover</a>
-                            </td>
-                            <td><code>&lt;a href="#" class="btn btn-danger" data-toggle="popover" data-content="And
-                                here's
-                                some amazing content. It's very engaging. right?" title="A Title"&gt;hover for popover&lt;/a&gt;</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><h3>Dialog</h3></td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-setting">Click for dialog</a>
-                            </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><h3>Tooltip</h3></td>
-                            <td>
-                                <a href="#" title="Tooltip, you can change the position." data-toggle="tooltip"
-                                   class="btn btn-warning">Hover for tooltip</a>
-                            </td>
-                            <td><code>&lt;a href="#" title="Tooltip, you can change the position, for example use
-                                data-placement="left"." data-toggle="tooltip" class="btn btn-warning"&gt;Hover for
-                                tooltip&lt;/a&gt;</code></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped ">
+                            <tbody>
+                            <tr>
+                                <td><h3>Multiple File Upload</h3></td>
+                                <td>
+                                    <input data-no-uniform="true" type="file" name="file_upload" id="file_upload">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><h3>CSS3 Animations</h3></td>
+                                <td>
+                                    <h3 class="animated rubberBand">Animation</h3>
+                                </td>
+                                <td>
+                                    <code>&lt;h3 class="animated rubberBand"&gt;Animation&lt;/h3&gt;</code>
+                                    <br>
+                                    For all more animation classes like <code>rubberBand</code>, please refer to
+                                    <a target="_blank" href="http://daneden.github.io/animate.css/">http://daneden.github.io/animate.css/</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h3>Star Rating</h3></td>
+                                <td>
+                                    <div class="raty"></div>
+                                </td>
+                                <td><code>&lt;div class="raty"&gt;&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><h3>Toggle Switch</h3></td>
+                                <td>
+                                    <input data-no-uniform="true" checked="" type="checkbox" class="iphone-toggle">
+                                </td>
+                                <td><code>&lt;input data-no-uniform="true" type="checkbox"
+                                    class="iphone-toggle"&gt;</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h3>Auto Growing Textarea</h3></td>
+                                <td>
+                                    <textarea class="autogrow">Press enter here, it will grow automatically.</textarea>
+                                </td>
+                                <td><code>&lt;textarea class="autogrow"&gt;&lt;/textarea&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td><h3>Popover</h3></td>
+                                <td>
+                                    <a href="#" class="btn btn-danger" data-toggle="popover"
+                                       data-content="And here's some amazing content. It's very engaging. right?"
+                                       title="A Title">Click for popover</a>
+                                </td>
+                                <td><code>&lt;a href="#" class="btn btn-danger" data-toggle="popover" data-content="And
+                                    here's
+                                    some amazing content. It's very engaging. right?" title="A Title"&gt;hover for
+                                    popover&lt;/a&gt;</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h3>Dialog</h3></td>
+                                <td>
+                                    <a href="#" class="btn btn-info btn-setting">Click for dialog</a>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><h3>Tooltip</h3></td>
+                                <td>
+                                    <a href="#" title="Tooltip, you can change the position." data-toggle="tooltip"
+                                       class="btn btn-warning">Hover for tooltip</a>
+                                </td>
+                                <td><code>&lt;a href="#" title="Tooltip, you can change the position, for example use
+                                    data-placement="left"." data-toggle="tooltip" class="btn btn-warning"&gt;Hover for
+                                    tooltip&lt;/a&gt;</code></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -193,56 +197,58 @@
                     </div>
                 </div>
                 <div class="box-content">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>Labels</th>
-                            <th>Markup</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>
-                                <span class="label-default label">Default</span>
-                            </td>
-                            <td>
-                                <code>&lt;span class="label"&gt;Default&lt;/span&gt;</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="label-success label label-default">Success</span>
-                            </td>
-                            <td>
-                                <code>&lt;span class="label label-success"&gt;Success&lt;/span&gt;</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="label-warning label label-default">Warning</span>
-                            </td>
-                            <td>
-                                <code>&lt;span class="label label-warning"&gt;Warning&lt;/span&gt;</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="label-default label label-danger">Important</span>
-                            </td>
-                            <td>
-                                <code>&lt;span class="label label-important"&gt;Important&lt;/span&gt;</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="label-info label label-default">Info</span>
-                            </td>
-                            <td>
-                                <code>&lt;span class="label label-info"&gt;Info&lt;/span&gt;</code>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Labels</th>
+                                <th>Markup</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <span class="label-default label">Default</span>
+                                </td>
+                                <td>
+                                    <code>&lt;span class="label"&gt;Default&lt;/span&gt;</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label-success label label-default">Success</span>
+                                </td>
+                                <td>
+                                    <code>&lt;span class="label label-success"&gt;Success&lt;/span&gt;</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label-warning label label-default">Warning</span>
+                                </td>
+                                <td>
+                                    <code>&lt;span class="label label-warning"&gt;Warning&lt;/span&gt;</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label-default label label-danger">Important</span>
+                                </td>
+                                <td>
+                                    <code>&lt;span class="label label-important"&gt;Important&lt;/span&gt;</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="label-info label label-default">Info</span>
+                                </td>
+                                <td>
+                                    <code>&lt;span class="label label-info"&gt;Info&lt;/span&gt;</code>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -395,11 +401,6 @@
     <!--/row-->
 </div>
 <jsp:include page="../externalJS.jsp" flush="true"/>
-<script>
-    $(document).ready(function(){
-        dataTable_drawCallback();
-    });
-</script>
 </body>
 </html>
 

@@ -1,15 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Charisma SpringMVC Mybatis Framework Demo</title>
     <script>
-        if(top != self){
+        if (top != self) {
             top.location.href = location.href;
         }
     </script>
     <jsp:include page="import.jsp" flush="true"/>
+    <style>
+        .tabbable ul{
+            white-space:nowrap;
+        }
+        .tabbable li{
+            float:none;
+            display:inline-block;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,8 +32,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand " href="<c:url value='/'/>"> <img alt="Charisma Logo" src="<c:url value='/img/logo20.png'/>" class="hidden-xs"/>
-            <span>Csm Framework Demo</span></a>
+        <a class="navbar-brand " href="<c:url value='/'/>"> <img alt="Charisma Logo"
+                                                                 src="<c:url value='/img/logo20.png'/>"
+                                                                 class="hidden-xs"/>
+            <span>Csm Demo</span></a>
 
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">
@@ -97,17 +108,20 @@
 
         <div id="content" class="col-lg-10 col-sm-10">
             <div class="tabbable" style="display:none;"> <!-- Only required for left/right tabs -->
-                <ul class="nav nav-tabs">
+                <div id="for-scroll">
 
-                </ul>
-                <div class="tabFullScreen" <%--title="全屏" data-toggle="tooltip" data-placement="bottom"--%>><i class="fa fa-expand"></i></div>
+                    <ul class="nav nav-tabs">
+                    </ul>
+                </div>
+                <div class="tabFullScreen  hidden-xs" ><i class="fa fa-expand"></i></div>
                 <div class="tab-content row">
 
                 </div>
             </div>
         </div>
-        <div id="contextMenu" class="dropdown clearfix" >
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+        <div id="contextMenu" class="dropdown clearfix">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"
+                style="display:block;position:static;margin-bottom:5px;">
                 <li><a tabindex="1" href="#">关闭标签页</a></li>
                 <li><a tabindex="2" href="#">关闭所有标签页</a></li>
                 <li><a tabindex="3" href="#">关闭其他标签页</a></li>
@@ -141,46 +155,51 @@
     </div>
 
     <footer class="row">
-        <div class="col-sm-12 col-lg-12 copyright">&copy; <a href="http://www.sargeraswang.com" target="_blank">SargerasWang</a> 2014-2015</div>
+        <div class="col-sm-12 col-lg-12 copyright">&copy; <a href="http://www.sargeraswang.com" target="_blank">SargerasWang</a>
+            2014-2015
+        </div>
     </footer>
 
 </div>
 <!--/.fluid-container-->
 <jsp:include page="externalJS.jsp" flush="true"/>
+<script src="<c:url value='/js/jquery.nicescroll.min.js'/>"></script>
 <script>
     //tab_id 流水号
-    var _tab_index=0;
+    var _tab_index = 0;
     //tab 右键菜单
     var $contextMenu = $("#contextMenu");
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         //右键菜单
         bindTabRightClick();
         //读取菜单
         ajaxLoadMenu();
 
-        $(window).resize(function() {
-            $('iframe').css("width",$('iframe').parent().parent().width()+"px");
+        $(window).resize(function () {
+            $('iframe').css("width", $('iframe').parent().parent().width() + "px");
         });
+
+        $("#for-scroll").niceScroll();
     });
 
     //全屏
-    $("div.tabFullScreen").click(function(){
-        $("i",this).toggleClass("fa-expand fa-compress");
-        if(!$("body div.topMenu").is(':visible')){
+    $("div.tabFullScreen").click(function () {
+        $("i", this).toggleClass("fa-expand fa-compress");
+        if (!$("body div.topMenu").is(':visible')) {
             changeChcontainer()
         }
         var toggleFlag = 0;
-        $("body div.topMenu,.ch-container div.leftMenu").toggle(400,function(){
-            toggleFlag ++;
-            if(toggleFlag == 2 && !$("body div.topMenu").is(':visible')){
+        $("body div.topMenu,.ch-container div.leftMenu").toggle(400, function () {
+            toggleFlag++;
+            if (toggleFlag == 2 && !$("body div.topMenu").is(':visible')) {
                 changeChcontainer()
             }
         });
     });
-    function changeChcontainer(){
-        $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12").promise().done(function(){
-            $('iframe').css("width",$('iframe').parent().parent().width()+"px");
+    function changeChcontainer() {
+        $(".ch-container div#content").toggleClass("col-lg-10 col-sm-10 col-lg-12 col-sm-12").promise().done(function () {
+            $('iframe').css("width", $('iframe').parent().parent().width() + "px");
         });
     }
 
@@ -244,9 +263,9 @@
                     e.preventDefault();
                     var $ul = $(this).siblings('ul');
                     var $li = $(this).parent();
-                    if ($ul.is(':visible')){
+                    if ($ul.is(':visible')) {
                         $li.removeClass('active');
-                    }else{
+                    } else {
                         $li.addClass('active');
                     }
                     $("ul.main-menu > li > ul").not($ul).slideUp();
@@ -260,26 +279,26 @@
                         $(this).openTab();
                     }
                     var $t = $(this);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         $("li", "ul.nav-pills").removeClass("active");
                         $t.parent().addClass("active");
-                    },200);
+                    }, 800);
                 });
             }
         });
     }
 
     //改变iframe高度
-    function resetIframeHeight(iframe,height){
-        if(iframe){
+    function resetIframeHeight(iframe, height) {
+        if (iframe) {
             var win = iframe.contentWindow || iframe.contentDocument.parentWindow;
-            if(win.document.body){
+            if (win.document.body) {
                 iframe.height = win.document.documentElement.scrollHeight || win.document.body.scrollHeight;
-                if(height > iframe.height){
+                if (height > iframe.height) {
                     iframe.height = height;
                 }
-                if($(".ch-container","body").height() > iframe.height){
-                    iframe.height = $(".ch-container","body").height();
+                if ($(".ch-container", "body").height() > iframe.height) {
+                    iframe.height = $(".ch-container", "body").height();
                 }
 //                if($(iframe).width() > $(iframe).parent().width()){
 //                    $(iframe).css("width",$(iframe).parent().width()+"px");
@@ -289,77 +308,94 @@
     }
 
     //打开tab
-    function openTab(url,text){
-        url =getContextPath()+url;
+    function openTab(url, text) {
+        url = getContextPath() + url;
         $(".tabbable").show();
-        var ul = $(".nav-tabs",".tabbable");
-        var div_p = $(".tab-content",".tabbable");
+        var ul = $(".nav-tabs", ".tabbable");
+        var div_p = $(".tab-content", ".tabbable");
         //已存在的直接切换过去
-        var old = $(div_p).find("iframe[src='"+url+"']");
-        if(old.length > 0 ){
+        var old = $(div_p).find("iframe[src='" + url + "']");
+        if (old.length > 0) {
             var old_id = $(old).first().parent().attr("id");
-            $("#a_"+old_id).click();
+            $("#a_" + old_id).click();
             old[0].contentDocument.location.reload(true);
             return false;
         }
-        var index = ++_tab_index ;
-        var id= "tab_"+index;
-        var li = $.parseHTML('<li><a id="a_'+id+'" href="#'+id+'" data-toggle="tab">'+text+'</a><span class="tab-close"><i class="fa fa-close"></i></span></li>');
-        var div = $.parseHTML('<div class="tab-pane" id="'+id+'">'
-            +'<iframe scrolling="no" src="'+url+'" class="mainFrame" onload="resetIframeHeight(this)"></iframe>'
-            +'</div>');
+        var index = ++_tab_index;
+        var id = "tab_" + index;
+        var li = $.parseHTML('<li><a id="a_' + id + '" href="#' + id + '" data-toggle="tab">' + text + '</a><span class="tab-close"><i class="fa fa-close"></i></span></li>');
+        var div = $.parseHTML('<div class="tab-pane" id="' + id + '">'
+        + '<iframe scrolling="no" src="' + url + '" class="mainFrame" onload="resetIframeHeight(this)"></iframe>'
+        + '</div>');
         //绑定右键事件
-        $(li).children("a").first().bind("contextmenu",function(e){
+        $(li).children("a").first().bind("contextmenu", function (e) {
             $contextMenu.css({
                 display: "block",
                 left: e.pageX - 5,
                 top: e.pageY - 5
             });
-            $contextMenu.attr("target",e.target.id.substr(2));
+            $contextMenu.attr("target", e.target.id.substr(2));
             return false;
+        }).bind("click",function(e){
+            e.preventDefault();
+            setTimeout(function(){
+                var left =0;
+                $(e.target).parent().prevAll().each(function(){
+                    left += $(this).width();
+                });
+                $("#for-scroll").getNiceScroll(0).doScrollLeft(left);
+            },800);
+
         });
         //绑定关闭tab事件
-        $(li).children("span").first().bind("click",function(){
+        $(li).children("span").first().bind("click", function () {
             var id = $(this).prev().attr("href").substr(1);
             closeTab(id);
         });
         $(ul).append(li);
+        var sumWidth = 0;
+        $(ul).children().each(function(){
+            sumWidth += $(this).width();
+        })
+        if($(ul).width() < sumWidth){
+            $(ul).css("width",sumWidth+"px");
+        }
         $(div_p).append(div);
-        $("iframe",div).css("width",$(div_p).width()+"px");
+        $("iframe", div).css("width", $(div_p).width() + "px");
         $(li).children().first().click();
     }
     //点击menu
-    $.fn.openTab=function(){
+    $.fn.openTab = function () {
         var url = $(this).attr("url");
-        var text ;
-        if($(this).find("span").length != 0){
+        var text;
+        if ($(this).find("span").length != 0) {
             //一级菜单
             text = $(this).find("span").text();
-        }else{
+        } else {
             //二级菜单
             text = $(this).parent().parent().prev().last().text() + "-" + $(this).text();
         }
-        if($(window).width()<767){
+        if ($(window).width() < 767) {
             $(".sidebar-nav").removeClass("active");
         }
-        openTab(url,text);
+        openTab(url, text);
     };
     //关闭tab标签页
-    function closeTab(id){
-        $("#a_"+id).parent().remove();
-        $("#"+id).remove();
-        var ul = $(".nav-tabs",".tabbable");
-        if($(ul).children().size() != 0){
+    function closeTab(id) {
+        $("#a_" + id).parent().remove();
+        $("#" + id).remove();
+        var ul = $(".nav-tabs", ".tabbable");
+        if ($(ul).children().size() != 0) {
             $(ul).children().first().children().first().click();
-        }else{
+        } else {
             $(".tabbable").hide();
         }
     }
 
-    function sendTestMail(){
+    function sendTestMail() {
         ajaxQuery({
-           url:'<c:url value="/base/sendTestMail.do"/>',
-            success:function(d){
+            url: '<c:url value="/base/sendTestMail.do"/>',
+            success: function (d) {
                 tipMsg(d['msg']);
             }
         });

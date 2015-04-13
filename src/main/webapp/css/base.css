@@ -46,9 +46,9 @@
 
 .tabbable .tab-close {
     position: absolute;
-    top: -11px;
-    right: -4px;
-    font-size: 22px;
+    top: -5px;
+    right: 2px;
+    font-size: 20px;
     color: #ababab;
 }
 
