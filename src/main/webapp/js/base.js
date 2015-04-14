@@ -602,8 +602,12 @@ $.fn.baseForm = function (opt) {
                     $("div.note-editable", _form).attr("contenteditable", true);
                 }
             }
-            $(modal_box).on('shown.bs.modal hidden.bs.modal', function () {
-                resetHeight($(modal_box).children()[0].scrollHeight);
+            $(modal_box).on('shown.bs.modal hidden.bs.modal', function (e) {
+                var height = $(modal_box).children()[0].scrollHeight;
+                if(e.type == 'shown'){
+                    height += 60;
+                }
+                resetHeight(height);
                 if (callback) {
                     callback();
                 }

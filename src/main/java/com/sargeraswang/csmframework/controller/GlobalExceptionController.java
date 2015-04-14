@@ -36,6 +36,7 @@ public class GlobalExceptionController {
         LG.error(ex.toString(),ex);
 
         ModelAndView model = new ModelAndView("error");
+        model.addObject("message",ex.getMessage());
         return model;
 
     }

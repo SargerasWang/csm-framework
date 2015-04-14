@@ -14,7 +14,6 @@
 <link href="<c:url value='/bower_components/fullcalendar/dist/fullcalendar.print.css'/>" rel='stylesheet' media='print'>
 <link href="<c:url value='/bower_components/chosen/chosen.min.css'/>" rel='stylesheet'>
 <link href="<c:url value='/bower_components/colorbox/example3/colorbox.css'/>" rel='stylesheet'>
-<link href="<c:url value='/bower_components/responsive-tables/responsive-tables.css'/>" rel='stylesheet'>
 <link href="<c:url value='/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/jquery.noty.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/noty_theme_default.css'/>" rel='stylesheet'>

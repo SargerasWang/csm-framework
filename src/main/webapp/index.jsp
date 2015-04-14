@@ -293,16 +293,10 @@
         if (iframe) {
             var win = iframe.contentWindow || iframe.contentDocument.parentWindow;
             if (win.document.body) {
-                iframe.height = win.document.documentElement.scrollHeight || win.document.body.scrollHeight;
-                if (height > iframe.height) {
+                iframe.height = win.document.body.offsetHeight;
+                if(height > iframe.height){
                     iframe.height = height;
                 }
-                if ($(".ch-container", "body").height() > iframe.height) {
-                    iframe.height = $(".ch-container", "body").height();
-                }
-//                if($(iframe).width() > $(iframe).parent().width()){
-//                    $(iframe).css("width",$(iframe).parent().width()+"px");
-//                }
             }
         }
     }

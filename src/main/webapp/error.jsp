@@ -1,93 +1,42 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib  uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font-family: arial, helvetica, sans-serif;
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAUElEQVQYV2NkYGAwBuKzQAwDID4IoIgxIikAMZE1oRiArBDdZBSNMIXoJiFbDZYDKcSmCOYimDuNSVKIzRNYrUYOFuQgweoZbIoxgoeoAAcAEckW11HVTfcAAAAASUVORK5CYII=) repeat;
-            background-color: #212121;
-            color: white;
-            font-size: 28px;
-            padding-bottom: 20px;
-        }
-
-        .error-code {
-            font-family: 'Creepster', cursive, arial, helvetica, sans-serif;
-            font-size: 200px;
-            color: white;
-            color: rgba(255, 255, 255, 0.98);
-            width: 50%;
-            text-align: right;
-            margin-top: 5%;
-            text-shadow: 5px 5px hsl(0, 0%, 25%);
-            float: left;
-        }
-
-        .not-found {
-            font-family: 'Audiowide', cursive, arial, helvetica, sans-serif;
-            width: 45%;
-            float: right;
-            margin-top: 5%;
-            font-size: 50px;
-            color: white;
-            text-shadow: 2px 2px 5px hsl(0, 0%, 61%);
-            padding-top: 70px;
-        }
-
-        .clear {
-            float: none;
-            clear: both;
+            margin: 0;
         }
 
         .content {
-            text-align: center;
-            line-height: 30px;
+            width: 880px;
+            height: 999px;
+            background-image: url("<c:url value="/img/error_cat.jpg"/>");
         }
 
-        input[type=text] {
-            border: hsl(247, 89%, 72%) solid 1px;
-            outline: none;
-            padding: 5px 3px;
-            font-size: 16px;
-            border-radius: 8px;
+        .txt {
+            padding: 20px;
+            font-size: 20px;
+            color: #ffffff;
         }
-
-        a {
-            text-decoration: none;
-            color: #9ECDFF;
-            text-shadow: 0px 0px 2px white;
-        }
-
-        a:hover {
-            color: white;
-        }
-
     </style>
-    <title>Error</title>
+    <title>什么!竟然发生了错误!</title>
 </head>
 <body>
-
-<p class="error-code">
-    404
-</p>
-
-<p class="not-found">Not<br/>Found</p>
-
-<div class="clear"></div>
-<div class="content">
-    The page your are looking for is not found.
-    <br>
-    <a href=''<c:url value="/index.jsp"/>' >Go Home</a>
-    <br>
+<div align="center">
+    <div class="content">
+        <div class="txt">
+            <c:out value="${message}"></c:out>
+            <c:if test="${message eq null}">
+                <h2>
+                    这个页面被我吃了....
+                </h2>
+                <h1>
+                    你是怎么发现的!!??
+                </h1>
+            </c:if>
+        </div>
+    </div>
 </div>
 </body>
 </html>
