@@ -1,5 +1,5 @@
-function getContextPath(){
-    return CsmContextPath?CsmContextPath:"";
+function getContextPath() {
+    return CsmContextPath ? CsmContextPath : "";
 }
 /**
  * default
@@ -7,10 +7,10 @@ function getContextPath(){
 bootbox.setDefaults({locale: "zh_CN"});
 $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
     ajaxErrorCallback(jqXHR);
-}).ajaxStart(function(){
+}).ajaxStart(function () {
     NProgress.start();
     NProgress.inc();
-}).ajaxStop(function(){
+}).ajaxStop(function () {
     NProgress.done();
 });
 /**
@@ -32,9 +32,9 @@ function convertObj2Arr(obj) {
  * @param hide close关闭
  */
 function loading(hide) {
-    if($("#_loading").length == 0){
-        var img = getContextPath()+"/img/ajax-loaders/ajax-loader-7.gif";
-        $("<div id=\"_loading\" style=\"display: none;\">正在加载<img src=\""+img+"\"></div>").prependTo("body");
+    if ($("#_loading").length == 0) {
+        var img = getContextPath() + "/img/ajax-loaders/ajax-loader-7.gif";
+        $("<div id=\"_loading\" style=\"display: none;\">正在加载<img src=\"" + img + "\"></div>").prependTo("body");
         $("#_loading").css("height", $("body").height() + "px");
         $("#_loading").css("lineHeight", $("body").height() + "px");
     }
@@ -81,7 +81,7 @@ function ajaxUpdateBatch(opt) {
     }, opt));
 }
 
-function gotoLoginPage(){
+function gotoLoginPage() {
     setTimeout(function () {
         location.href = getContextPath() + "/login.jsp";
     }, 2000);
@@ -90,7 +90,7 @@ function gotoLoginPage(){
  * ajax error callback
  */
 function ajaxErrorCallback(err) {
-    switch (err.status){
+    switch (err.status) {
         case 200:
             bootbox.alert("本次会话断开,即将重新登入...");
             gotoLoginPage();
@@ -173,33 +173,19 @@ function datatableDownload(type, options) {
         order: _order
     });
 }
+
 /**
  * 提示框
  * @param text 文字内容
- * @param title 标题,默认"系统提示"
- * @param type 类型:info,success(默认),warning,danger
+ * @param type 类型:alert,success,warning,error,information(默认)
  * @param time 显示多长时间后关闭,默认800ms
  */
-function tipMsg(text) {
-    tipMsg(text, "系统提示", "success", 800);
-}
-function tipMsg(text, title, type, time) {
-    if (typeof title == "undefined") {
-        title = "系统提示";
-    }
-    if (typeof type == "undefined") {
-        type = "success";
-    }
-    if (typeof time == "undefined") {
-        time = 800;
-    }
-    var _alert = $.parseHTML('<div class="alert alert-' + type + ' basealert" style="display:none;">'
-        // +'<a href="#" class="close" data-dismiss="alert">&times;</a>'
-    + '<h4 class="alert-heading">' + title + '</h4>' + text + '</div>');
-    $(document.body).append(_alert);
-    $(_alert).fadeIn('fast').delay(time).fadeOut('fast', function () {
-        this.remove();
-    });
+function tipMsg(text, type, time) {
+    top.noty($.extend({}, {type: "information", layout: "center", modal: true, timeout: 1000}, {
+        text: text,
+        type: type,
+        timeout: time
+    }))
 }
 
 /**
@@ -213,10 +199,10 @@ $.fn.dateRangeBox = function (opt) {
     }, opt);
     var html = '<span class="input-group-addon">' + opt.placeholder + ':</span>'
         + '<input type="text" class="input-sm form-control baseSearch'
-        +  '" id="' + opt.id + '_0' + '" />'
+        + '" id="' + opt.id + '_0' + '" />'
         + '<span class="input-group-addon">~</span>'
         + '<input type="text" class="input-sm form-control baseSearch'
-        +  '" id="' + opt.id + '_1' + '" />';
+        + '" id="' + opt.id + '_1' + '" />';
     this.append(html);
     this.addClass('input-daterange input-group');
     this.datepicker({
@@ -224,7 +210,7 @@ $.fn.dateRangeBox = function (opt) {
         format: "yyyy/mm/dd",
         autoclose: true
     });
-    this.css("marginRight","5px");
+    this.css("marginRight", "5px");
 }
 
 /**
@@ -290,69 +276,69 @@ $.fn.baseTable = function (opt) {
     var _this = this;
     this.addClass("table table-striped table-bordered");
     var table = this.DataTable($.extend({},
-        {
-            "autoWidth": false,
-            "serverSide": true,
-            "searching": false,
-            "dom": "<'row-fluid'r><'table-responsive' t><'row'<'col-sm-3'l><'col-sm-5 text-center'p><'col-sm-3'i>>",
-            "paginationType": "bootstrap",
-            "columns": opt.columns,
-            "language": {
-                "sLengthMenu": "每页显示 _MENU_ 条记录",
-                "sZeroRecords": "对不起，查询不到相关数据！",
-                "sEmptyTable": "对不起，查询不到相关数据！",
-                "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-                "sInfoEmpty": "当前显示 0 到 0 条，共 0 条记录",
-                "sInfoFiltered": "数据表中共 _MAX_ 条记录",
-                "sSearch": "搜索",
-                "oPaginate": {
-                    "sFirst": "首页",
-                    "sPrevious": "",
-                    "sNext": "",
-                    "sLast": "末页"
-                }
-            },
-            "ajax": {
-                "url": getContextPath() + "/base/query.do",
-                "type": "POST",
-                "data": function (d) {
-                    //index
-                    d.index = opt.index;
-                    //order
-                    if(d.order[0]){
-                        var order_index = d.order[0].column;
-                        var column = d.columns[order_index].data;
-                        var dir = d.order[0].dir;
-                        d.order = {"column": column, "dir": dir};
+            {
+                "autoWidth": false,
+                "serverSide": true,
+                "searching": false,
+                "dom": "<'row-fluid'r><'table-responsive' t><'row'<'col-sm-3'l><'col-sm-5 text-center'p><'col-sm-3'i>>",
+                "paginationType": "bootstrap",
+                "columns": opt.columns,
+                "language": {
+                    "sLengthMenu": "每页显示 _MENU_ 条记录",
+                    "sZeroRecords": "对不起，查询不到相关数据！",
+                    "sEmptyTable": "对不起，查询不到相关数据！",
+                    "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                    "sInfoEmpty": "当前显示 0 到 0 条，共 0 条记录",
+                    "sInfoFiltered": "数据表中共 _MAX_ 条记录",
+                    "sSearch": "搜索",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "",
+                        "sNext": "",
+                        "sLast": "末页"
                     }
-                    //search
-                    $(".baseSearch", $(_this).parent().parent()).each(function () {
-                        if ($(this).val() != '') {
-                            d[this.id] = $(this).val();
+                },
+                "ajax": {
+                    "url": getContextPath() + "/base/query.do",
+                    "type": "POST",
+                    "data": function (d) {
+                        //index
+                        d.index = opt.index;
+                        //order
+                        if (d.order[0]) {
+                            var order_index = d.order[0].column;
+                            var column = d.columns[order_index].data;
+                            var dir = d.order[0].dir;
+                            d.order = {"column": column, "dir": dir};
                         }
-                    });
-                    delete d.search;
-                    delete d.columns;
+                        //search
+                        $(".baseSearch", $(_this).parent().parent()).each(function () {
+                            if ($(this).val() != '') {
+                                d[this.id] = $(this).val();
+                            }
+                        });
+                        delete d.search;
+                        delete d.columns;
+                    }
+                },
+                "drawCallback": function () {
+                    //加载完数据后,通知外层改变iframe高度
+                    resetHeight();
+                    //dataTable_drawCallback();
                 }
-            },
-            "drawCallback": function () {
-                //加载完数据后,通知外层改变iframe高度
-                resetHeight();
-                //dataTable_drawCallback();
-            }
-            /*,"fnServerData": function (sSource, aoData, fnCallback) {
-             console.debug(sSource);
-             $.ajax({
-             "dataType": 'json',
-             //"type": "GET",
-             "url": sSource,
-             "data": aoData,
-             "success": fnCallback,
-             "timeout": 15000,   // optional if you want to handle timeouts (which you should)
-             "error": ajaxErrorCallback
-             });
-             }*/
-        },opt)
+                /*,"fnServerData": function (sSource, aoData, fnCallback) {
+                 console.debug(sSource);
+                 $.ajax({
+                 "dataType": 'json',
+                 //"type": "GET",
+                 "url": sSource,
+                 "data": aoData,
+                 "success": fnCallback,
+                 "timeout": 15000,   // optional if you want to handle timeouts (which you should)
+                 "error": ajaxErrorCallback
+                 });
+                 }*/
+            }, opt)
     );
     $(table).DataTable.ext.errMode = "throw";//出错时不alert
     //绑定选中事件
@@ -504,7 +490,7 @@ $.fn.baseTable = function (opt) {
                     //点击按钮,将当前选中数据当做参数传回
                     $(_btn).on("click", function () {
                         if (!allowNull && table.rows('.selected').data().length == 0) {
-                            tipMsg("请先选择数据", "提示", "warning");
+                            tipMsg("请先选择数据", "warning", 1000);
                             return false;
                         }
                         method(table.rows('.selected').data());
@@ -532,11 +518,11 @@ $.fn.baseTable = function (opt) {
  * @param opt
  * @returns {*|jQuery}
  */
-$.fn.modalWin=function(opt){
-    opt = $.extend({},{
-        width:"",
-        title:""
-    },opt);
+$.fn.modalWin = function (opt) {
+    opt = $.extend({}, {
+        width: "",
+        title: ""
+    }, opt);
     var div_modal = $.parseHTML('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>');
     var div_dialog = $.parseHTML('<div class="modal-dialog"></div>');
     $(div_dialog).width(opt.width);
@@ -546,7 +532,7 @@ $.fn.modalWin=function(opt){
     var div_body = $.parseHTML('<div class="modal-body"></div>');
 
     var div_tmp = $(div_content).append(div_header).append($(div_body).append($(this)));
-    if(opt.footer){
+    if (opt.footer) {
         div_tmp.append(opt.footer);
     }
     var modal_box = $(div_modal).append($(div_dialog).append(div_tmp));
@@ -572,12 +558,12 @@ $.fn.baseForm = function (opt) {
     $(this).removeClass("hide");
     //模式化窗口
     var modal_win = $(this.append(hide_submit)).modalWin({
-       width:opt.width,
-        title:opt.title,
-        footer:div_footer
+        width: opt.width,
+        title: opt.title,
+        footer: div_footer
     });
     //组装弹出层
-    var modal_box = $.extend( $(modal_win), {
+    var modal_box = $.extend($(modal_win), {
         open: function (opt, callback) {
             modal_box.modal("show");
             $(_form)[0].reset();
@@ -604,7 +590,7 @@ $.fn.baseForm = function (opt) {
             }
             $(modal_box).on('shown.bs.modal hidden.bs.modal', function (e) {
                 var height = $(modal_box).children()[0].scrollHeight;
-                if(e.type == 'shown'){
+                if (e.type == 'shown') {
                     height += 60;
                 }
                 resetHeight(height);

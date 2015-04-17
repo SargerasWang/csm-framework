@@ -46,7 +46,7 @@
                             tipMsg("操作成功!");
                             table.reload();
                         }else{
-                            tipMsg("错误原因"+ r.message,"操作失败","danger",5000);
+                            tipMsg("错误原因"+ r.message,"error",5000);
                         }
                     }
                 });

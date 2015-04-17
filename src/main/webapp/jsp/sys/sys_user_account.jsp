@@ -114,7 +114,7 @@
                             tipMsg("操作成功!");
                             table.draw(false);
                         } else {
-                            tipMsg("错误原因" + r.message, "操作失败", "danger", 5000);
+                            tipMsg("错误原因" + r.message, "error", 5000);
                         }
                     }
                 });
@@ -129,7 +129,7 @@
                         if (r.status != -1) {
                             tipMsg("操作成功!");
                         } else {
-                            tipMsg("错误原因" + r.message, "操作失败", "danger", 5000);
+                            tipMsg("错误原因" + r.message,  "error", 5000);
                         }
                     }
                 });

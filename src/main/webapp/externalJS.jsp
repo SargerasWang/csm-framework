@@ -20,7 +20,7 @@
 <!-- plugin for gallery image view -->
 <script src="<c:url value='/bower_components/colorbox/jquery.colorbox-min.js'/>"></script>
 <!-- notification plugin -->
-<script src="<c:url value='/js/jquery.noty.js'/>"></script>
+<script src="<c:url value='/js/jquery.noty.packaged.min.js'/>"></script>
 <!-- tour plugin -->
 <script src="<c:url value='/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js'/>"></script>
 <!-- star rating plugin -->
