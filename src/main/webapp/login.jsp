@@ -5,7 +5,12 @@
 <head>
     <title>Charisma SpringMVC Mybatis Framework Demo Login Page</title>
     <meta name="description" content="SargerasWang's CSMFramework Demo">
-    <jsp:include page="import.jsp" flush="true"/>
+    <link rel="shortcut icon" href="<c:url value='/img/favicon.ico'/>">
+    <link rel="stylesheet" href="<c:url value="/css/preloader.css"/> "/>
+    <link id="bs-css" href="<c:url value='/css/bootstrap.min.css'/>" rel="stylesheet">
+    <link href="<c:url value='/css/font-awesome.min.css'/>" rel='stylesheet'>
+    <link href="<c:url value='/css/charisma-app.css'/>" rel="stylesheet">
+
     <style>
         #imgCaptcha {
             position: absolute;
@@ -17,7 +22,10 @@
 </head>
 
 <body>
-<div class="ch-container">
+<div id="loader-wrapper">
+    <div id="loader"></div>
+</div>
+<div class="ch-container" style="display:none;">
     <div class="row">
 
         <div class="row">
@@ -74,6 +82,8 @@
 
 </div>
 <!--/.fluid-container-->
+<script src="<c:url value='/bower_components/jquery/1.11.2/jquery-1.11.2.min.js'/>"></script>
+
 <jsp:include page="externalJS.jsp" flush="true"/>
 <script>
     function reloadCaptcha() {
@@ -99,6 +109,8 @@
         top.location.href = location.href;
     }
     $(document).ready(function () {
+        $(".ch-container").show();
+        $('body').addClass('loaded');
         $("#loginname").focus();
         var msg = "${msg}";
         if (msg) {

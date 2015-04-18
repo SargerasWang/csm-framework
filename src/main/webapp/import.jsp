@@ -6,7 +6,6 @@
 <meta name="author" content="SargerasWang">
 
 <!-- The styles -->
-<%--<link href="<c:url value='/css/fonts.css'/>" rel="stylesheet">--%>
 <link id="bs-css" href="<c:url value='/css/bootstrap.min.css'/>" rel="stylesheet">
 <link href="<c:url value='/css/base.css'/>" rel="stylesheet">
 <link href="<c:url value='/css/charisma-app.css'/>" rel="stylesheet">
@@ -38,4 +37,3 @@
 
 <!-- The fav icon -->
 <link rel="shortcut icon" href="<c:url value='/img/favicon.ico'/>">
-
