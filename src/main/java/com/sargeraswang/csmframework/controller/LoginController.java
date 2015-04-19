@@ -62,13 +62,13 @@ public class LoginController {
             Object objcaptcha = session.getAttribute(Constants.SESSION_KEY_CAPTCHA);
             if (objcaptcha == null) {
                 LOG.info(MessageFormat.format("用户验证码不存在于Session，loginname={0},ip={1}", loginname, ip));
-                loginView.addObject("msg", "3");
+                loginView.addObject("msg", "验证码失效,请重新输入!");
                 return loginView;
             }
             if (!objcaptcha.toString().equalsIgnoreCase(captcha)) {
                 LOG.info(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip, objcaptcha, captcha));
                 session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
-                loginView.addObject("msg", "4");
+                loginView.addObject("msg", "验证码错误,请重新输入!");
                 return loginView;
             }
             session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
@@ -77,7 +77,7 @@ public class LoginController {
 
             if (CollectionUtils.isEmpty(list)) {
                 LOG.info(MessageFormat.format("用户登入失败，loginname={0},password={1},ip={2}", loginname, password, ip));
-                loginView.addObject("msg", "2");
+                loginView.addObject("msg", "用户名或密码错误!");
                 return loginView;
             } else {
                 LOG.warn("用户登陆成功，user=" + list.get(0) + ",ip=" + ip);
@@ -91,7 +91,7 @@ public class LoginController {
             }
         } catch (Exception e) {
             LOG.error(e.toString(), e);
-            loginView.addObject("msg", "2");
+            loginView.addObject("msg", "登录失败,系统发生问题");
             return loginView;
         }
     }
