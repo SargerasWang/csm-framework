@@ -33,8 +33,6 @@
 <script src="<c:url value='/js/jquery.uploadify-3.1.min.js'/>"></script>
 <!-- history.js for cross-browser state change on ajax -->
 <script src="<c:url value='/js/jquery.history.js'/>"></script>
-<!-- base.js -->
-<script src="<c:url value='/js/base.js'/>"></script>
 <!-- application script for Charisma demo -->
 <script src="<c:url value='/js/charisma.js'/>"></script>
 <!-- datetimepicker -->
@@ -50,6 +48,5 @@
 <script src="<c:url value='/js/jquery.formautofill.js'/>"></script>
 <!--nprogress -->
 <script src="<c:url value='/js/nprogress.js'/>"></script>
-
-
-
+<!-- base.js -->
+<script src="<c:url value='/js/base.js'/>"></script>
