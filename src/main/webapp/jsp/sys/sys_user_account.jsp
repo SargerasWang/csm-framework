@@ -7,7 +7,7 @@
     <script src="<c:url value='/base/getStatusJS/user_status.do'/>"></script>
 </head>
 
-<body>import
+<body>
 <form id="myForm" role="form" class="hide">
     <input type="hidden" name="index">
     <input type="hidden" name="id">
