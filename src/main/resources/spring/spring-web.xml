@@ -40,6 +40,10 @@
             <bean class="com.sargeraswang.csmframework.common.filter.ControllerPermissionsFilter"/>
         </mvc:interceptor>
         <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.sargeraswang.csmframework.common.filter.Log4jMDCPropertyAdapter"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
             <mvc:mapping path="/base/query*"/>
             <mvc:mapping path="/base/execute*"/>
             <mvc:mapping path="/base/executeBatch*"/>

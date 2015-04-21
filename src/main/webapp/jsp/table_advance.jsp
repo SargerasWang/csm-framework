@@ -30,7 +30,8 @@
         </textarea>
     </div>
     <div class="form-group">
-        <label >权限</label>
+        <label>权限</label>
+
         <div>
             <div class="radio">
                 <label>
@@ -40,14 +41,15 @@
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" name="permissions" id="permissions_2" value="2" >
+                    <input type="radio" name="permissions" id="permissions_2" value="2">
                     私有(仅本人可见)
                 </label>
             </div>
         </div>
     </div>
     <div class="form-group">
-        <label >标签</label>
+        <label>标签</label>
+
         <div>
             <label class="checkbox-inline">
                 <input type="checkbox" name="tags" value="1"> 技术
@@ -77,7 +79,7 @@
         //初始化富文本编辑器
         $('#article').richEditor({
             height: 200,
-            disableResizeEditor:true
+            disableResizeEditor: true
         });
         resetHeight();
         //初始化form
@@ -91,7 +93,7 @@
                             tipMsg("操作成功!");
                             table.draw(false);
                         } else {
-                            tipMsg("错误原因" + r.message,  "error", 5000);
+                            tipMsg("错误原因" + r.message, "error", 5000);
                         }
                     }
                 });
@@ -108,26 +110,26 @@
                 {data: "ctime", title: "创建时间"},
                 {
                     data: "status", title: "状态", render: function (data) {
-                        var c;
-                        switch (data) {
-                            case 0:
-                                c = "";
-                                break;
-                            case 1:
-                                c = "label-warning";
-                                break;
-                            case 2:
-                                c = "label-success";
-                                break;
-                            case 3:
-                                c = "label-danger"
-                                break;
-                            default :
-                        }
-                        return '<span class="' + c + ' label label-default">' + blog_status[data] + '</span>';
+                    var c;
+                    switch (data) {
+                        case 0:
+                            c = "";
+                            break;
+                        case 1:
+                            c = "label-warning";
+                            break;
+                        case 2:
+                            c = "label-success";
+                            break;
+                        case 3:
+                            c = "label-danger"
+                            break;
+                        default :
                     }
+                    return '<span class="' + c + ' label label-default">' + blog_status[data] + '</span>';
+                }
                 },
-                {data:"article",title:"文章内容",visible:false}
+                {data: "article", title: "文章内容", visible: false}
             ],
             search: [
                 {column: "id"},
@@ -162,11 +164,11 @@
                         }
                     },
                     {
-                        text:"查看",
+                        text: "查看",
                         icon: "glyphicon glyphicon-eye-open",
                         "css": "btn-info",
-                        method:function(datas){
-                            myForm.open({data: datas[0], readOnly: true });
+                        method: function (datas) {
+                            myForm.open({data: datas[0], readOnly: true});
                         }
                     },
                     {
@@ -174,18 +176,16 @@
                         "css": "btn-danger",
                         icon: "glyphicon glyphicon-trash",
                         "method": function (datas) {
-                            bootbox.confirm('确认删除数据[' + datas[0].title + ']么?', function (r) {
-                                if (r) {
-                                    ajaxUpdate({
-                                        data: {index: "blog.delete", id: datas[0].id},
-                                        success: function (r) {
-                                            if (r.status == 1) {
-                                                tipMsg('操作成功!');
-                                                table.reload();
-                                            }
+                            tipConfirm('确认删除数据[' + datas[0].title + ']么?', function (r) {
+                                ajaxUpdate({
+                                    data: {index: "blog.delete", id: datas[0].id},
+                                    success: function (r) {
+                                        if (r.status == 1) {
+                                            tipMsg('操作成功!');
+                                            table.reload();
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             });
                         }
                     }

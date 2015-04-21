@@ -189,6 +189,29 @@ function tipMsg(text, type, time) {
 }
 
 /**
+ * 确认框
+ * @param text 文字
+ * @param callback 点击确认后回调
+ */
+function tipConfirm(text,callback) {
+    var options = {
+        layout: "center", timeout: 2000, modal: true,type: "warning",
+        text:text,
+        buttons:[{
+            addClass:'btn btn-sm btn-primary',text:'确认',onClick:function($noty){
+                callback();
+                $noty.close();
+            }
+        },{
+            addClass:'btn btn-sm btn-default',text:'取消',onClick:function($noty){
+                $noty.close();
+            }
+        }]
+    };
+    top.noty(options);
+}
+
+/**
  * Created by SagerasWang on 14/11/25.
  */
 $.fn.dateRangeBox = function (opt) {

@@ -41,7 +41,7 @@ public class LoginController {
     @Resource
     UserService loginService;
 
-    private static final transient Logger LOG = LoggerFactory.getLogger(LoginController.class);
+    private static final transient Logger LG = LoggerFactory.getLogger(LoginController.class);
 
     @RequestMapping(value = "/login")
     @ControllerPermission(ControllerPermissionType.PUBLIC)
@@ -61,12 +61,12 @@ public class LoginController {
         try {
             Object objcaptcha = session.getAttribute(Constants.SESSION_KEY_CAPTCHA);
             if (objcaptcha == null) {
-                LOG.info(MessageFormat.format("用户验证码不存在于Session，loginname={0},ip={1}", loginname, ip));
+                LG.warn(MessageFormat.format("用户验证码不存在于Session，loginname={0},ip={1}", loginname, ip));
                 loginView.addObject("msg", "验证码失效,请重新输入!");
                 return loginView;
             }
             if (!objcaptcha.toString().equalsIgnoreCase(captcha)) {
-                LOG.info(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip, objcaptcha, captcha));
+                LG.warn(MessageFormat.format("用户验证码不正确，loginname={0},ip={1},system={2},customer={3}", loginname, ip, objcaptcha, captcha));
                 session.removeAttribute(Constants.SESSION_KEY_CAPTCHA);
                 loginView.addObject("msg", "验证码错误,请重新输入!");
                 return loginView;
@@ -76,11 +76,11 @@ public class LoginController {
             List<SystemUser> list = loginService.selectUserByLogin(loginname, password);
 
             if (CollectionUtils.isEmpty(list)) {
-                LOG.info(MessageFormat.format("用户登入失败，loginname={0},password={1},ip={2}", loginname, password, ip));
+                LG.warn(MessageFormat.format("用户登入失败，loginname={0},password={1},ip={2}", loginname, password, ip));
                 loginView.addObject("msg", "用户名或密码错误!");
                 return loginView;
             } else {
-                LOG.warn("用户登陆成功，user=" + list.get(0) + ",ip=" + ip);
+                LG.info("用户登陆成功，user=" + list.get(0) + ",ip=" + ip);
                 session.setAttribute(Constants.SESSION_KEY_UID, list.get(0).getId());
                 session.setAttribute(Constants.SESSION_KEY_UINFO, list.get(0));
 
@@ -90,7 +90,7 @@ public class LoginController {
                 return new ModelAndView("redirect:/");
             }
         } catch (Exception e) {
-            LOG.error(e.toString(), e);
+            LG.error("用户登录发生错误", e);
             loginView.addObject("msg", "登录失败,系统发生问题");
             return loginView;
         }
@@ -99,7 +99,7 @@ public class LoginController {
     @RequestMapping(value = "/logout")
     @ControllerPermission(ControllerPermissionType.PUBLIC)
     public String logout(HttpServletRequest request) {
-        LOG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
+        LG.info("用户注销：uid=" + request.getSession().getAttribute(Constants.SESSION_KEY_UID));
         request.getSession().invalidate();
         SessionContext sessionContext = SpringBeanFactoryUtils.getBean(SessionContext.class);
         sessionContext.removeSession(request.getSession());
@@ -128,7 +128,7 @@ public class LoginController {
             }
             treeMenus = loginService.generateTreeMenus(sysMenus);
         } else {
-            LOG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
+            LG.error("getMenu->sessionUser =null || sessionUser.role ==null", NullPointerException.class);
         }
         return JsonUtil.toJson(treeMenus);
     }
@@ -186,6 +186,7 @@ public class LoginController {
         }
 
         g2d.dispose();
+        LG.debug("产生图片验证码内容:" + finalString);
         request.getSession().setAttribute(Constants.SESSION_KEY_CAPTCHA, finalString);
         return bufferedImage;
     }

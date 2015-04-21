@@ -12,6 +12,7 @@
 <form id="myForm" role="form" class="hide">
     <input type="hidden" name="index">
     <input type="hidden" name="id">
+
     <div class="form-group">
         <label for="name">名称</label>
         <input type="text" class="form-control" id="name" name="name" maxlength="100" placeholder="请输入名称" required>
@@ -22,6 +23,7 @@
     </div>
     <div class="form-group">
         <label>状态</label>
+
         <div>
             <div class="radio">
                 <label>
@@ -35,6 +37,7 @@
     </div>
     <div class="form-group">
         <label>类型</label>
+
         <div>
             <div class="radio">
                 <label>
@@ -85,28 +88,36 @@
             single: true,
             order: [[0, "asc"]],
             columns: [
-                {data: "id", title: "ID",visible:false}
-                ,{data: "name", title: "名称"}
-                ,{data: "description", title: "描述",defaultContent:""}
-                ,{data: "status", title: "状态",render: function (data) {return role_status[data]}}
-                ,{data: "c_time", title: "创建时间"}
-                ,{data: "c_user", title: "创建人"}
-                ,{data: "type", title: "类型",render: function (data) {return role_type[data]}}
+                {data: "id", title: "ID", visible: false}
+                , {data: "name", title: "名称"}
+                , {data: "description", title: "描述", defaultContent: ""}
+                , {
+                    data: "status", title: "状态", render: function (data) {
+                        return role_status[data]
+                    }
+                }
+                , {data: "c_time", title: "创建时间"}
+                , {data: "c_user", title: "创建人"}
+                , {
+                    data: "type", title: "类型", render: function (data) {
+                        return role_type[data]
+                    }
+                }
             ],
             search: [
-                {column: "name","placeholder": "名称"}
-                ,{column: "description","placeholder": "描述"}
-                ,{column: "status","placeholder": "状态",select:true,data: convertObj2Arr(role_status)}
-                ,{column: "c_time","placeholder": "创建时间",date:true}
-                ,{column: "c_user","placeholder": "创建人"}
-                ,{column: "type","placeholder": "类型",select:true,data: convertObj2Arr(role_type)}
+                {column: "name", "placeholder": "名称"}
+                , {column: "description", "placeholder": "描述"}
+                , {column: "status", "placeholder": "状态", select: true, data: convertObj2Arr(role_status)}
+                , {column: "c_time", "placeholder": "创建时间", date: true}
+                , {column: "c_user", "placeholder": "创建人"}
+                , {column: "type", "placeholder": "类型", select: true, data: convertObj2Arr(role_type)}
             ],
             download: {
                 type: "all",
                 fileName: "sys_role",
                 statusColumn: [
-                    {column: "status", statusArr: "role_status",statusType:"1"}
-                    ,{column: "type", statusArr: "role_type",statusType:"1"}
+                    {column: "status", statusArr: "role_status", statusType: "1"}
+                    , {column: "type", statusArr: "role_type", statusType: "1"}
                 ]
             },
             buttons: [
@@ -129,11 +140,11 @@
                         }
                     },
                     {
-                        text:"查看",
+                        text: "查看",
                         icon: "glyphicon glyphicon-eye-open",
                         "css": "btn-info",
-                        method:function(datas){
-                            myForm.open({data: datas[0], readOnly: true });
+                        method: function (datas) {
+                            myForm.open({data: datas[0], readOnly: true});
                         }
                     },
                     {
@@ -141,18 +152,16 @@
                         icon: "glyphicon glyphicon-trash",
                         "css": "btn-danger",
                         "method": function (datas) {
-                            bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
-                                if (r) {
-                                    ajaxUpdate({
-                                        data: {index: "sys_role.delete",id: datas[0].id},
-                                        success: function (r) {
-                                            if (r.status == 1) {
-                                                tipMsg('操作成功!');
-                                                table.draw(false);
-                                            }
+                            tipConfirm('确认删除数据[' + datas[0].name + ']么?', function (r) {
+                                ajaxUpdate({
+                                    data: {index: "sys_role.delete", id: datas[0].id},
+                                    success: function (r) {
+                                        if (r.status == 1) {
+                                            tipMsg('操作成功!');
+                                            table.draw(false);
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             });
                         }
                     }

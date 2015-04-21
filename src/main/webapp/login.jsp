@@ -21,7 +21,7 @@
     </style>
 </head>
 
-<body>
+<body onload="onload()">
 <div id="loader-wrapper">
     <div id="loader"></div>
 </div>
@@ -89,7 +89,6 @@
 
 </div>
 <!--/.fluid-container-->
-<script src="<c:url value='/bower_components/jquery/1.11.2/jquery-1.11.2.min.js'/>"></script>
 <script src="<c:url value='/js/lazyload.js'/>"></script>
 <script>
     function reloadCaptcha() {
@@ -114,61 +113,62 @@
     if (top != self) {
         top.location.href = location.href;
     }
-    $(document).ready(function () {
-        LazyLoad.css('<c:url value='/css/bootstrap.min.css'/>', function () {
-            $('body').addClass('loaded');
-            $(".ch-container").show();
-            $("#loginname").focus();
-
-            setTimeout(function () {
-                LazyLoad.js(['<c:url value='/js/jquery.form.js'/>',
-                    '<c:url value='/bower_components/bootstrap/dist/js/bootstrap.min.js'/>',
-                    '<c:url value='/js/jquery.cookie.js'/>',
-                    '<c:url value='/bower_components/moment/min/moment.min.js'/>',
-                    '<c:url value='/bower_components/fullcalendar/dist/fullcalendar.min.js'/>',
-                    '<c:url value='/js/jquery.dataTables.min.js'/>',
-                    '<c:url value='/js/dataTables.bootstrap.js'/>',
-                    '<c:url value='/bower_components/chosen/chosen.jquery.min.js'/>',
-                    '<c:url value='/bower_components/colorbox/jquery.colorbox-min.js'/>',
-                    '<c:url value='/js/jquery.noty.packaged.min.js'/>',
-                    '<c:url value='/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js'/>',
-                    '<c:url value='/js/jquery.raty.min.js'/>',
-                    '<c:url value='/js/jquery.iphone.toggle.js'/>',
-                    '<c:url value='/js/jquery.autogrow-textarea.js'/>',
-                    '<c:url value='/js/jquery.uploadify-3.1.min.js'/>',
-                    '<c:url value='/js/jquery.history.js'/>',
-                    '<c:url value='/js/bootstrap-datepicker.js'/>',
-                    '<c:url value='/js/bootstrap-datepicker.zh-CN.js'/>',
-                    '<c:url value='/js/prism.js'/>',
-                    '<c:url value='/js/bootbox.js'/>',
-                    '<c:url value='/js/summernote.js'/>',
-                    '<c:url value='/js/summernote-zh-CN.js'/>',
-                    '<c:url value='/js/jquery.formautofill.js'/>',
-                    '<c:url value='/js/nprogress.js'/>',
-                    '<c:url value='/js/base.js'/>',
-                    '<c:url value='/js/charisma.js'/>']);
-                LazyLoad.css([
-                    '<c:url value='/css/base.css'/>',
-                    '<c:url value='/css/charisma-app.css'/>',
-                    '<c:url value='/bower_components/fullcalendar/dist/fullcalendar.css'/>',
-                    '<c:url value='/bower_components/fullcalendar/dist/fullcalendar.print.css'/>',
-                    '<c:url value='/bower_components/chosen/chosen.min.css'/>',
-                    '<c:url value='/bower_components/colorbox/example3/colorbox.css'/>',
-                    '<c:url value='/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css'/>',
-                    '<c:url value='/css/elfinder.min.css'/>',
-                    '<c:url value='/css/elfinder.theme.css'/>',
-                    '<c:url value='/css/jquery.iphone.toggle.css'/>',
-                    '<c:url value='/css/uploadify.css'/>',
-                    '<c:url value='/css/animate.min.css'/>',
-                    '<c:url value='/css/dataTables.bootstrap.css'/>',
-                    '<c:url value='/css/datepicker3.css'/>',
-                    '<c:url value='/css/prism.css'/>',
-                    '<c:url value='/css/nprogress.css'/>',
-                    '<c:url value='/css/summernote.css'/>',
-                    '<c:url value='/css/font-awesome.min.css'/>']);
-            }, 1000);
+    function onload() {
+        LazyLoad.js('<c:url value='/bower_components/jquery/1.11.2/jquery-1.11.2.min.js'/>', function () {
+            LazyLoad.css('<c:url value='/css/bootstrap.min.css'/>', function () {
+                $('body').addClass('loaded');
+                $(".ch-container").show();
+                $("#loginname").focus();
+                setTimeout(function () {
+                    LazyLoad.js(['<c:url value='/js/jquery.form.js'/>',
+                        '<c:url value='/bower_components/bootstrap/dist/js/bootstrap.min.js'/>',
+                        '<c:url value='/js/jquery.cookie.js'/>',
+                        '<c:url value='/bower_components/moment/min/moment.min.js'/>',
+                        '<c:url value='/bower_components/fullcalendar/dist/fullcalendar.min.js'/>',
+                        '<c:url value='/js/jquery.dataTables.min.js'/>',
+                        '<c:url value='/js/dataTables.bootstrap.js'/>',
+                        '<c:url value='/bower_components/chosen/chosen.jquery.min.js'/>',
+                        '<c:url value='/bower_components/colorbox/jquery.colorbox-min.js'/>',
+                        '<c:url value='/js/jquery.noty.packaged.min.js'/>',
+                        '<c:url value='/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js'/>',
+                        '<c:url value='/js/jquery.raty.min.js'/>',
+                        '<c:url value='/js/jquery.iphone.toggle.js'/>',
+                        '<c:url value='/js/jquery.autogrow-textarea.js'/>',
+                        '<c:url value='/js/jquery.uploadify-3.1.min.js'/>',
+                        '<c:url value='/js/jquery.history.js'/>',
+                        '<c:url value='/js/bootstrap-datepicker.js'/>',
+                        '<c:url value='/js/bootstrap-datepicker.zh-CN.js'/>',
+                        '<c:url value='/js/prism.js'/>',
+                        '<c:url value='/js/bootbox.js'/>',
+                        '<c:url value='/js/summernote.js'/>',
+                        '<c:url value='/js/summernote-zh-CN.js'/>',
+                        '<c:url value='/js/jquery.formautofill.js'/>',
+                        '<c:url value='/js/nprogress.js'/>',
+                        '<c:url value='/js/base.js'/>',
+                        '<c:url value='/js/charisma.js'/>']);
+                    LazyLoad.css([
+                        '<c:url value='/css/base.css'/>',
+                        '<c:url value='/css/charisma-app.css'/>',
+                        '<c:url value='/bower_components/fullcalendar/dist/fullcalendar.css'/>',
+                        '<c:url value='/bower_components/fullcalendar/dist/fullcalendar.print.css'/>',
+                        '<c:url value='/bower_components/chosen/chosen.min.css'/>',
+                        '<c:url value='/bower_components/colorbox/example3/colorbox.css'/>',
+                        '<c:url value='/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css'/>',
+                        '<c:url value='/css/elfinder.min.css'/>',
+                        '<c:url value='/css/elfinder.theme.css'/>',
+                        '<c:url value='/css/jquery.iphone.toggle.css'/>',
+                        '<c:url value='/css/uploadify.css'/>',
+                        '<c:url value='/css/animate.min.css'/>',
+                        '<c:url value='/css/dataTables.bootstrap.css'/>',
+                        '<c:url value='/css/datepicker3.css'/>',
+                        '<c:url value='/css/prism.css'/>',
+                        '<c:url value='/css/nprogress.css'/>',
+                        '<c:url value='/css/summernote.css'/>',
+                        '<c:url value='/css/font-awesome.min.css'/>']);
+                }, 1000);
+            });
         });
-    });
+    }
 </script>
 </body>
 </html>

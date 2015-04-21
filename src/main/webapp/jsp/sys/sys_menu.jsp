@@ -9,10 +9,12 @@
             font-size: 24px;
             margin: 2px;
         }
-        .sql_index{
+
+        .sql_index {
             margin-left: 20px;
         }
-        #sqlList .list-group-item{
+
+        #sqlList .list-group-item {
             cursor: pointer;
         }
     </style>
@@ -82,6 +84,7 @@
     <input type="hidden" name="index">
     <input type="hidden" name="level">
     <input type="hidden" name="repeat">
+
     <div id="rolesList"></div>
 </form>
 <form id="menuSqlForm" role="form" class="form-horizontal hide">
@@ -89,6 +92,7 @@
     <input type="hidden" name="index">
     <input type="hidden" name="level">
     <input type="hidden" name="repeat">
+
     <div id="sqlList"></div>
 </form>
 <div class="container-fluid">
@@ -142,8 +146,8 @@
         menuRoleForm.open({
             data: {
                 menu_id: menu.id,
-                level:menu.level,
-                repeat:"role_id"
+                level: menu.level,
+                repeat: "role_id"
             },
             index: 'sys_menu.menuUpdateRoles'
         });
@@ -166,25 +170,25 @@
                     url: getContextPath() + "/base/getAllSqlIndex.do",
                     success: function (result) {
                         var namespace = Object.keys(result);
-                        for(var i = 0;i<namespace.length;i++){
-                            var div_id = "namespace_"+i;
-                            var div = $.parseHTML("<div class='sql_index collapse' id='"+div_id+"'></div>");
+                        for (var i = 0; i < namespace.length; i++) {
+                            var div_id = "namespace_" + i;
+                            var div = $.parseHTML("<div class='sql_index collapse' id='" + div_id + "'></div>");
 
                             var indexs = result[namespace[i]];
                             var hasCheck = false;
-                            for(var j =0;j<indexs.length;j++){
+                            for (var j = 0; j < indexs.length; j++) {
 
                                 var checked = "";
-                                if(data && $.inArray(indexs[j],data) !=-1){
+                                if (data && $.inArray(indexs[j], data) != -1) {
                                     checked = "checked";
                                     hasCheck = true;
                                 }
                                 $(div).append('<label><input type="checkbox" name="sql_index" value="' + indexs[j] + '" ' + checked + '>' + indexs[j] + '</label><br>');
                             }
-                            if(hasCheck){
+                            if (hasCheck) {
                                 $(div).addClass("in");
                             }
-                            $("#sqlList",sqlForm).append("<li class='list-group-item' data-toggle='collapse' data-target='#"+div_id+"'>"+namespace[i]+"</li>").append(div);
+                            $("#sqlList", sqlForm).append("<li class='list-group-item' data-toggle='collapse' data-target='#" + div_id + "'>" + namespace[i] + "</li>").append(div);
                         }
                     }
                 });
@@ -193,8 +197,8 @@
         sqlForm.open({
             data: {
                 menu_id: menu.id,
-                level:menu.level,
-                repeat:"sql_index"
+                level: menu.level,
+                repeat: "sql_index"
             },
             index: 'sys_menu.menuUpdateSqlIndex'
         });
@@ -249,7 +253,7 @@
                             tipMsg("操作成功!");
                             table.draw(false);
                         } else {
-                            tipMsg("错误原因" + r.message,  "error", 5000);
+                            tipMsg("错误原因" + r.message, "error", 5000);
                         }
                     }
                 });
@@ -264,7 +268,7 @@
                         if (r.status != -1) {
                             tipMsg("操作成功!");
                         } else {
-                            tipMsg("错误原因" + r.message,  "error", 5000);
+                            tipMsg("错误原因" + r.message, "error", 5000);
                         }
                     }
                 });
@@ -288,9 +292,9 @@
         var table = $('#example').baseTable({
             index: "sys_menu.selectAll",
             single: true,
-            ordering:false,
+            ordering: false,
             columns: [
-                {data: "id", title: "ID",width:"10px"}
+                {data: "id", title: "ID", width: "10px"}
                 , {data: "name", title: "菜单名称"}
                 , {data: "url", title: "链接"}
                 , {data: "level", title: "层级"}
@@ -353,18 +357,16 @@
                         "css": "btn-danger",
                         icon: "glyphicon glyphicon-trash",
                         "method": function (datas) {
-                            bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
-                                if (r) {
-                                    ajaxUpdate({
-                                        data: {index: "sys_menu.delete", id: datas[0].id},
-                                        success: function (r) {
-                                            if (r.status == 1) {
-                                                tipMsg('操作成功!');
-                                                table.draw(false);
-                                            }
+                            tipConfirm('确认删除数据[' + datas[0].name + ']么?', function (r) {
+                                ajaxUpdate({
+                                    data: {index: "sys_menu.delete", id: datas[0].id},
+                                    success: function (r) {
+                                        if (r.status == 1) {
+                                            tipMsg('操作成功!');
+                                            table.draw(false);
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             });
                         }
                     }
@@ -376,26 +378,22 @@
                         method: function (datas) {
                             var menu = datas[0];
                             if (menu.level == 1 && menu.url == "") {
-                                bootbox.confirm('对父菜单设置权限将覆盖其所有子菜单的权限设置,您确定么?', function (r) {
-                                    if (r) {
-                                        initRolesList(menu, menuRoleForm);
-                                    }
+                                tipConfirm('对父菜单设置权限将覆盖其所有子菜单的权限设置,您确定么?', function (r) {
+                                    initRolesList(menu, menuRoleForm);
                                 });
                             } else {
                                 initRolesList(menu, menuRoleForm);
                             }
                         }
-                    },{
+                    }, {
                         text: "数据权限",
                         css: "btn-success",
                         icon: "fa fa-database",
                         method: function (datas) {
                             var menu = datas[0];
                             if (menu.level == 1 && menu.url == "") {
-                                bootbox.confirm('对父菜单设置权限将覆盖其所有子菜单的权限设置,您确定么?', function (r) {
-                                    if (r) {
-                                        initSqlList(menu, menuSqlForm);
-                                    }
+                                tipConfirm('对父菜单设置权限将覆盖其所有子菜单的权限设置,您确定么?', function (r) {
+                                    initSqlList(menu, menuSqlForm);
                                 });
                             } else {
                                 initSqlList(menu, menuSqlForm);

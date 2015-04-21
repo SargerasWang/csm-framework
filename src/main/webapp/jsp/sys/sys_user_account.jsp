@@ -4,20 +4,22 @@
 <html>
 <head>
     <jsp:include page="/import.jsp" flush="true"/>
-    <script  src="<c:url value='/base/getStatusJS/user_status.do'/>"></script>
+    <script src="<c:url value='/base/getStatusJS/user_status.do'/>"></script>
 </head>
 
-<body>
+<body>import
 <form id="myForm" role="form" class="hide">
     <input type="hidden" name="index">
     <input type="hidden" name="id">
+
     <div class="form-group">
         <label for="role_id">角色</label>
-        <select  id="role_id" class="form-control" name="role_id"></select>
+        <select id="role_id" class="form-control" name="role_id"></select>
     </div>
     <div class="form-group">
         <label for="loginname">账号</label>
-        <input type="text" class="form-control" id="loginname" name="loginname" maxlength="50" placeholder="请输入账号" required>
+        <input type="text" class="form-control" id="loginname" name="loginname" maxlength="50" placeholder="请输入账号"
+               required>
     </div>
     <div class="form-group">
         <label for="name">姓名</label>
@@ -36,9 +38,11 @@
 <form id="passwordForm" role="form" class="hide">
     <input type="hidden" name="index">
     <input type="hidden" name="id">
+
     <div class="form-group">
         <label for="loginname">密码</label>
-        <input type="password" class="form-control" id="password" name="password" maxlength="50" placeholder="请输入密码" required>
+        <input type="password" class="form-control" id="password" name="password" maxlength="50" placeholder="请输入密码"
+               required>
     </div>
 </form>
 <div class="container-fluid">
@@ -53,17 +57,17 @@
 </div>
 <jsp:include page="/externalJS.jsp" flush="true"/>
 <script>
-    function disconnect(session_id){
+    function disconnect(session_id) {
         ajaxQuery({
-            url:"<c:url value='/base/disconnectSession.do'/>",
-            data:{session_id:session_id},
-            success:function(){
+            url: "<c:url value='/base/disconnectSession.do'/>",
+            data: {session_id: session_id},
+            success: function () {
                 showOnlineUser()
             }
         });
     }
 
-    function showOnlineUser(){
+    function showOnlineUser() {
         $("#onlineTable").empty();
         var th = "<tr><th>用户</th><th>上线时间</th><th>IP</th><th>操作</th></tr>";
         $("#onlineTable").append(th);
@@ -76,9 +80,9 @@
                     var tr = $.parseHTML("<tr><td>" + data['user_name'] + "</td>"
                     + "<td>" + data['start_time'] + "</td>"
                     + "<td>" + data['ip'] + "</td>"
-                    + "<td><a class='btn btn-danger btn-sm' sid='"+data['session_id']+"' href='#' ><i class='fa fa-chain-broken'></i></a></td>"
+                    + "<td><a class='btn btn-danger btn-sm' sid='" + data['session_id'] + "' href='#' ><i class='fa fa-chain-broken'></i></a></td>"
                     + "</tr>");
-                    $("a",tr).click(function(){
+                    $("a", tr).click(function () {
                         disconnect($(this).attr('sid'));
                     });
                     $("#onlineTable").append(tr);
@@ -91,14 +95,14 @@
         resetHeight();
         //角色下拉菜单
         $("#role_id").baseSelect({
-            index:"selectRoleNameList",
-            value:"id",
-            text:"name",
-            hasNull:false
+            index: "selectRoleNameList",
+            value: "id",
+            text: "name",
+            hasNull: false
         });
         //在线用户列表
         var onlineDiv = $("#onlineDiv").modalWin({
-           title:"在线用户 <i style='margin-left: 20px;cursor: pointer;color:green;' class='glyphicon glyphicon-refresh' onclick='showOnlineUser()'></i>"
+            title: "在线用户 <i style='margin-left: 20px;cursor: pointer;color:green;' class='glyphicon glyphicon-refresh' onclick='showOnlineUser()'></i>"
         }).on('shown.bs.modal', function () {
             showOnlineUser()
         });
@@ -120,16 +124,16 @@
                 });
             }
         });
-        var passwordForm=$("#passwordForm").baseForm({
-           title:"修改密码",
-            submit:function(data){
+        var passwordForm = $("#passwordForm").baseForm({
+            title: "修改密码",
+            submit: function (data) {
                 ajaxUpdate({
-                    data:data,
-                    success:function(r){
+                    data: data,
+                    success: function (r) {
                         if (r.status != -1) {
                             tipMsg("操作成功!");
                         } else {
-                            tipMsg("错误原因" + r.message,  "error", 5000);
+                            tipMsg("错误原因" + r.message, "error", 5000);
                         }
                     }
                 });
@@ -141,26 +145,28 @@
             single: true,
             order: [[0, "asc"]],
             columns: [
-                {data: "id", title: "ID",visible:true}
-                ,{data: "role_id", title: "角色",defaultContent:"",render:function(d,a,b){
-                    return b['role_name'];
-                }}
-                ,{data: "loginname", title: "账号"}
-                ,{data: "name", title: "姓名",defaultContent:""}
-                ,{data: "info", title: "描述",defaultContent:""}
+                {data: "id", title: "ID", visible: true}
+                , {
+                    data: "role_id", title: "角色", defaultContent: "", render: function (d, a, b) {
+                        return b['role_name'];
+                    }
+                }
+                , {data: "loginname", title: "账号"}
+                , {data: "name", title: "姓名", defaultContent: ""}
+                , {data: "info", title: "描述", defaultContent: ""}
 //                ,{data: "status", title: "状态",defaultContent:"",render: function (data) {return user_status[data]}}
-                ,{data: "mobile", title: "手机号",defaultContent:""}
-                ,{data: "c_time", title: "创建时间",defaultContent:""}
-                ,{data: "c_user", title: "创建人",defaultContent:""}
+                , {data: "mobile", title: "手机号", defaultContent: ""}
+                , {data: "c_time", title: "创建时间", defaultContent: ""}
+                , {data: "c_user", title: "创建人", defaultContent: ""}
             ],
             search: [
-                {column: "role_id","placeholder": "角色"}
-                ,{column: "loginname","placeholder": "账号"}
-                ,{column: "name","placeholder": "姓名"}
-                ,{column: "info","placeholder": "描述"}
+                {column: "role_id", "placeholder": "角色"}
+                , {column: "loginname", "placeholder": "账号"}
+                , {column: "name", "placeholder": "姓名"}
+                , {column: "info", "placeholder": "描述"}
 //                ,{column: "status","placeholder": "状态",select:true,data: convertObj2Arr(user_status)}
-                ,{column: "mobile","placeholder": "手机号"}
-                ,{column: "c_time","placeholder": "创建时间",date:true}
+                , {column: "mobile", "placeholder": "手机号"}
+                , {column: "c_time", "placeholder": "创建时间", date: true}
             ],
             buttons: [
                 [
@@ -182,11 +188,11 @@
                         }
                     },
                     {
-                        text:"查看",
+                        text: "查看",
                         icon: "glyphicon glyphicon-eye-open",
                         "css": "btn-info",
-                        method:function(datas){
-                            myForm.open({data: datas[0], readOnly: true });
+                        method: function (datas) {
+                            myForm.open({data: datas[0], readOnly: true});
                         }
                     },
                     {
@@ -194,22 +200,20 @@
                         "css": "btn-danger",
                         icon: "glyphicon glyphicon-trash",
                         "method": function (datas) {
-                            bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
-                                if (r) {
-                                    ajaxUpdate({
-                                        data: {index: "sys_user_account.delete",id: datas[0].id},
-                                        success: function (r) {
-                                            if (r.status == 1) {
-                                                tipMsg('操作成功!');
-                                                table.draw(false);
-                                            }
+                            tipConfirm('确认删除数据[' + datas[0].name + ']么?', function (r) {
+                                ajaxUpdate({
+                                    data: {index: "sys_user_account.delete", id: datas[0].id},
+                                    success: function (r) {
+                                        if (r.status == 1) {
+                                            tipMsg('操作成功!');
+                                            table.draw(false);
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             });
                         }
                     }
-                ],[
+                ], [
                     {
                         "text": "修改密码",
                         "css": "btn-warning",
@@ -218,7 +222,7 @@
                             passwordForm.open({data: datas[0], index: "sys_user_account.updatePassword!"});
                         }
                     }
-                ],[
+                ], [
                     {
                         "text": "查看在线用户",
                         "css": "btn-info",

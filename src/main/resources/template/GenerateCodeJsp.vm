@@ -213,24 +213,22 @@
                         "css": "btn-danger",
                         icon: "glyphicon glyphicon-trash",
                         "method": function (datas) {
-                            bootbox.confirm('确认删除数据[' + datas[0] + ']么?', function (r) {
-                                if (r) {
-                                    ajaxUpdate({
-                                        data: {index: "${table}.delete",##
+                            tipConfirm('确认删除数据[' + datas[0] + ']么?', function (r) {
+                                ajaxUpdate({
+                                    data: {index: "${table}.delete",##
 #foreach($col in $columns)
 #if(${col.isPrimaryKey})##
 ${col.columnName}: datas[0].${col.columnName}##
 #end##
 #end##
 },
-                                        success: function (r) {
-                                            if (r.status == 1) {
-                                                tipMsg('操作成功!');
-                                                table.draw(false);
-                                            }
+                                    success: function (r) {
+                                        if (r.status == 1) {
+                                            tipMsg('操作成功!');
+                                            table.draw(false);
                                         }
-                                    });
-                                }
+                                    }
+                                });
                             });
                         }
                     }
