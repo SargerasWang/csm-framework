@@ -111,7 +111,6 @@
                                         data: data,
                                         drawCallback: function () {
                                             resetHeight();
-                                            dataTable_drawCallback();
                                         }
                                     });
                                     $(".selectAllStatusMap",divPanel).append(divSelectStatus);
