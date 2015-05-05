@@ -7,6 +7,7 @@
     <SCRIPT LANGUAGE="JavaScript">CsmContextPath = '<%=path%>';</SCRIPT>
     <title>Charisma SpringMVC Mybatis Framework Demo Login Page</title>
     <meta name="description" content="SargerasWang's CSMFramework Demo">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
     <link rel="shortcut icon" href="<c:url value='/img/favicon.ico'/>">
     <link rel="stylesheet" href="<c:url value="/css/preloader.css"/> "/>
     <link href="<c:url value='/css/charisma-app.css'/>" rel="stylesheet">
@@ -17,6 +18,9 @@
             right: 3px;
             top: 3px;
             z-index: 999;
+        }
+        body{
+            overflow-x:hidden;
         }
     </style>
 </head>
@@ -37,7 +41,7 @@
         <!--/row-->
 
         <div class="row">
-            <div class="well col-md-5 center login-box">
+            <div class="well col-md-5 col-xs-10 center login-box">
                 <c:if test="${msg eq null}">
                     <div id="divInfo" class="alert alert-info">
                         请输入您的用户名和密码.
