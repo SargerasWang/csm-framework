@@ -8,10 +8,7 @@ import com.sargeraswang.csmframework.common.ControllerPermissionType;
 import com.sargeraswang.csmframework.common.SessionContext;
 import com.sargeraswang.csmframework.common.annotation.ControllerPermission;
 import com.sargeraswang.csmframework.common.exception.BaseUpdateException;
-import com.sargeraswang.csmframework.common.util.JsonUtil;
-import com.sargeraswang.csmframework.common.util.SpringBeanFactoryUtils;
-import com.sargeraswang.csmframework.common.util.StatusUtil;
-import com.sargeraswang.csmframework.common.util.StringUtil;
+import com.sargeraswang.csmframework.common.util.*;
 import com.sargeraswang.csmframework.service.BaseService;
 import com.sargeraswang.excelutil.ExcelUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -63,6 +60,14 @@ public class BaseController {
             bean.setRecordsFiltered(allCount);
             bean.setDraw(Integer.valueOf(echo));
             return JsonUtil.toJson(bean);
+        }
+        if ("true".equals(allRequestParams.get("needTreeList"))) {
+            String tree_self_key = allRequestParams.get("tree_self_key");
+            String tree_parent_key = allRequestParams.get("tree_parent_key");
+            String tree_children_name = allRequestParams.get("tree_children_name");
+            List<Map<String, Object>> treeList = TreeUtil.generateTree(list, tree_self_key,
+                    tree_parent_key, tree_children_name, false);
+            return JsonUtil.toJson(treeList);
         }
         return JsonUtil.toJson(list);
 
