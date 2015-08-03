@@ -181,7 +181,7 @@ function datatableDownload(type, options) {
  * @param time 显示多长时间后关闭,默认800ms
  */
 function tipMsg(text, type, time) {
-    top.noty($.extend({}, {type: "information", layout: "center", modal: true, timeout: 1000}, {
+    top.noty($.extend({}, {type: "information", layout: "center", modal: false, timeout: 1000}, {
         text: text,
         type: type,
         timeout: time
@@ -278,7 +278,7 @@ $.fn.baseSelect = function (opt) {
     }, opt);
     var $sel = $(this);
     ajaxQuery({
-        data: {index: $opt.index},
+        data:  $.extend({},{index: $opt.index},opt.data),
         success: function (data) {
             if ($opt.hasNull) {
                 $sel.append("<option value=''>请选择</option>");
@@ -342,6 +342,10 @@ $.fn.baseTable = function (opt) {
                         });
                         delete d.search;
                         delete d.columns;
+                        //other data
+                        if(opt.data){
+                            d = $.extend(d,opt.data);
+                        }
                     }
                 },
                 "drawCallback": function () {
@@ -427,7 +431,7 @@ $.fn.baseTable = function (opt) {
                     var select = $.parseHTML("<select></select>");
                     $(select).addClass("chosen-select baseSearch")
                     $(select).attr("id", column);
-                    $(select).append("<option></option>");
+                    $(select).append("<option value=''>"+colObj.placeholder+"-请选择</option>");
                     $(colObj.data).each(function () {
                         var option = $.parseHTML("<option></option>");
                         $(option).attr("value", this.value)
@@ -618,7 +622,7 @@ $.fn.baseForm = function (opt) {
                 }
                 resetHeight(height);
                 if (callback) {
-                    callback();
+                    callback(opt.data);
                 }
             })
         },
@@ -631,7 +635,7 @@ $.fn.baseForm = function (opt) {
         if ($(_form)[0].checkValidity()) {
             var values = $(_form).serializeArray()
             //处理相同name的value要用逗号相隔拼接
-            var finalValues = new Array();
+            var finalValues = new Object();
             $(values).each(function (i, field) {
                 var repeat = false;
                 for (var i = 0; i < finalValues.length; i++) {
@@ -642,11 +646,13 @@ $.fn.baseForm = function (opt) {
                     }
                 }
                 if (!repeat) {
-                    finalValues.push(field);
+                    finalValues[field.name]= field.value;
                 }
             });
-            opt.submit(finalValues);
-            modal_box.close();
+            var result = opt.submit(finalValues);
+            if(result != false){
+                modal_box.close();
+            }
         }
         return false;
     });
@@ -655,3 +661,121 @@ $.fn.baseForm = function (opt) {
     });
     return modal_box;
 }
+
+/**
+ * baseTree
+ * @param opt
+ */
+$.fn.baseTree = function(opt){
+    opt = $.extend({},{
+        index:"",
+        tree_self_key:"id",
+        tree_parent_key:"pid",
+        tree_children_name:"childrens",
+        columns:[],
+        buttons:[]
+    },opt);
+    var $this = $(this);
+    ajaxQuery({
+        data: {
+            index: opt.index,
+            needTreeList: true,
+            tree_self_key: opt.tree_self_key,
+            tree_parent_key: opt.tree_parent_key,
+            tree_children_name: opt.tree_children_name
+        },
+        success: function (r) {
+            $(r).each(function () {
+                var tbody = loopChildrens(this, null, null, {
+                    self_key: opt.tree_self_key,
+                    children_name: opt.tree_children_name,
+                    columns:opt.columns,
+                    buttons:opt.buttons
+                });
+                $this.append(tbody);
+                resetHeight();
+            });
+            $this.treegrid();
+        }
+    });
+    $this.reload=function(){
+        $this.empty();
+        $this.baseTree(opt);
+    }
+    return $this;
+}
+function loopChildrens(data, html, parent_id, opt) {
+    opt = $.extend({
+        self_key: "id",
+        children_name: "childrens",
+        columns: {},
+        buttons:[]
+    }, opt);
+    if (!html) {
+        html = $.parseHTML("<tbody></tbody>");
+        tr = $.parseHTML("<tr></tr>");
+        $(opt.columns).each(function () {
+            $(tr).append("<th>" + this['title'] + "</th>");
+        });
+        if(opt.buttons){
+            $(tr).append("<th>操作</th>");
+        }
+        $(html).append(tr);
+    }
+    var tr = $.parseHTML("<tr></tr>")
+    $(tr).addClass("treegrid-" + data[opt.self_key]);
+    if (parent_id) {
+        $(tr).addClass("treegrid-parent-" + parent_id);
+    }
+    $(opt.columns).each(function () {
+        var value = data[this['data']];
+        if (this.render) {
+            value = this.render(value);
+        } else if (typeof value === "undefined" || value == null) {
+            value = "";
+        }
+        $(tr).append("<td>" + value + "</td>");
+    });
+    if(opt.buttons){
+        var btnTD = $.parseHTML("<td></td>");
+        $(tr).append(btnTD);
+        $(opt.buttons).each(function () {
+            var _btnGroup = $.parseHTML('<div class="btn-group "></div>');
+            $(btnTD).append(_btnGroup);
+            $(this).each(function () {
+                var css;
+                if (typeof this.css === "undefined") {
+                    css = "btn-default";
+                } else {
+                    css = this.css;
+                }
+                var _btn = $.parseHTML('<button type="button" class="btn btn-xs"></button>');
+                $(_btn).text(" " + this.text).addClass(css);
+                if (this.icon) {
+                    var span = $.parseHTML('<span class="' + this.icon + '"></span>');
+                    $(_btn).prepend(span)
+                }
+                var method = this.method;
+                //点击按钮,将当前选中数据当做参数传回
+                $(_btn).on("click", function () {
+                    var data = $(this).parents("tr").data();
+                    method(new Array(data));
+                });
+                $(_btnGroup).append(_btn);
+                $(btnTD).append(_btnGroup);
+            });
+
+        });
+    }
+    $(tr).data(data);
+    $(html).append(tr);
+
+    if (!data[opt.children_name]) {
+        return html;
+    }
+    $(data[opt.children_name]).each(function () {
+        $(html).parent().append(loopChildrens(this, html, data[opt.self_key], opt));
+    });
+    return html;
+}
+//baseTree End
