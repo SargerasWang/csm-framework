@@ -1,6 +1,7 @@
 package com.sargeraswang.csmframework.service;
 
 import com.sargeraswang.csmframework.bean.BaseExecuteParamater;
+import com.sargeraswang.csmframework.bean.BaseGenerateCodeCfg;
 import com.sargeraswang.csmframework.bean.BaseQueryParamater;
 import com.sargeraswang.csmframework.bean.BaseTableColumn;
 import com.sargeraswang.csmframework.common.util.JsonUtil;
@@ -56,8 +57,8 @@ public class BaseService {
      * 根据数据集和标题行,组成数据数组
      *
      * @param statusColumn 状态列
-     * @param datalist 数据集
-     * @param columns 列集合
+     * @param datalist     数据集
+     * @param columns      列集合
      * @return 数据数组
      */
     public String[][] assembleTableData(String statusColumn, List datalist, String columns) {
@@ -138,22 +139,24 @@ public class BaseService {
     /**
      * 生成代码
      *
-     * @param tables 表名集合
-     * @param types  生成类型(JSP/XML)
+     * @param types   生成类型(JSP/XML)
+     * @param cfgList 自定义配置
      */
-    public ByteArrayOutputStream generateCode(String[] tables, String[] types, Map<String, List<Map<String, String>>> configList) {
+    public ByteArrayOutputStream generateCode(String[] types, List<BaseGenerateCodeCfg> cfgList) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ZipOutputStream zos = null;
         try {
             zos = new ZipOutputStream(baos, Charset.forName("UTF-8"));
-            for (String table : tables) {
+            for (BaseGenerateCodeCfg tableCfg : cfgList) {
+                String table = tableCfg.getTableName();
                 List<BaseTableColumn> columns = baseDao.getColumns(table);
-                if (configList.get(table) != null) {
+                tableCfg.setFinalColumnCfgList(columns);
+                List<Map<String, String>> columnCfgList = tableCfg.getColumnCfgList();
+                if (columnCfgList != null) {
                     //用户在页面的设置要覆盖读出来的设置
-                    List<Map<String, String>> columnConfigs = configList.get(table);
                     for (BaseTableColumn btc : columns) {
                         String columnName = btc.getColumnName();
-                        for (Map<String, String> detail : columnConfigs) {
+                        for (Map<String, String> detail : columnCfgList) {
                             if (columnName.equals(detail.get("column"))) {
                                 if (detail.containsKey("remarks")) {
                                     btc.setRemarks(detail.get("remarks"));
@@ -172,14 +175,14 @@ public class BaseService {
                 if (typeList.contains("XML")) {
                     ZipEntry tEntry = new ZipEntry(table + "/" + table + ".xml");
                     zos.putNextEntry(tEntry);
-                    byte[] xml = createFile(table, columns, "template/GenerateCodeXml.vm");
+                    byte[] xml = createFile(tableCfg, "template/GenerateCodeXml.vm");
                     zos.write(xml);
                     zos.closeEntry();
                 }
                 if (typeList.contains("JSP")) {
                     ZipEntry tEntry = new ZipEntry(table + "/" + table + ".jsp");
                     zos.putNextEntry(tEntry);
-                    byte[] jsp = createFile(table, columns, "template/GenerateCodeJsp.vm");
+                    byte[] jsp = createFile(tableCfg, "template/GenerateCodeJsp.vm");
                     zos.write(jsp);
                     zos.closeEntry();
                 }
@@ -196,7 +199,7 @@ public class BaseService {
         return baos;
     }
 
-    private byte[] createFile(String tableName, List<BaseTableColumn> columns, String vmPath) {
+    private byte[] createFile(BaseGenerateCodeCfg tableCfg, String vmPath) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             VelocityEngine ve = new VelocityEngine();
@@ -204,8 +207,9 @@ public class BaseService {
             ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
             ve.init();
             VelocityContext context = new VelocityContext();
-            context.put("columns", columns);
-            context.put("table", tableName);
+            context.put("columns", tableCfg.getFinalColumnCfgList());
+            context.put("align", tableCfg.getAlign());
+            context.put("table", tableCfg.getTableName());
             Template t = ve.getTemplate(vmPath, "UTF-8");
             OutputStreamWriter osw = new OutputStreamWriter(baos, "UTF-8");
             t.merge(context, osw);
@@ -216,7 +220,7 @@ public class BaseService {
         return baos.toByteArray();
     }
 
-    public Map<String,List<String>> getAllSqlIndex(){
+    public Map<String, List<String>> getAllSqlIndex() {
         return baseDao.getAllSqlIndex();
     }
 

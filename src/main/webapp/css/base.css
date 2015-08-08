@@ -138,6 +138,13 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 ,
     left:15px;
     right:15px;
 }
+.uploaded-container .btn-group-vertical{
+    margin-top:10px;
+    height:135px;
+}
+.uploaded-container .btn-group{
+    margin-top:10px;
+}
 
 /* Mobile */
 @media only screen and (max-width: 767px) {

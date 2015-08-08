@@ -13,6 +13,9 @@
         <result column="unique_key" property="uniqueKey"/>
     </resultMap>
     <select id="selectAttachmentFileByKey" parameterType="String" resultMap="attachmentFileMap">
-        select * from comm_attachment_file where unique_key=#{key}
+        select * from comm_attachment_file where unique_key=#{key} and status = 1
     </select>
+    <delete id="deleteAttachmentFileByKey" parameterType="String">
+        update comm_attachment_file set status = 0 where unique_key=#{key} and status = 1
+    </delete>
 </mapper>

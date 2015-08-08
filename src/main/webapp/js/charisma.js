@@ -164,13 +164,6 @@ function docReady() {
         path:"/img/"
     });
 
-    //uploadify - multiple uploads
-    $('#file_upload').uploadify({
-        'swf': 'misc/uploadify.swf',
-        'uploader': 'misc/uploadify.php'
-        // Put your options here
-    });
-
     //gallery controls container animation
     $('ul.gallery li').hover(function () {
         $('img', this).fadeToggle(1000);

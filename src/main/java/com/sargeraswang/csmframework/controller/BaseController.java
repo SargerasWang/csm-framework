@@ -235,24 +235,28 @@ public class BaseController {
     public void generateCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String[] tables = request.getParameterValues("tables");
         String[] types = request.getParameterValues("types");
-        //表设置
-        Map<String, List<Map<String, String>>> configList = new HashMap<>();
+        List<BaseGenerateCodeCfg> cfgList = new ArrayList<>();
         for (String table : tables) {
             String[] arrConfig = request.getParameterValues(table + "_config");
-            if (arrConfig == null) {
-                continue;
-            }
+            String align = request.getParameter(table + "_align");
             String config = arrConfig[0];
             List<Map<String, String>> list = (List<Map<String, String>>) JsonUtil.fromJson(config, List.class);
-            configList.put(table, list);
+            BaseGenerateCodeCfg cfg = new BaseGenerateCodeCfg();
+            cfg.setAlign(align);
+            cfg.setTableName(table);
+            cfg.setColumnCfgList(list);
+            cfgList.add(cfg);
         }
 
-        ByteArrayOutputStream baos = service.generateCode(tables, types, configList);
-
-        response.setContentType("application/octet-stream;charset=utf-8");
-        response.setHeader("Content-disposition", "attachment; filename=code.zip");
-        IOUtils.write(baos.toByteArray(), response.getOutputStream());
-        response.flushBuffer();
+        ByteArrayOutputStream baos = service.generateCode(types, cfgList);
+        try {
+            response.setContentType("application/octet-stream;charset=utf-8");
+            response.setHeader("Content-disposition", "attachment; filename=code.zip");
+            IOUtils.write(baos.toByteArray(), response.getOutputStream());
+            response.flushBuffer();
+        } catch (IOException e) {
+            LG.error(e.toString(), e);
+        }
     }
 
     @ResponseBody

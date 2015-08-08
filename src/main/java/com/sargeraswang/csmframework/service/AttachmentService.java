@@ -29,7 +29,7 @@ public class AttachmentService {
         StringBuffer fileName;
         String md5;
         String path ;
-        String now = DateUtil.getFormatNow("yyyyMMddHHmmss");
+        String now = DateUtil.getFormatNow("yyyyMMddHHmmssSSS");
         try {
             fileName = new StringBuffer();
             byte[] bytes = file.getBytes();
@@ -66,5 +66,10 @@ public class AttachmentService {
 
     public AttachmentFile selectAttachmentFileByKey(String key){
         return attachmentFileMapper.selectAttachmentFileByKey(key);
+    }
+
+    public boolean deleteAttachmentFileByKey(String key){
+        int i = attachmentFileMapper.deleteAttachmentFileByKey(key);
+        return i ==1;
     }
 }

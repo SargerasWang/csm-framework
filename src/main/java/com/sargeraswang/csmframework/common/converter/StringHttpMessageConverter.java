@@ -78,10 +78,11 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
         if (this.writeAcceptCharset) {
             outputMessage.getHeaders().setAcceptCharset(getAcceptedCharsets());
         }
-        Charset charset = getContentTypeCharset(outputMessage.getHeaders().getContentType());
-        if(charset.equals(Charset.forName("UTF-8"))){
-            outputMessage.getHeaders().setContentType(new MediaType("text", "plain", charset));
-        }
+        Charset charset = Charset.forName("UTF-8");
+        MediaType contentType = outputMessage.getHeaders().getContentType();
+        MediaType utfContentType = new MediaType(contentType.getType(),contentType.getSubtype(),charset);
+        outputMessage.getHeaders().setContentType(utfContentType);
+        outputMessage.getHeaders().setContentLength(s.getBytes().length);
         StreamUtils.copy(s, charset, outputMessage.getBody());
     }
 

@@ -143,6 +143,7 @@
                             form
                                 .append(options.fileInput)
                                 .prop('enctype', 'multipart/form-data')
+                                .prop('charset','charset=UTF-8')
                                 // enctype must be set as encoding for IE:
                                 .prop('encoding', 'multipart/form-data');
                             // Remove the HTML5 form attribute from the input(s):

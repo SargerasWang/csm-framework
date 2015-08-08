@@ -188,12 +188,8 @@ function datatableDownload(type, options) {
  * @param type 类型:alert,success,warning,error,information(默认)
  * @param time 显示多长时间后关闭,默认800ms
  */
-function tipMsg(text, type, time) {
-    top.noty($.extend({}, {type: "information", layout: "center", modal: false, timeout: 1000}, {
-        text: text,
-        type: type,
-        timeout: time
-    }))
+function tipMsg(opt) {
+    top.noty($.extend({}, {type: "information", layout: "center", modal: false, timeout: 1000},opt));
 }
 
 /**
@@ -825,3 +821,222 @@ function loopChildrens(data, html, parent_id, opt) {
     return html;
 }
 //baseTree End
+
+var getFileComplateUrl = function(key){
+    return getContextPath()+"/file/downloadFile.do?key="+key;
+}
+/**
+ * 上传组件
+ * @param opt
+ * @param resetHeight
+ */
+$.fn.baseUpload = function(opt,resetHeight){
+    var $this = $(this);
+    opt = $.extend({},{
+        maxFileSize : 2000000,//2MB
+        onlyImg : false,
+        multiple:false,
+        separator:",",
+        onuploaded:function(key){
+            if(opt.multiple){
+                if($this.val()==''){
+                    $this.val(key);
+                }else{
+                    $this.val($this.val()+","+key);
+                }
+            }else{
+                $this.val(key);
+            }
+        },
+        ondeleted:function(key){
+            if(opt.multiple){
+                var imgArr = $this.val().split(opt.separator);
+                imgArr = $.grep(imgArr,function(value){
+                    return value != key;
+                });
+                $this.val(imgArr.join(opt.separator));
+            }else{
+                $this.val("");
+            }
+        }
+    },opt);
+    var imageFileTypes = /^image\/(gif|jpe?g|png)$/i;
+
+    var generateFileDiv = function(key,readOnly){
+        var div = $('<div>').addClass("col-md-4");
+        var delBtn = $('<button type="button" class="btn btn-xs btn-danger">' +
+            '<span class="glyphicon glyphicon-remove-circle"></span> 删除' +
+            '</button>');
+        if(opt.onlyImg){
+            $(div).addClass("btn-group-vertical");
+            $(delBtn).addClass("btn-block");
+        }else{
+            $(div).addClass("btn-group");
+        }
+        if(readOnly){
+            $(delBtn).attr("disabled","disabled");
+        }else{
+            $(delBtn).click(function(){
+                    tipConfirm("此操作不可恢复,确认删除么?",function(){
+                        ajaxUpdate({
+                            url:getContextPath()+"/file/deleteFile.do",
+                            data:{"key":key},
+                            success:function(r){
+                                if(r.status != 1){
+                                    tipAlert({
+                                        text: r.message,
+                                        type:'warning'
+                                    });
+                                }else{
+                                    $(div).remove();
+                                    opt.ondeleted(key);
+                                }
+                            }
+                        });
+                    });
+                }
+            );
+        }
+        if(opt.onlyImg){
+            var img = $('<img width="100%" height="80%">').attr("src",getFileComplateUrl(key))
+                .on("load",function(){
+                    $(div).append(delBtn);
+                    if(resetHeight){
+                        setTimeout(resetHeight(),500);
+                    }
+                }
+            );
+            $(div).append(img);
+        }else{
+            var downloadBtn = $('<a type="button" class="btn btn-xs btn-success">' +
+                '<span class="glyphicon glyphicon-download"></span> 下载查看' +
+                '</a>');
+            $(downloadBtn).attr("href",getFileComplateUrl(key)).attr("target","_blank");
+            $(div).append(downloadBtn);
+            $(div).append(delBtn);
+        }
+        return div;
+    }
+
+    var row1= $.parseHTML('<div class="row"></div>');
+    var row2= $.parseHTML('<div class="row"></div>');
+    var fileupload = $.parseHTML('<input id="fileupload" type="file" class="hide" name="file" >');
+    if(opt.multiple){
+        $(fileupload).attr("multiple","multiple");
+    }
+    $(fileupload).wrap('<div class="col-sm-2"></div>');
+    var progress = $.parseHTML('<div id="progress" class="progress hide">'
+        +'<div class="progress-bar progress-bar-striped" style="width: 0%;"></div>'
+        +'</div>');
+    $(progress).wrap('<div class="col-sm-10"></div>');
+    $(row1).append($(fileupload).parent());
+    $(row1).append($(progress).parent());
+    $(row2).append('<div class="col-sm-12 uploaded-container"></div>');
+    $(this).after(row1)
+    $(row1).after(row2);
+
+    var uploadBtn = $.parseHTML("<button type='button' class='btn btn-success btn-xs'>" +
+        "<i class='glyphicon glyphicon-cloud-upload'></i> 上传" +
+        "</button>");
+    $(fileupload).attr("data-url",getContextPath()+"/file/uploadFile.do");
+    var  container= $(row2).find(".uploaded-container");
+    $(uploadBtn).on('click',function(){
+        if(! opt.multiple && $(container).children().length !=0){
+            if(opt.onlyImg){
+                tipAlert({text:"当前已有图片,请删除后再上传",type:"warning"});
+            }else{
+                tipAlert({text:"当前已有文件,请删除后再上传",type:"warning"});
+            }
+            return;
+        }
+        $($this).next().find("#fileupload").click();
+    });
+    $(fileupload).before(uploadBtn);
+    $(fileupload).fileupload({
+        //dataType: 'json',
+        add: function(e, data) {
+            var uploadErrors = [];
+            if(opt.onlyImg){
+                if(data.originalFiles[0]['type'] =="" || !imageFileTypes.test(data.originalFiles[0]['type'])) {
+                    uploadErrors.push('只允许上传图片文件.');
+                }
+            }
+            if(opt.maxFileSize){
+                if(data.originalFiles[0]['size'] && data.originalFiles[0]['size'] > opt.maxFileSize) {
+                    uploadErrors.push('文件大小超出限制.');
+                }
+            }
+            if(uploadErrors.length > 0) {
+                tipAlert({text:uploadErrors.join("<br>"),type:"warning"});
+            } else {
+                data.submit();
+            }
+        },
+        done: function (e, data) {
+            $(progress).addClass("hide");
+            $(progress).find('.progress-bar').css('width','0%').text("");
+            var success=true;
+            $.each($.parseJSON(data.result), function (index, file) {
+                if(file['errMsg']){
+                    tipAlert(file['errMsg']);
+                    success = false;
+                }else{
+                    var div = generateFileDiv(file.key);
+                    container.append(div);
+                    opt.onuploaded(file.key);
+                }
+            });
+            if(success){
+                tipMsg({text:"上传成功",layout:"bottomCenter",type:"success"});
+            }
+            if(resetHeight){
+                resetHeight();
+            }
+        },
+        progressall: function (e, data) {
+            $(progress).removeClass("hide");
+            var pInt = parseInt(data.loaded / data.total * 100, 10);
+            $(progress).find('.progress-bar').css(
+                'width',
+                pInt + '%'
+            ).text(pInt + '%');
+            if(pInt == 100){
+                $(progress).find('.progress-bar').text("上传完成,等待服务器处理,请稍后...")
+            }
+        }
+    });
+    var imgPlugin = $.extend({}, $this, {
+        clear: function () {
+            $(container).empty();
+            $(row1).find("button").removeAttr("disabled");
+        },
+        reload: function (loadOpt) {
+            loadOpt = $.extend({},{
+                readOnly:false
+            },loadOpt);
+            this.clear();
+            var imgPath = $this.val();
+            if(!imgPath){
+                return;
+            }
+            if (opt.multiple) {
+                var imgPathArr = imgPath.split(opt.separator);
+                $(imgPathArr).each(function(){
+                    var div = generateFileDiv(this,loadOpt.readOnly);
+                    container.append(div);
+                });
+            } else {
+                var div = generateFileDiv(imgPath,loadOpt.readOnly);
+                container.append(div);
+            }
+            if(loadOpt.readOnly){
+                $(row1).find("button").attr("disabled","disabled");
+            }else{
+                $(row1).find("button").removeAttr("disabled");
+            }
+        }
+    });
+
+    return imgPlugin;
+}
+//baseUpload end

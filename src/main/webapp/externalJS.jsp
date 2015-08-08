@@ -29,8 +29,6 @@
 <script src="<c:url value='/js/jquery.iphone.toggle.js'/>"></script>
 <!-- autogrowing textarea plugin -->
 <script src="<c:url value='/js/jquery.autogrow-textarea.js'/>"></script>
-<!-- multiple file upload plugin -->
-<script src="<c:url value='/js/jquery.uploadify-3.1.min.js'/>"></script>
 <!-- history.js for cross-browser state change on ajax -->
 <script src="<c:url value='/js/jquery.history.js'/>"></script>
 <!-- application script for Charisma demo -->
@@ -51,5 +49,9 @@
 <!-- treeGrid -->
 <script src="<c:url value='/js/jquery.treegrid.js'/>"></script>
 <script src="<c:url value='/js/jquery.treegrid.bootstrap3.js'/>"></script>
+<%--<!-- jquery upload -->--%>
+<%--<script src="<c:url value='/js/jquery.ui.widget.js'/>"></script>--%>
+<%--<script src="<c:url value='/js/jquery.iframe-transport.js'/>"></script>--%>
+<%--<script src="<c:url value='/js/jquery.fileupload.js'/>"></script>--%>
 <!-- base.js -->
 <script src="<c:url value='/js/base.js'/>"></script>
