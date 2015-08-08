@@ -607,11 +607,11 @@ $.fn.baseForm = function (opt) {
                 }
                 if (opt.readOnly) {
                     $(div_footer).hide();
-                    $("input", _form).attr("disabled", true);
+                    $("input,select", _form).attr("disabled", true);
                     $("div.note-editable", _form).attr("contenteditable", false);
                 } else {
                     $(div_footer).show();
-                    $("input", _form).attr("disabled", false);
+                    $("input,select", _form).attr("disabled", false);
                     $("div.note-editable", _form).attr("contenteditable", true);
                 }
             }
@@ -673,9 +673,11 @@ $.fn.baseTree = function(opt){
         tree_parent_key:"pid",
         tree_children_name:"childrens",
         columns:[],
-        buttons:[]
+        buttons:[],
+        sort_by:null
     },opt);
     var $this = $(this);
+    $this.addClass("table tree table-hover");
     ajaxQuery({
         data: {
             index: opt.index,
@@ -685,12 +687,17 @@ $.fn.baseTree = function(opt){
             tree_children_name: opt.tree_children_name
         },
         success: function (r) {
+            //sort
+            if(opt.sort_by){
+                sortByKey(r,opt.sort_by);
+            }
             $(r).each(function () {
                 var tbody = loopChildrens(this, null, null, {
                     self_key: opt.tree_self_key,
                     children_name: opt.tree_children_name,
                     columns:opt.columns,
-                    buttons:opt.buttons
+                    buttons:opt.buttons,
+                    sort_by:opt.sort_by
                 });
                 $this.append(tbody);
                 resetHeight();
@@ -704,12 +711,19 @@ $.fn.baseTree = function(opt){
     }
     return $this;
 }
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
 function loopChildrens(data, html, parent_id, opt) {
     opt = $.extend({
         self_key: "id",
         children_name: "childrens",
         columns: {},
-        buttons:[]
+        buttons:[],
+        sort_by:null
     }, opt);
     if (!html) {
         html = $.parseHTML("<tbody></tbody>");
@@ -724,7 +738,7 @@ function loopChildrens(data, html, parent_id, opt) {
     }
     var tr = $.parseHTML("<tr></tr>")
     $(tr).addClass("treegrid-" + data[opt.self_key]);
-    if (parent_id) {
+    if (typeof parent_id != "undefined" && parent_id != null) {
         $(tr).addClass("treegrid-parent-" + parent_id);
     }
     $(opt.columns).each(function () {
@@ -740,7 +754,7 @@ function loopChildrens(data, html, parent_id, opt) {
         var btnTD = $.parseHTML("<td></td>");
         $(tr).append(btnTD);
         $(opt.buttons).each(function () {
-            var _btnGroup = $.parseHTML('<div class="btn-group "></div>');
+            var _btnGroup = $.parseHTML('<div class="btn-group" style="margin-right:10px;"></div>');
             $(btnTD).append(_btnGroup);
             $(this).each(function () {
                 var css;
@@ -772,6 +786,10 @@ function loopChildrens(data, html, parent_id, opt) {
 
     if (!data[opt.children_name]) {
         return html;
+    }
+    //sort
+    if(opt.sort_by){
+        sortByKey(data[opt.children_name],opt.sort_by);
     }
     $(data[opt.children_name]).each(function () {
         $(html).parent().append(loopChildrens(this, html, data[opt.self_key], opt));

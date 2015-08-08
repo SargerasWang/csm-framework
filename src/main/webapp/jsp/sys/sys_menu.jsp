@@ -26,6 +26,13 @@
     <input type="hidden" name="id">
 
     <div class="form-group">
+        <label for="parent" class="col-sm-2">父菜单</label>
+
+        <div class="col-sm-10">
+            <select class="form-control" id="parent" name="parent"></select>
+        </div>
+    </div>
+    <div class="form-group">
         <label for="name" class="col-sm-2">菜单名称</label>
 
         <div class="col-sm-10">
@@ -37,20 +44,6 @@
 
         <div class="col-sm-10">
             <input type="text" class="form-control" id="url" name="url" maxlength="200" placeholder="请输入链接">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="parent" class="col-sm-2">父菜单</label>
-
-        <div class="col-sm-10">
-            <select class="form-control" id="parent" name="parent"></select>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="level" class="col-sm-2">层级</label>
-
-        <div class="col-sm-10">
-            <input type="number" class="form-control" id="level" name="level" maxlength="0" required readonly>
         </div>
     </div>
     <div class="form-group">
@@ -107,7 +100,6 @@
 <script>
     //显示父菜单用的
     var level1Menus = new Array();
-    level1Menus[0] = "*ROOT*";
 
     //选择图标
     function clickSelectIcon() {
@@ -225,21 +217,12 @@
             data: {index: "sys_menu.selectLevel1Menus"},
             success: function (data) {
                 var $sel = $("#myForm select#parent");
-                $sel.append("<option value='0'>*ROOT*</option>");
                 for (var i = 0; i < data.length; i++) {
                     var obj = data[i];
                     $sel.append("<option value='" + obj.id + "'>" + obj.name + "</option>");
 
                     level1Menus[obj.id] = obj.name;
                 }
-
-                $sel.on("change", function () {
-                    if ($(this).val() == 0) {
-                        $("#myForm input#level").val(1);
-                    } else {
-                        $("#myForm input#level").val(2);
-                    }
-                });
             }
         });
         //初始化form
@@ -251,7 +234,7 @@
                     success: function (r) {
                         if (r.status != -1) {
                             tipMsg("操作成功!");
-                            table.draw(false);
+                            baseTree.reload();
                         } else {
                             tipMsg("错误原因" + r.message, "error", 5000);
                         }
@@ -289,20 +272,14 @@
                 });
             }
         });
-        var table = $('#example').baseTable({
+        var baseTree = $('#example').baseTree({
             index: "sys_menu.selectAll",
-            single: true,
-            ordering: false,
+            tree_self_key:"id",
+            tree_parent_key:"parent",
+            sort_by:"seq",
             columns: [
-                {data: "id", title: "ID", width: "10px"}
-                , {data: "name", title: "菜单名称"}
+                {data: "name", title: "菜单名称"}
                 , {data: "url", title: "链接"}
-                , {data: "level", title: "层级"}
-                , {
-                    data: "parent", title: "父菜单", render: function (d) {
-                        return level1Menus[d];
-                    }
-                }
                 , {
                     data: "icon", title: "图标", defaultContent: "", render: function (d) {
                         var icon = d ? d : "";
@@ -319,12 +296,11 @@
                         "css": "btn-success",
                         icon: "glyphicon glyphicon-plus",
                         allowNull: true,
-                        "method": function () {
-                            myForm.open({index: "sys_menu.insert"}, function () {
+                        "method": function (datas) {
+                            myForm.open({index: "sys_menu.insert",data:{parent:datas[0]['id']}}, function () {
                                 $("#myForm #iSelectBtn").attr("class", "glyphicon glyphicon-hand-up");
                                 $("#iconList").hide();
                                 $("#iSelectBtn").parent().prop("disabled", false);
-                                $("#myForm input#level").val(1);
                             });
                         }
                     },
@@ -363,7 +339,7 @@
                                     success: function (r) {
                                         if (r.status == 1) {
                                             tipMsg('操作成功!');
-                                            table.draw(false);
+                                            baseTree.reload();
                                         }
                                     }
                                 });

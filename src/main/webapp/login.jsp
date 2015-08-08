@@ -57,7 +57,7 @@
                     <fieldset>
                         <div class="input-group input-group-lg">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user red"></i></span>
-                            <input id="loginname" name="loginname" type="text" class="form-control" placeholder="用户名"/>
+                            <input id="loginname" name="loginname" autofocus type="text" class="form-control" placeholder="用户名"/>
                         </div>
                         <div class="clearfix"></div>
                         <br>
@@ -122,7 +122,6 @@
             LazyLoad.css('<c:url value='/css/bootstrap.min.css'/>', function () {
                 $('body').addClass('loaded');
                 $(".ch-container").show();
-                $("#loginname").focus();
                 setTimeout(function () {
                     LazyLoad.js(['<c:url value='/js/jquery.form.js'/>',
                         '<c:url value='/bower_components/bootstrap/dist/js/bootstrap.min.js'/>',

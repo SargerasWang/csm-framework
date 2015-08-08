@@ -26,6 +26,8 @@
 <!-- richtext editor -->
 <link href="<c:url value='/css/summernote.css'/>" rel='stylesheet'>
 <link href="<c:url value='/css/font-awesome.min.css'/>" rel='stylesheet'>
+<!-- treeGrid -->
+<link href="<c:url value='/css/jquery.treegrid.css'/>" rel='stylesheet'>
 
 <!-- jQuery -->
 <script src="<c:url value='/bower_components/jquery/1.11.2/jquery-1.11.2.min.js'/>"></script>

@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * The <code>TreeUtil</code>
- * 
+ *
  * @author SargerasWang Created at 2014年8月22日 上午10:08:16
  */
 public class TreeUtil {
@@ -22,12 +22,12 @@ public class TreeUtil {
         return generateTree(list, "id", "pid", "children",false);
     }
     public static List<Map<String, Object>> generateTree(List<Object> list,Boolean hasAttributes) {
-      return generateTree(list, "id", "pid", "children",hasAttributes);
+        return generateTree(list, "id", "pid", "children",hasAttributes);
     }
 
     /**
      * 把数据库中查出来的扁平数据转换成树
-     * 
+     *
      * @author SargerasWang Created at 2014年8月22日 上午10:29:15
      * @param list sql 数据集
      * @param selfKey id
@@ -37,7 +37,7 @@ public class TreeUtil {
      */
     @SuppressWarnings("unchecked")
     public static List<Map<String, Object>> generateTree(List<Object> list, String selfKey,
-            String parentKey, String childrenName,Boolean hasAttributes) {
+                                                         String parentKey, String childrenName,Boolean hasAttributes) {
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
@@ -62,7 +62,7 @@ public class TreeUtil {
                 dataMap.put(String.valueOf(map.get(selfKey)), map);
             }
             // 从叶子节点向上遍历
-            Map<String, Map<String, Object>> parentMap = new HashMap<String, Map<String, Object>>();
+            Map<String, Map<String, Object>> parentMap = new HashMap<>();
             for (Object object : list) {
                 Map<String, Object> map = (Map<String, Object>) object;
                 String id = String.valueOf(map.get(selfKey));
@@ -88,8 +88,8 @@ public class TreeUtil {
      * @return
      */
     private static void recursion( String parentKey, String childrenName,
-            Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
-            List<Map<String, Object>> rootList,String selfKey) {
+                                   Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
+                                   List<Map<String, Object>> rootList,String selfKey) {
         Map<String, Map<String, Object>> tempMap = new HashMap<String, Map<String, Object>>();
         for (String key : parentMap.keySet()) {
             Map<String, Object> map = dataMap.get(key);
@@ -116,8 +116,8 @@ public class TreeUtil {
      */
     @SuppressWarnings("unchecked")
     private static void bindParent(String parentKey, String childrenName,
-            Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
-            Map<String, Object> map,String selfKey) {
+                                   Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
+                                   Map<String, Object> map,String selfKey) {
         Map<String, Object> parent;
         String pid = String.valueOf(map.get(parentKey));
         if (parentMap.containsKey(pid)) {

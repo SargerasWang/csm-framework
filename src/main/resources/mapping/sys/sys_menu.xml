@@ -42,19 +42,20 @@
                 and seq = #{seq}
             </if>
         </where>
-        ORDER BY parent,seq
+        ORDER BY seq
     </select>
     <insert id="insert" parameterType="java.util.HashMap">
-        insert into sys_menu(name,url,level,parent,icon,remarks,c_time,c_user,seq) values(#{name},#{url},#{level},#{parent},#{icon},#{remarks},NOW(),#{_current_user_},#{seq})
+        insert into sys_menu(name,url,level,parent,icon,remarks,c_time,c_user,seq)
+        values(#{name},#{url},(select a.level -1 from (select level from sys_menu where id=#{parent}) a),#{parent},#{icon},#{remarks},NOW(),#{_current_user_},#{seq})
     </insert>
     <update id="update" parameterType="java.util.HashMap">
-        update sys_menu set name = #{name},url = #{url},level = #{level},parent = #{parent},icon = #{icon},remarks = #{remarks},seq = #{seq} where id = #{id}
+        update sys_menu set name = #{name},url = #{url},level = (select a.level -1 from (select level from sys_menu where id=#{parent}) a),parent = #{parent},icon = #{icon},remarks = #{remarks},seq = #{seq} where id = #{id}
     </update>
     <delete id="delete" parameterType="java.util.HashMap">
         delete from sys_menu where id = #{id}
     </delete>
     <select id="selectLevel1Menus" parameterType="HashMap" resultType="HashMap">
-        select id,name from sys_menu where level=1
+        select id,name from sys_menu order by seq
     </select>
     <select id="selectRoleIdAndNameList" resultType="HashMap">
         select id,name from sys_role where status=1 and type != -1

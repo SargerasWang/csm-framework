@@ -48,5 +48,8 @@
 <script src="<c:url value='/js/jquery.formautofill.js'/>"></script>
 <!--nprogress -->
 <script src="<c:url value='/js/nprogress.js'/>"></script>
+<!-- treeGrid -->
+<script src="<c:url value='/js/jquery.treegrid.js'/>"></script>
+<script src="<c:url value='/js/jquery.treegrid.bootstrap3.js'/>"></script>
 <!-- base.js -->
 <script src="<c:url value='/js/base.js'/>"></script>
