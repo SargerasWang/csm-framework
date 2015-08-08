@@ -116,9 +116,10 @@
                     success: function (r) {
                         if (r.status != -1) {
                             tipMsg("操作成功!");
+                            myForm.close();
                             table.draw(false);
                         } else {
-                            tipMsg("错误原因" + r.message, "error", 5000);
+                            tipAlert({text:"操作失败,原因:" + r.message,type:"error"});
                         }
                     }
                 });
@@ -132,8 +133,9 @@
                     success: function (r) {
                         if (r.status != -1) {
                             tipMsg("操作成功!");
+                            passwordForm.close();
                         } else {
-                            tipMsg("错误原因" + r.message, "error", 5000);
+                            tipAlert({text:"操作失败,原因:" + r.message,type:"error"});
                         }
                     }
                 });

@@ -28,6 +28,14 @@ function convertObj2Arr(obj) {
     return arr;
 }
 /**
+ * 获得随机数   e.g. 0~3  getRandom(3)
+ * @param n 随机数范围 0~n
+ * @returns {number}
+ */
+function getRandom(n){
+    return Math.floor(Math.random()*n+1)
+}
+/**
  * 正在加载的遮罩
  * @param hide close关闭
  */
@@ -186,6 +194,22 @@ function tipMsg(text, type, time) {
         type: type,
         timeout: time
     }))
+}
+
+/**
+ * 模式框 有[确认]按钮,有遮罩
+ * @param options
+ */
+function tipAlert(options) {
+    if (typeof(options) == "string") {
+        options = {text: options};
+    }
+    var options = $.extend({}, {layout: "center",  modal: true,buttons:[{
+        addClass:'btn btn-sm btn-primary',text:'确认',onClick:function($noty){
+            $noty.close();
+        }
+    }]}, options)
+    top.noty(options);
 }
 
 /**
@@ -628,6 +652,13 @@ $.fn.baseForm = function (opt) {
         },
         close: function () {
             modal_box.modal("hide");
+        },
+        resetHeight:function(){
+            var height = $(this).children()[0].scrollHeight;
+            if ($(this).hasClass("in")) {
+                height += 60;
+            }
+            resetHeight(height);
         }
     });
     //绑定提交事件
@@ -649,10 +680,7 @@ $.fn.baseForm = function (opt) {
                     finalValues[field.name]= field.value;
                 }
             });
-            var result = opt.submit(finalValues);
-            if(result != false){
-                modal_box.close();
-            }
+            opt.submit(finalValues);
         }
         return false;
     });

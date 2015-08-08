@@ -49,9 +49,9 @@
         //选字典值用的下拉菜单
         var divSelectStatus = $.parseHTML('<div></div>');
         var selectStatus = $.parseHTML('<select></select>');
-        var selectText = $.parseHTML('<code style="display:none;"></code>');
+        var selectText = $.parseHTML('<button type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" style="display:none;"><i class="glyphicon glyphicon-eye-open"></i></button>');
         var statusType = $.parseHTML('<span style="display:none;"><select><option value="1" checked>单选</option>' +
-            '<option value="2" checked>多选</option></select></sapn>')
+                '<option value="2" >多选</option><option value="3" >下拉</option></select></sapn>')
         $(selectStatus).append("<option value='' >无</option>");
         $(allStatusMap).each(function(i,obj){
             $.each(obj,function(k){
@@ -65,11 +65,13 @@
                 var v= $(":selected",this).val();
                 $(this).next().show();
                 $(this).next().next().show();
-                $(this).next().next().text(JSON.stringify(allStatusMap[parseInt(sIndex)][v]));
+                $(this).next().next().tooltip('hide')
+                        .attr('data-original-title', JSON.stringify(allStatusMap[parseInt(sIndex)][v]))
+                        .tooltip('fixTitle');
             }else{
                 $(this).next().hide();
                 $(this).next().next().hide();
-                $(this).next().next().text("");
+                $(this).next().next().tooltip('destroy');
             }
         });
         $(divSelectStatus).append(selectStatus).append(statusType).append(selectText);
@@ -92,6 +94,8 @@
                                 data: {table: tableName},
                                 dataType: "json",
                                 success: function (data) {
+                                    $("table",divPanel).before("<label><input name='"+tableName+"_align' type='radio' value='1' checked>垂直排列</label>&nbsp;&nbsp;");
+                                    $("table",divPanel).before("<label><input name='"+tableName+"_align' type='radio' value='2'>水平排列</label>");
                                     $("table", divPanel).DataTable({
                                         dom: "t",
                                         paging: false,
@@ -102,16 +106,13 @@
                                                 return '<input type="text" value="'+data+'">';
                                             }},
                                             {title:"使用字典翻译",render:function(d,t,r){
-                                                if(r.simpleType ==2 || r.simpleType == 3){
+                                                if(r.simpleType ==2 || r.simpleType == 3 || r.simpleType == 4){
                                                     return "<div class='selectAllStatusMap'></div>";
                                                 }
                                                 return "";
                                             }}
                                         ],
-                                        data: data,
-                                        drawCallback: function () {
-                                            resetHeight();
-                                        }
+                                        data: data
                                     });
                                     $(".selectAllStatusMap",divPanel).append(divSelectStatus);
                                     $("table", divPanel).before("<input type='hidden' id='"+tableName+"_config' name='"+tableName+"_config' >");

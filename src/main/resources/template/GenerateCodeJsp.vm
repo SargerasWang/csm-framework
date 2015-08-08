@@ -10,10 +10,18 @@
 #end
 #end
 </head>
-
+#if($align == 2)##水平排列
+    #set($align_h_form= "form-horizontal")
+    #set($align_h_left= "class='col-sm-3 control-label'")
+    #set($align_h_right= "class='col-sm-9'")
+#else
+    #set($align_h_form= "")
+    #set($align_h_left= "")
+    #set($align_h_right= "")
+#end
 <body>
 <div class="container-fluid">
-<form id="myForm" role="form" class="hide">
+<form id="myForm" role="form" class="hide ${align_h_form}">
     <input type="hidden" name="index">
 #foreach($col in $columns)
 #if($col.isPrimaryKey)
@@ -21,8 +29,8 @@
 #elseif($col.statusKey)
 #if($col.statusType == 1)##单选
     <div class="form-group">
-        <label>${col.remarks}</label>
-        <div>
+        <label ${align_h_left}>${col.remarks}</label>
+        <div ${align_h_right}>
 #foreach($status in $col.statusList)
             <div class="radio">
                 <label>
@@ -33,10 +41,10 @@
 #end
         </div>
     </div>
-#else##多选
+#elseif($col.statusType == 2)##多选
     <div class="form-group">
-        <label>${col.remarks}</label>
-        <div>
+        <label ${align_h_left}>${col.remarks}</label>
+        <div ${align_h_right}>
 #foreach($status in $col.statusList)
             <label class="checkbox-inline">
                 <input type="checkbox" name="${col.columnName}" value="${status.get(0)}"> ${status.get(1)}
@@ -44,39 +52,63 @@
 #end
         </div>
     </div>
+#elseif($col.statusType == 3)##下拉
+    <div class="form-group">
+        <label ${align_h_left}>${col.remarks}</label>
+        <div ${align_h_right}>
+            <select class="form-control" name="${col.columnName}">
+#foreach($status in $col.statusList)
+                <option value="${status.get(0)}"> ${status.get(1)}</option>
+#end
+            </select>
+        </div>
+    </div>
 #end
 #elseif($col.simpleType == 1)##日期
-
+    <div class="form-group">
+        <label ${align_h_left}>${col.remarks}</label>
+        <div ${align_h_right}>
+            <input type="date" class="form-control" id="${col.columnName}" name="${col.columnName}" placeholder="请选择${col.remarks}">
+        </div>
+    </div>
 #elseif($col.type == -1)##超大文本
     <div class="form-group">
-        <label for="${col.columnName}">${col.remarks}</label>
-        <textarea id="${col.columnName}" name="${col.columnName}" placeholder="请输入${col.remarks}"></textarea>
+        <label ${align_h_left} for="${col.columnName}">${col.remarks}</label>
+        <div ${align_h_right}>
+            <textarea id="${col.columnName}" name="${col.columnName}" placeholder="请输入${col.remarks}"></textarea>
+        </div>
     </div>
 #elseif($col.simpleType == 2)##文本
     <div class="form-group">
-        <label for="${col.columnName}">${col.remarks}</label>
-        <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
+        <label ${align_h_left} for="${col.columnName}">${col.remarks}</label>
+        <div ${align_h_right}>
+            <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
 #if(${col.nullable}==0)
  required##
 #end>
+        </div>
     </div>
 #elseif($col.simpleType == 3)##数字
 #if($col.columnName != 'c_user')
     <div class="form-group">
-        <label for="${col.columnName}">${col.remarks}</label>
-        <input type="number" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
+        <label ${align_h_left} for="${col.columnName}">${col.remarks}</label>
+        <div ${align_h_right}>
+            <input type="number" class="form-control" id="${col.columnName}" name="${col.columnName}" maxlength="${col.length}" placeholder="请输入${col.remarks}"##
 #if(${col.nullable}==0)
  required##
 #end>
+        </div>
 #end##
     </div>
 #else##其余都用文本框
     <div class="form-group">
-        <label for="${col.columnName}">${col.remarks}</label>
-        <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}"  placeholder="请输入${col.remarks}"##
+        <label ${align_h_left} for="${col.columnName}">${col.remarks}</label>
+        <div ${align_h_right}>
+            <input type="text" class="form-control" id="${col.columnName}" name="${col.columnName}"  placeholder="请输入${col.remarks}"##
 #if(${col.nullable}==0)
  required##
 #end>
+        </div>
     </div>
 #end
 #end
@@ -90,9 +122,9 @@
 <jsp:include page="/externalJS.jsp" flush="true"/>
 <script>
     $(document).ready(function () {
-        //初始化富文本编辑器
 #foreach($col in $columns)
 #if($col.type == -1)
+        //初始化富文本编辑器
         $('#${col.columnName}').richEditor({
             height: 200
         });
@@ -108,9 +140,10 @@
                     success: function (r) {
                         if (r.status != -1) {
                             tipMsg("操作成功!");
+                            myForm.close();
                             table.draw(false);
                         } else {
-                            tipMsg("错误原因" + r.message, "操作失败", "danger", 5000);
+                            tipAlert({text:"操作失败,原因:" + r.message,type:"error"});
                         }
                     }
                 });
@@ -131,7 +164,7 @@
 ,defaultContent:""##
 #end##
 #if($col.statusKey)##状态翻译
-#if($col.statusType == 1)##单选
+#if($col.statusType == 1 || $col.statusType == 3)##单选
 ,render: function (data) {return ${col.statusKey}[data]}##
 #else##多选
 ,render: function (data) {

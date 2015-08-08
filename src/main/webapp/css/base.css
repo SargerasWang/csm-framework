@@ -101,6 +101,9 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 ,
 .dataTable tbody tr:nth-child(odd).selected td {
     background-color: #D1D1D1;
 }
+.dataTable th{
+    white-space:nowrap;
+}
 
 .alert.basealert {
     position: absolute;
