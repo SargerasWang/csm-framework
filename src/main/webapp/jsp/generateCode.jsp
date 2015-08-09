@@ -1,3 +1,4 @@
+<%--suppress ALL --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -34,9 +35,13 @@
 </div>
 <jsp:include page="../externalJS.jsp" flush="true"/>
 <script>
-    $(document).ready(function () {
-        //所有字典值
-        var allStatusMap = new Object();
+    /**
+     * 所有处理方式
+     */
+    function getAllToDealWith(){
+        var toDealWithArr = new Array();
+        var useDict = {value:"1",text:"字典翻译",children_name:"statusKey"};
+        var allStatusMap = new Array();
         $.ajax({
             async:false,
             url:"<c:url value='/base/getAllStatusMap.do'/>",
@@ -45,37 +50,83 @@
             success:function(data){
                 allStatusMap = data;
             }
-        })
-        //选字典值用的下拉菜单
-        var divSelectStatus = $.parseHTML('<div></div>');
-        var selectStatus = $.parseHTML('<select></select>');
-        var selectText = $.parseHTML('<button type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" style="display:none;"><i class="glyphicon glyphicon-eye-open"></i></button>');
-        var statusType = $.parseHTML('<span style="display:none;"><select><option value="1" checked>单选</option>' +
-                '<option value="2" >多选</option><option value="3" >下拉</option></select></sapn>')
-        $(selectStatus).append("<option value='' >无</option>");
-        $(allStatusMap).each(function(i,obj){
-            $.each(obj,function(k){
-                var option = $.parseHTML('<option value="'+k+'" index="'+i+'">'+k+'</option>');
-                $(selectStatus).append(option);
+        });
+        if(allStatusMap.length > 0){
+            var child = new Array();
+            $(allStatusMap).each(function(i,obj){
+                $.each(obj,function(k){
+                    child.push({
+                        value:k,
+                        text:k,
+                        children_name:"statusType",
+                        childrens:[
+                            {value:"1",text:"单选"},
+                            {value:"2",text:"多选"},
+                            {value:"3",text:"下拉"}
+                        ]
+                    });
+                });
             });
-        });
-        $(selectStatus).on("change",function(){
-            var sIndex = $(":selected",this).attr("index");
-            if(sIndex){
-                var v= $(":selected",this).val();
-                $(this).next().show();
-                $(this).next().next().show();
-                $(this).next().next().tooltip('hide')
-                        .attr('data-original-title', JSON.stringify(allStatusMap[parseInt(sIndex)][v]))
-                        .tooltip('fixTitle');
-            }else{
-                $(this).next().hide();
-                $(this).next().next().hide();
-                $(this).next().next().tooltip('destroy');
-            }
-        });
-        $(divSelectStatus).append(selectStatus).append(statusType).append(selectText);
+            useDict.childrens=child;
+        }
 
+        toDealWithArr.push({value:"0",text:"默认"});
+        toDealWithArr.push(useDict);
+        toDealWithArr.push({
+            value:"2",
+            text:"上传文件",
+            children_name:"uploadFileType",
+            childrens:[
+                {
+                    value:"1",
+                    text:"只允许图片",
+                    children_name:"uploadOnlyOne",
+                    childrens:[
+                        {value:"1",text:"单张"},
+                        {value:"2",text:"多张"}
+                    ]
+                },
+                {
+                    value:"2",
+                    text:"任意文件类型",
+                    children_name:"uploadOnlyOne",
+                    childrens:[
+                        {value:"1",text:"单文件"},
+                        {value:"2",text:"多文件"}
+                    ]
+                }
+            ]
+        });
+
+        var toDealWithSelect = loopAllDealWith("toDealWith",toDealWithArr);
+        return toDealWithSelect;
+    }
+    function loopAllDealWith(name,arr){
+        var toDealWithDiv = $("<div></div>");
+        var toDealWithSelect = $("<select></select>").attr("name",name);
+        $(toDealWithDiv).append(toDealWithSelect);
+        $(arr).each(function(){
+            var optionValue = this['value'];
+            var option = $("<option></option>").val(optionValue).text(this['text']);
+            if(this['childrens']){
+                var childrenSelect = loopAllDealWith(this['children_name'],this['childrens']);
+                $(childrenSelect).css("margin-left","10px").css("display","none");
+                $(childrenSelect).attr("data-parent",optionValue);
+                $(toDealWithSelect).after(childrenSelect);
+            }
+            $(toDealWithSelect).append(option);
+        });
+        $(toDealWithSelect).on("change",function(){
+            $(this).nextAll().hide();
+            var childrenSelect = $(this).nextAll("[data-parent="+this.value+"]");
+            $(childrenSelect).css("display","inline");
+            $("select",childrenSelect).change();
+        });
+        return toDealWithDiv;
+    }
+
+    $(document).ready(function () {
+        var allToDealWithSelect = getAllToDealWith();
         $.ajax({
             url: "<c:url value='/base/getTables.do'/>",
             type: "POST",
@@ -101,20 +152,26 @@
                                         paging: false,
                                         ordering: false,
                                         columns: [
-                                            {data: "columnName", title: "字段"},
-                                            {data: "remarks", title: "名称",render:function(data){
+                                            {data: "columnName", title: "字段",width:"200px"},
+                                            {data: "remarks", title: "名称",width:"200px",render:function(data){
                                                 return '<input type="text" value="'+data+'">';
                                             }},
-                                            {title:"使用字典翻译",render:function(d,t,r){
-                                                if(r.simpleType ==2 || r.simpleType == 3 || r.simpleType == 4){
-                                                    return "<div class='selectAllStatusMap'></div>";
+                                            {title:"处理方式",render:function(d,t,r){
+                                                switch (r.simpleType){
+                                                    case 0:
+                                                        return "无";
+                                                    case 1:
+                                                        return "格式化为:<code>'%Y/%m/%d %H:%i:%s'</code>";
+                                                    case 2:
+                                                    case 3:
+                                                    case 4:
+                                                        return "<div class='toDealWith'></div>";
                                                 }
-                                                return "";
                                             }}
                                         ],
                                         data: data
                                     });
-                                    $(".selectAllStatusMap",divPanel).append(divSelectStatus);
+                                    $(".toDealWith",divPanel).append(allToDealWithSelect);
                                     $("table", divPanel).before("<input type='hidden' id='"+tableName+"_config' name='"+tableName+"_config' >");
                                 }
                             });
@@ -157,12 +214,10 @@
                                     config.remarks = remarks;
                                 }
                                 if($tds.eq(2).children().length > 0){
-                                    var statusKey = $tds.eq(2).find("select").first().val();
-                                    var statusType = $tds.eq(2).find("select").eq(1).val();
-                                    if(statusKey){
-                                        config.statusKey = statusKey;
-                                        config.statusType = statusType;
-                                    }
+                                    var select = $tds.eq(2).find("select:visible");
+                                    $(select).each(function(){
+                                        config[$(this).attr("name")] = $(this).val();
+                                    });
                                 }
                                 configArr.push(config);
                             }

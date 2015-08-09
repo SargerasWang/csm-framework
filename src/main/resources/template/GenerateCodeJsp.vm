@@ -26,7 +26,7 @@
 #foreach($col in $columns)
 #if($col.isPrimaryKey)
     <input type="hidden" name="${col.columnName}">
-#elseif($col.statusKey)
+#elseif($col.toDealWith == 1)##使用字典翻译
 #if($col.statusType == 1)##单选
     <div class="form-group">
         <label ${align_h_left}>${col.remarks}</label>
@@ -56,14 +56,18 @@
     <div class="form-group">
         <label ${align_h_left}>${col.remarks}</label>
         <div ${align_h_right}>
-            <select class="form-control" name="${col.columnName}">
-#foreach($status in $col.statusList)
-                <option value="${status.get(0)}"> ${status.get(1)}</option>
-#end
+            <select class="form-control" name="${col.columnName}" id="${col.columnName}">
             </select>
         </div>
     </div>
 #end
+#elseif($col.toDealWith == 2)##上传文件
+    <div class="form-group">
+        <label ${align_h_left} for="${col.columnName}">${col.remarks}</label>
+        <div ${align_h_right}>
+            <input type="hidden" id="${col.columnName}" name="${col.columnName}" >
+        </div>
+    </div>
 #elseif($col.simpleType == 1)##日期
     <div class="form-group">
         <label ${align_h_left}>${col.remarks}</label>
@@ -120,13 +124,43 @@
     </div>
 </div>
 <jsp:include page="/externalJS.jsp" flush="true"/>
+#set($hasImage = false)
+#foreach($col in $columns)
+#if(${col.toDealWith}==2)
+#set($hasImage = true)
+#end
+#end
+#if($hasImage)
+<script src="<c:url value='/js/fileupload/vendor/jquery.ui.widget.js'/>"></script>
+<script src="<c:url value='/js/fileupload/jquery.iframe-transport.js'/>"></script>
+<script src="<c:url value='/js/fileupload/jquery.fileupload.js'/>"></script>
+#end
 <script>
     $(document).ready(function () {
 #foreach($col in $columns)
-#if($col.type == -1)
+#if($col.statusType == 3)
+        //初始化${col.columnName}下拉列表
+        $("#${col.columnName}").baseSelect({method:"statusMap",statusMap:${col.columnName}});
+#elseif($col.type == -1)
         //初始化富文本编辑器
         $('#${col.columnName}').richEditor({
             height: 200
+        });
+#elseif($col.toDealWith == 2)##上传文件
+        //初始化文件下载控件
+        var uploadPluginOption = new Object();
+#if($col.uploadFileType ==1)
+        uploadPluginOption.onlyImg=true;
+#else
+        uploadPluginOption.onlyImg=false;
+#end
+#if($col.uploadOnlyOne == 1)
+        uploadPluginOption.multiple = false;
+#else
+        uploadPluginOption.multiple = true;
+#end
+        var myFile = $('#${col.columnName}').baseUpload(uploadPluginOption,function(){
+            myForm.resetHeight();
         });
 #end
 #end
@@ -163,7 +197,7 @@
 #if($col.nullable != 0)
 ,defaultContent:""##
 #end##
-#if($col.statusKey)##状态翻译
+#if($col.toDealWith == 1)##状态翻译
 #if($col.statusType == 1 || $col.statusType == 3)##单选
 ,render: function (data) {return ${col.statusKey}[data]}##
 #else##多选
@@ -181,6 +215,23 @@
                 return text;
             }##
 #end
+#elseif($col.toDealWith == 2)##上传文件
+,render:function(v){
+                if(!v){
+                    return "";
+                }
+                var html = "";
+                var imgPathArr = v.split(",");
+                $(imgPathArr).each(function(){
+#if($col.uploadFileType == 1)##图片
+                    var div = "<img src='" + getFileComplateUrl(this) +"' height='50'>";
+#else
+                    var div = "<a href='" + getFileComplateUrl(this) +"'>下载查看</a>&nbsp;&nbsp;";
+#end
+                    html += div;
+                });
+                return html;
+            }##
 #end##
 }
 #end
@@ -188,7 +239,7 @@
             search: [
 #set($searchCount = 0)
 #foreach($col in $columns)
-#if(!${col.isPrimaryKey})
+#if(!${col.isPrimaryKey} && ${col.toDealWith}!=2)##主键与上传文件不作为查询条件
 #set($searchCount = $searchCount + 1)
                 #if(${searchCount}!=1),#end##
 {column: "${col.columnName}","placeholder": "${col.remarks}"##
@@ -222,6 +273,9 @@
                         icon: "glyphicon glyphicon-plus",
                         allowNull: true,
                         "method": function () {
+#if($hasImage)##
+                            myFile.clear();
+#end
                             myForm.open({index: "${table}.insert"});
                         }
                     },
@@ -230,7 +284,13 @@
                         "css": "btn-warning",
                         icon: "glyphicon glyphicon-edit",
                         "method": function (datas) {
-                            myForm.open({data: datas[0], index: "${table}.update"});
+                            myForm.open({data: datas[0], index: "${table}.update"}##
+#if($hasImage)##
+, function () {
+                                    myFile.reload();
+                                }
+#end##
+                            );
                         }
                     },
                     {
@@ -238,7 +298,13 @@
                         "css": "btn-info",
                         icon:"glyphicon glyphicon-eye-open",
                         method:function(datas){
-                            myForm.open({data: datas[0], readOnly: true });
+                            myForm.open({data: datas[0], readOnly: true }##
+#if($hasImage)##
+, function () {
+                                    myFile.reload({readOnly: true});
+                                }
+#end##
+                            );
                         }
                     },
                     {

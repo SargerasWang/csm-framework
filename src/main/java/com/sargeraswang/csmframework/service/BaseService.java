@@ -161,11 +161,21 @@ public class BaseService {
                                 if (detail.containsKey("remarks")) {
                                     btc.setRemarks(detail.get("remarks"));
                                 }
-                                if (detail.containsKey("statusKey")) {
-                                    String key = detail.get("statusKey");
-                                    btc.setStatusKey(key);
-                                    btc.setStatusList(StatusUtil.getStatusArr(key));
-                                    btc.setStatusType(Integer.valueOf(detail.get("statusType")));
+                                if (detail.containsKey("toDealWith")) {
+                                    String toDealWith = detail.get("toDealWith");
+                                    btc.setToDealWith(Integer.valueOf(toDealWith));
+                                    switch (toDealWith){
+                                        case "1":
+                                            String key = detail.get("statusKey");
+                                            btc.setStatusKey(key);
+                                            btc.setStatusList(StatusUtil.getStatusArr(key));
+                                            btc.setStatusType(Integer.valueOf(detail.get("statusType")));
+                                            break;
+                                        case "2":
+                                            btc.setUploadFileType(Integer.valueOf(detail.get("uploadFileType")));
+                                            btc.setUploadOnlyOne(Integer.valueOf(detail.get("uploadOnlyOne")));
+                                            break;
+                                    }
                                 }
                             }
                         }

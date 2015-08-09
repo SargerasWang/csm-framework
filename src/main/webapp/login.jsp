@@ -137,7 +137,6 @@
                         '<c:url value='/js/jquery.raty.min.js'/>',
                         '<c:url value='/js/jquery.iphone.toggle.js'/>',
                         '<c:url value='/js/jquery.autogrow-textarea.js'/>',
-                        '<c:url value='/js/jquery.uploadify-3.1.min.js'/>',
                         '<c:url value='/js/jquery.history.js'/>',
                         '<c:url value='/js/bootstrap-datepicker.js'/>',
                         '<c:url value='/js/bootstrap-datepicker.zh-CN.js'/>',

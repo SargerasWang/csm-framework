@@ -18,7 +18,9 @@ $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
  */
 function resetHeight(height) {
     //index.jsp's function
-    parent.resetIframeHeight(window.frameElement, height);
+    if(parent != self){
+        parent.resetIframeHeight(window.frameElement, height);
+    }
 }
 function convertObj2Arr(obj) {
     var arr = new Array();
@@ -189,6 +191,9 @@ function datatableDownload(type, options) {
  * @param time 显示多长时间后关闭,默认800ms
  */
 function tipMsg(opt) {
+    if (typeof(opt) == "string") {
+        opt = {text: opt};
+    }
     top.noty($.extend({}, {type: "information", layout: "center", modal: false, timeout: 1000},opt));
 }
 
@@ -291,24 +296,32 @@ $.fn.richEditor = function (opt) {
  */
 $.fn.baseSelect = function (opt) {
     var $opt = $.extend({}, {
+        method:"ajax",
         index: "",
         text: "text",
         value: "value",
         hasNull: true
     }, opt);
     var $sel = $(this);
-    ajaxQuery({
-        data:  $.extend({},{index: $opt.index},opt.data),
-        success: function (data) {
-            if ($opt.hasNull) {
-                $sel.append("<option value=''>请选择</option>");
+    if(opt.method == "ajax"){
+        ajaxQuery({
+            data: $.extend({},{index: $opt.index},opt.data),
+            success: function (data) {
+                if ($opt.hasNull) {
+                    $sel.append("<option value=''>请选择</option>");
+                }
+                for (var i = 0; i < data.length; i++) {
+                    var obj = data[i];
+                    $sel.append("<option value='" + obj[$opt.value] + "'>" + obj[$opt.text] + "</option>");
+                }
             }
-            for (var i = 0; i < data.length; i++) {
-                var obj = data[i];
-                $sel.append("<option value='" + obj[$opt.value] + "'>" + obj[$opt.text] + "</option>");
-            }
-        }
-    });
+        });
+    }else if(opt.method =="statusMap"){
+        $sel.empty();
+        $.each(opt.statusMap,function(k,v){
+            $sel.append("<option value='"+k+"'>"+v+"</option>");
+        });
+    }
 }
 
 /**
@@ -887,10 +900,9 @@ $.fn.baseUpload = function(opt,resetHeight){
                                         text: r.message,
                                         type:'warning'
                                     });
-                                }else{
-                                    $(div).remove();
-                                    opt.ondeleted(key);
                                 }
+                                $(div).remove();
+                                opt.ondeleted(key);
                             }
                         });
                     });
@@ -899,7 +911,7 @@ $.fn.baseUpload = function(opt,resetHeight){
         }
         if(opt.onlyImg){
             var img = $('<img width="100%" height="80%">').attr("src",getFileComplateUrl(key))
-                .on("load",function(){
+                .on("load error",function(){
                     $(div).append(delBtn);
                     if(resetHeight){
                         setTimeout(resetHeight(),500);

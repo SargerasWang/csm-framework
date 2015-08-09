@@ -41,7 +41,17 @@
 							if(elt.prop("tagName") == "TEXTAREA" && elt.code ){
 								elt.code(v);
 							}else{
-								elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
+                                if(elt.attr("type") == "checkbox" ){
+                                    elt.val([v]);
+                                }else if(elt.attr("type") == "date" ){
+                                    var d = new Date(v);
+                                    var day = ("0" + d.getDate()).slice(-2);
+                                    var month = ("0" + (d.getMonth() + 1)).slice(-2);
+                                    var today = d.getFullYear()+"-"+(month)+"-"+(day) ;
+                                    elt.val(today);
+                                }else{
+                                    elt.val(v);
+                                }
 							}
 						} else if ( elt.length > 1 ) {
 							// checkbox 并且 data中有逗号
@@ -74,7 +84,17 @@
 							if(elt.prop("tagName") == "TEXTAREA" && elt.code ){
 								elt.code(v);
 							}else{
-								elt.val( ( elt.attr("type") == "checkbox" ) ? [v] : v );
+                                if(elt.attr("type") == "checkbox" ){
+                                    elt.val([v]);
+                                }else if(elt.attr("type") == "date" ){
+                                    var d = new Date(v);
+                                    var day = ("0" + d.getDate()).slice(-2);
+                                    var month = ("0" + (d.getMonth() + 1)).slice(-2);
+                                    var today = d.getFullYear()+"-"+(month)+"-"+(day) ;
+                                    elt.val(today);
+                                }else{
+                                    elt.val(v);
+                                }
 							}
 						} else {
 							var radiofound = false;

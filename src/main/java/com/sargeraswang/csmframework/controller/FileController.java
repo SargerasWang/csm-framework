@@ -99,6 +99,9 @@ public class FileController {
         String key = allRequestParams.get("key");
         boolean result = service.deleteAttachmentFileByKey(key);
         bean.setStatus(result? BaseExecuteAjaxBean.Status.SUCCESS: BaseExecuteAjaxBean.Status.FAILURE);
+        if(!result){
+            bean.setMessage("文件删除失败");
+        }
         return JsonUtil.toJson(bean);
     }
 }

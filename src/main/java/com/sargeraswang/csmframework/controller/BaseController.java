@@ -237,9 +237,8 @@ public class BaseController {
         String[] types = request.getParameterValues("types");
         List<BaseGenerateCodeCfg> cfgList = new ArrayList<>();
         for (String table : tables) {
-            String[] arrConfig = request.getParameterValues(table + "_config");
+            String config = request.getParameter(table + "_config");
             String align = request.getParameter(table + "_align");
-            String config = arrConfig[0];
             List<Map<String, String>> list = (List<Map<String, String>>) JsonUtil.fromJson(config, List.class);
             BaseGenerateCodeCfg cfg = new BaseGenerateCodeCfg();
             cfg.setAlign(align);

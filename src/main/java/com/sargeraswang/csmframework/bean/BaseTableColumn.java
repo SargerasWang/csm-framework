@@ -25,6 +25,10 @@ public class BaseTableColumn {
     private String autoIncrement;
     private boolean isPrimaryKey;
     /**
+     * 处理方式
+     */
+    private int toDealWith;
+    /**
      * 翻译字段
      */
     private String statusKey;
@@ -32,6 +36,14 @@ public class BaseTableColumn {
      * 翻译字段类型(1:单选,2:多选)
      */
     private int statusType;
+    /**
+     * 上传文件类型(1:图片,2:任意)
+     */
+    private int uploadFileType;
+    /**
+     * 上传文件只允许一个(1:是,2:否)
+     */
+    private int uploadOnlyOne;
     private List<String[]> statusList;
 
     public List<String[]> getStatusList() {
@@ -155,5 +167,37 @@ public class BaseTableColumn {
 
     public void setAutoIncrement(String autoIncrement) {
         this.autoIncrement = autoIncrement;
+    }
+
+    public int getToDealWith() {
+        return toDealWith;
+    }
+
+    public void setToDealWith(int toDealWith) {
+        this.toDealWith = toDealWith;
+    }
+
+    public boolean isPrimaryKey() {
+        return isPrimaryKey;
+    }
+
+    public void setIsPrimaryKey(boolean isPrimaryKey) {
+        this.isPrimaryKey = isPrimaryKey;
+    }
+
+    public int getUploadOnlyOne() {
+        return uploadOnlyOne;
+    }
+
+    public void setUploadOnlyOne(int uploadOnlyOne) {
+        this.uploadOnlyOne = uploadOnlyOne;
+    }
+
+    public int getUploadFileType() {
+        return uploadFileType;
+    }
+
+    public void setUploadFileType(int uploadFileType) {
+        this.uploadFileType = uploadFileType;
     }
 }
