@@ -19,105 +19,108 @@ public class TreeUtil {
     private static Logger LG = Logger.getLogger(TreeUtil.class);
 
     public static List<Map<String, Object>> generateTree(List<Object> list) {
-        return generateTree(list, "id", "pid", "children",false);
+        return generateTree(list, "id", "pid", "children", false);
     }
-    public static List<Map<String, Object>> generateTree(List<Object> list,Boolean hasAttributes) {
-        return generateTree(list, "id", "pid", "children",hasAttributes);
+
+    public static List<Map<String, Object>> generateTree(List<Object> list, Boolean hasAttributes) {
+        return generateTree(list, "id", "pid", "children", hasAttributes);
     }
 
     /**
      * 把数据库中查出来的扁平数据转换成树
      *
-     * @author SargerasWang Created at 2014年8月22日 上午10:29:15
-     * @param list sql 数据集
-     * @param selfKey id
-     * @param parentKey pid
+     * @param list         sql 数据集
+     * @param selfKey      id
+     * @param parentKey    pid
      * @param childrenName children
      * @return
+     * @author SargerasWang Created at 2014年8月22日 上午10:29:15
      */
     @SuppressWarnings("unchecked")
     public static List<Map<String, Object>> generateTree(List<Object> list, String selfKey,
-                                                         String parentKey, String childrenName,Boolean hasAttributes) {
+                                                         String parentKey, String childrenName, Boolean hasAttributes) {
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
         List<Map<String, Object>> rootList = new ArrayList<>();
-        if(list.size() == 1){
-            Map<String,Object>  root = new HashMap<>();
-            root.putAll((Map)list.get(0));
-            rootList.add(root);
-        }else {
-            Map<String, Map<String, Object>> dataMap = new HashMap<>();
-            // 遍历所有pid到set中
-            Set<String> pidSet = new HashSet<>();
-            for (Object object : list) {
-                Map<String, Object> map = (Map<String, Object>) object;
-                String pid = String.valueOf(map.get(parentKey));
+        Map<String, Map<String, Object>> dataMap = new HashMap<>();
+        // 遍历所有parent_id到set中
+        Set<String> pidSet = new HashSet<>();
+        for (Object object : list) {
+            Map<String, Object> map = (Map<String, Object>) object;
+            String pid = String.valueOf(map.get(parentKey));
+            if(StringUtil.isBlank(pid) || "0".equals(pid)){
+                if(!rootList.contains(map)) {
+                    rootList.add(map);
+                }
+            }else{
                 pidSet.add(pid);
                 if (hasAttributes) {
                     Map<String, Object> attr = new HashMap<String, Object>();
                     attr.putAll(map);
                     map.put("attributes", attr);
                 }
-                dataMap.put(String.valueOf(map.get(selfKey)), map);
             }
-            // 从叶子节点向上遍历
-            Map<String, Map<String, Object>> parentMap = new HashMap<>();
-            for (Object object : list) {
-                Map<String, Object> map = (Map<String, Object>) object;
-                String id = String.valueOf(map.get(selfKey));
-                if (pidSet.contains(id) == false) {
-                    // 叶子节点
-                    bindParent(parentKey, childrenName, dataMap, parentMap, map, selfKey);
-                }
-            }
-
-            recursion(parentKey, childrenName, dataMap, parentMap, rootList, selfKey);
+            dataMap.put(String.valueOf(map.get(selfKey)), map);
         }
+        // 从叶子节点向上遍历
+        Map<String, Map<String, Object>> parentMap = new HashMap<>();
+        for (Object object : list) {
+            Map<String, Object> map = (Map<String, Object>) object;
+            String id = String.valueOf(map.get(selfKey));
+            if (pidSet.contains(id) == false) {
+                // 叶子节点
+                bindParent(parentKey, childrenName, dataMap, parentMap, map, selfKey);
+            }
+        }
+
+        recursion(parentKey, childrenName, dataMap, parentMap, rootList, selfKey);
         LG.info(JsonUtil.toJson(rootList));
         return rootList;
     }
 
     /**
-     * @author SargerasWang Created at 2014年8月22日 下午2:20:33
      * @param parentKey
      * @param childrenName
      * @param dataMap
      * @param parentMap
      * @param rootList
      * @return
+     * @author SargerasWang Created at 2014年8月22日 下午2:20:33
      */
-    private static void recursion( String parentKey, String childrenName,
-                                   Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
-                                   List<Map<String, Object>> rootList,String selfKey) {
+    private static void recursion(String parentKey, String childrenName,
+                                  Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
+                                  List<Map<String, Object>> rootList, String selfKey) {
         Map<String, Map<String, Object>> tempMap = new HashMap<String, Map<String, Object>>();
         for (String key : parentMap.keySet()) {
             Map<String, Object> map = dataMap.get(key);
             Object parent = map.get(parentKey);
-            rootList.add(map);
+            if(!rootList.contains(map)){
+                rootList.add(map);
+            }
             if (parent != null && StringUtils.isNotBlank(parent.toString())) {
-                bindParent(parentKey, childrenName, dataMap, tempMap, map,selfKey);
+                bindParent(parentKey, childrenName, dataMap, tempMap, map, selfKey);
             }
         }
         if (tempMap.size() > 0) {
             rootList.clear();
             parentMap = tempMap;
-            recursion( parentKey, childrenName, dataMap, parentMap,rootList,selfKey);
+            recursion(parentKey, childrenName, dataMap, parentMap, rootList, selfKey);
         }
     }
 
     /**
-     * @author SargerasWang Created at 2014年8月22日 下午2:16:19
      * @param parentKey
      * @param childrenName
      * @param dataMap
      * @param parentMap
      * @param map
+     * @author SargerasWang Created at 2014年8月22日 下午2:16:19
      */
     @SuppressWarnings("unchecked")
     private static void bindParent(String parentKey, String childrenName,
                                    Map<String, Map<String, Object>> dataMap, Map<String, Map<String, Object>> parentMap,
-                                   Map<String, Object> map,String selfKey) {
+                                   Map<String, Object> map, String selfKey) {
         Map<String, Object> parent;
         String pid = String.valueOf(map.get(parentKey));
         if (parentMap.containsKey(pid)) {
@@ -138,13 +141,13 @@ public class TreeUtil {
             parent.put(childrenName, children);
         }
         boolean had = false;
-        for(Map<String,Object> c : children){
-            if(c.get(selfKey).equals(map.get(selfKey))){
+        for (Map<String, Object> c : children) {
+            if (c.get(selfKey).equals(map.get(selfKey))) {
                 had = true;
                 break;
             }
         }
-        if(!had) {
+        if (!had) {
             children.add(map);
         }
     }

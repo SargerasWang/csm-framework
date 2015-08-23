@@ -19,7 +19,6 @@
         }
     </style>
 </head>
-
 <body>
 <form id="myForm" role="form" class="form-horizontal hide">
     <input type="hidden" name="index">

@@ -293,26 +293,34 @@ $.fn.richEditor = function (opt) {
 
 /**
  * baseSelect 下拉菜单
+ * method:  默认ajax[通过index取值],
+ *          statusMap通过[status.xml]取值,
+ *          cascading级联方式通过[index,parent_key,parent_sel]取值
  */
 $.fn.baseSelect = function (opt) {
-    var $opt = $.extend({}, {
+    var opt = $.extend({}, {
         method:"ajax",
         index: "",
         text: "text",
         value: "value",
-        hasNull: true
+        hasNull: true,
+        data:null,
+        statusMap:null,
+        parent_key:null,
+        parent_sel:null
     }, opt);
     var $sel = $(this);
     if(opt.method == "ajax"){
+        if (opt.hasNull) {
+            $sel.append("<option value=''>请选择</option>");
+        }
         ajaxQuery({
-            data: $.extend({},{index: $opt.index},opt.data),
+            async:false,
+            data: $.extend({},{index: opt.index},opt.data),
             success: function (data) {
-                if ($opt.hasNull) {
-                    $sel.append("<option value=''>请选择</option>");
-                }
                 for (var i = 0; i < data.length; i++) {
                     var obj = data[i];
-                    $sel.append("<option value='" + obj[$opt.value] + "'>" + obj[$opt.text] + "</option>");
+                    $sel.append("<option value='" + obj[opt.value] + "'>" + obj[opt.text] + "</option>");
                 }
             }
         });
@@ -321,6 +329,28 @@ $.fn.baseSelect = function (opt) {
         $.each(opt.statusMap,function(k,v){
             $sel.append("<option value='"+k+"'>"+v+"</option>");
         });
+    }else if(opt.method == "cascading"){
+        $(opt.parent_sel).on("change",function(){
+            $sel.empty();
+            if (opt.hasNull) {
+                $sel.append("<option value=''>请选择</option>");
+            }
+            if($(this).val() != ""){
+                var d= {index:opt.index};
+                d[opt.parent_key] = $(this).val();
+                ajaxQuery({
+                    async:false,
+                    data: $.extend({},d,opt.data),
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            var obj = data[i];
+                            $sel.append("<option value='" + obj[opt.value] + "'>" + obj[opt.text] + "</option>");
+                        }
+                    }
+                });
+            }
+        });
+        $(opt.parent_sel).change();
     }
 }
 
@@ -330,7 +360,20 @@ $.fn.baseSelect = function (opt) {
  */
 $.fn.baseTable = function (opt) {
     var _this = this;
-    this.addClass("table table-striped table-bordered");
+    this.addClass("table table-striped table-bordered table-condensed");
+    //翻译字段处理
+    $(opt.columns).each(function(){
+        var col = this;
+        if(! col.render){
+            this.render = function(data,type,row){
+                var formatterValue = row["__"+col.data];
+                if(typeof formatterValue != "undefined"){
+                    return "["+data+"]"+formatterValue;
+                }
+                return data;
+            }
+        }
+    });
     var table = this.DataTable($.extend({},
             {
                 "autoWidth": false,
@@ -710,43 +753,74 @@ $.fn.baseTree = function(opt){
         tree_parent_key:"pid",
         tree_children_name:"childrens",
         columns:[],
-        buttons:[],
-        sort_by:null
+        buttons:null,
+        sort_by:null,
+        datas:null
     },opt);
     var $this = $(this);
-    $this.addClass("table tree table-hover");
-    ajaxQuery({
-        data: {
-            index: opt.index,
-            needTreeList: true,
-            tree_self_key: opt.tree_self_key,
-            tree_parent_key: opt.tree_parent_key,
-            tree_children_name: opt.tree_children_name
-        },
-        success: function (r) {
-            //sort
-            if(opt.sort_by){
-                sortByKey(r,opt.sort_by);
+    $this.addClass("table tree table-hover ");
+    $this.empty();
+    if(opt.datas){
+        renderTree($this,opt,opt.datas);
+    }else{
+        ajaxQuery({
+            data: $.extend({},{
+                index: opt.index,
+                needTreeList: true,
+                tree_self_key: opt.tree_self_key,
+                tree_parent_key: opt.tree_parent_key,
+                tree_children_name: opt.tree_children_name
+            },opt.data),
+            success: function (r) {
+                opt.datas = r;
+                renderTree($this,opt,r);
             }
-            $(r).each(function () {
-                var tbody = loopChildrens(this, null, null, {
-                    self_key: opt.tree_self_key,
-                    children_name: opt.tree_children_name,
-                    columns:opt.columns,
-                    buttons:opt.buttons,
-                    sort_by:opt.sort_by
-                });
-                $this.append(tbody);
-                resetHeight();
-            });
-            $this.treegrid();
-        }
-    });
-    $this.reload=function(){
+        });
+    }
+    $this.reload=function(datas){
         $this.empty();
-        $this.baseTree(opt);
+        opt.datas = datas;
+        return $this.baseTree(opt);
+    }
+    $this.getData=function(){
+        return opt.datas;
     }
     return $this;
+}
+function renderTree(treeGrid,opt,datas){
+    var head = $.parseHTML("<thead></thead>");
+    var tr = $.parseHTML("<tr></tr>");
+    $(opt.columns).each(function () {
+        if(this['title']){
+            $(tr).append("<th>" + this['title'] + "</th>");
+        }
+    });
+    if(opt.buttons){
+        $(tr).append("<th>操作</th>");
+    }
+    if($(tr).children().length != 0){
+        $(head).append(tr);
+    }
+    treeGrid.append(head);
+    //sort
+    if(datas && opt.sort_by){
+        sortByKey(datas,opt.sort_by);
+        var tbody = $("<tbody></tbody>");
+        $(datas).each(function (index) {
+            tbody = loopChildrens(this, tbody, null, {
+                self_key: opt.tree_self_key,
+                children_name: opt.tree_children_name,
+                columns:opt.columns,
+                buttons:opt.buttons,
+                sort_by:opt.sort_by
+            },index,datas.length);
+            treeGrid.append(tbody);
+            resetHeight();
+        });
+        treeGrid.treegrid();
+    }else{
+        treeGrid.append("<tr><td colspan='"+opt.columns.length+"'>暂无数据</td></tr>");
+    }
 }
 function sortByKey(array, key) {
     return array.sort(function(a, b) {
@@ -754,7 +828,7 @@ function sortByKey(array, key) {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
-function loopChildrens(data, html, parent_id, opt) {
+function loopChildrens(data, html, parent_id, opt,rowIndex,sumCount) {
     opt = $.extend({
         self_key: "id",
         children_name: "childrens",
@@ -762,17 +836,6 @@ function loopChildrens(data, html, parent_id, opt) {
         buttons:[],
         sort_by:null
     }, opt);
-    if (!html) {
-        html = $.parseHTML("<tbody></tbody>");
-        tr = $.parseHTML("<tr></tr>");
-        $(opt.columns).each(function () {
-            $(tr).append("<th>" + this['title'] + "</th>");
-        });
-        if(opt.buttons){
-            $(tr).append("<th>操作</th>");
-        }
-        $(html).append(tr);
-    }
     var tr = $.parseHTML("<tr></tr>")
     $(tr).addClass("treegrid-" + data[opt.self_key]);
     if (typeof parent_id != "undefined" && parent_id != null) {
@@ -781,11 +844,11 @@ function loopChildrens(data, html, parent_id, opt) {
     $(opt.columns).each(function () {
         var value = data[this['data']];
         if (this.render) {
-            value = this.render(value);
+            value = this.render(value,data,rowIndex,sumCount);
         } else if (typeof value === "undefined" || value == null) {
             value = "";
         }
-        $(tr).append("<td>" + value + "</td>");
+        $(tr).append($("<td></td>").append(value));
     });
     if(opt.buttons){
         var btnTD = $.parseHTML("<td></td>");
@@ -825,11 +888,11 @@ function loopChildrens(data, html, parent_id, opt) {
         return html;
     }
     //sort
-    if(opt.sort_by){
+    if(data[opt.children_name] && opt.sort_by){
         sortByKey(data[opt.children_name],opt.sort_by);
     }
-    $(data[opt.children_name]).each(function () {
-        $(html).parent().append(loopChildrens(this, html, data[opt.self_key], opt));
+    $(data[opt.children_name]).each(function (index) {
+        $(html).parent().append(loopChildrens(this, html, data[opt.self_key], opt,index,data[opt.children_name].length));
     });
     return html;
 }
